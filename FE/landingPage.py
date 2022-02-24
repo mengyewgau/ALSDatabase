@@ -2,17 +2,17 @@ import tkinter as tk
 
 window = tk.Tk()
 
-buttonMember = tk.Button(text = "Membership", width=25, height=5,)
+buttonMember = tk.Button(text = "Membership", width=25, height=5, bg="indianred")
 
-buttonBooks = tk.Button(text = "Books", width=25, height=5,)
+buttonBooks = tk.Button(text = "Books", width=25, height=5,bg="aquamarine")
 
-buttonLoans = tk.Button(text = "Loans", width=25, height=5,)
+buttonLoans = tk.Button(text = "Loans", width=25, height=5, bg="darksalmon")
 
-buttonReservation = tk.Button(text = "Reservation", width=25, height=5,)
+buttonReservation = tk.Button(text = "Reservation", width=25, height=5, bg="darkseagreen")
 
-buttonFines = tk.Button(text = "Fines", width=25, height=5,)
+buttonFines = tk.Button(text = "Fines", width=25, height=5, bg="cadetblue")
 
-buttonReports = tk.Button(text = "Reports", width=25, height=5,)
+buttonReports = tk.Button(text = "Reports", width=25, height=5,bg="peru")
 
 
 
