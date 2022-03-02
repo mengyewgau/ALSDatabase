@@ -2,20 +2,11 @@ import tkinter as tk
 
 window = tk.Tk()
 
-def openLoans():
-    window.destroy()
-    import loans
-
 buttonMember = tk.Button(text = "Membership", width=25, height=5, bg="indianred")
 
 buttonBooks = tk.Button(text = "Books", width=25, height=5,bg="aquamarine")
 
-buttonLoans = tk.Button(
-    text = "Loans",
-    width=25,
-    height=5,
-    bg="darksalmon",
-    command=openLoans)
+buttonLoans = tk.Button(text = "Loans", width=25, height=5, bg="darksalmon")
 
 buttonReservation = tk.Button(text = "Reservation", width=25, height=5, bg="darkseagreen")
 
@@ -36,9 +27,6 @@ buttonReservation.grid(row=0, column=1);
 buttonFines.grid(row=1, column=1);
 
 buttonReports.grid(row=2, column=1);
-
-
-
 
 
 
