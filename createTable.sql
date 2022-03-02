@@ -2,8 +2,8 @@ CREATE TABLE Member(
      membershipId	VARCHAR(25)    NOT NULL,
      name			VARCHAR(25)   NOT NULL,
      memberFac        VARCHAR(25)   NOT NULL,
-     memberEmail    VARCHAR(25)	NOT NULL,
      memberPhone VARCHAR(8) NOT NULL,
+     memberEmail    VARCHAR(25)	NOT NULL,
 	 PRIMARY KEY (membershipId)); 
 CREATE TABLE Book( 
      ISBN    VARCHAR(25)    NOT NULL,
