@@ -5,10 +5,19 @@ window = tk.Tk()
 def openLoans():
     window.destroy()
     import loans
-
+    
+def openBooks():
+    window.destroy()
+    import books
+    
 buttonMember = tk.Button(text = "Membership", width=25, height=5, bg="indianred")
 
-buttonBooks = tk.Button(text = "Books", width=25, height=5,bg="aquamarine")
+buttonBooks = tk.Button(
+    text = "Books",
+    width=25,
+    height=5,
+    bg="aquamarine",
+    command=openBooks)
 
 buttonLoans = tk.Button(
     text = "Loans",
