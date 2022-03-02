@@ -1,34 +1,75 @@
 import tkinter as tk
+from tkinter import messagebox
 
 window = tk.Tk()
 
-buttonMember = tk.Button(text = "Membership", width=25, height=5, bg="indianred")
+## Need to implement logic for returning
+## 1) Check if Book has been borrowed
+## 1a) If not borrowed, show error message
+## 2) Check if book returned on time
+## 2a) If not, add fine to member
+## 2b) Show message that fine has been added
+## 3) Return book
 
-buttonBooks = tk.Button(text = "Books", width=25, height=5,bg="aquamarine")
+def returnBook():
+    tk.messagebox.showerror(
+        "Filler Error",
+        "Error: Function not complete yet!")
 
-buttonLoans = tk.Button(text = "Loans", width=25, height=5, bg="darksalmon")
+def isBookBorrowed():
+    tk.messagebox.showerror(
+        "Filler Error",
+        "Error: Function not complete yet!")
 
-buttonReservation = tk.Button(text = "Reservation", width=25, height=5, bg="darkseagreen")
+def isBookReturnedOnTime():
+    tk.messagebox.showerror(
+        "Filler Error",
+        "Error: Function not complete yet!")
 
-buttonFines = tk.Button(text = "Fines", width=25, height=5, bg="cadetblue")
+def goBack():
+    window.destroy()
+    import loans
 
-buttonReports = tk.Button(text = "Reports", width=25, height=5,bg="peru")
+def goHome():
+    window.destroy()
+    import landingPage
 
+titleLabel = tk.Label(
+    text="Book Returning",
+    bg="cornsilk",
+    font=("20"))
 
+bookNumLabel = tk.Label(
+    text="Please Insert Book Accession Number")
 
-buttonMember.grid(row=0, column=0);
+bookNumEntry = tk.Entry(window);
 
-buttonBooks.grid(row=1, column=0);
+returnBookButton = tk.Button(
+    text="Confirm",
+    width=8,
+    height=2,
+    command=returnBook)
 
-buttonLoans.grid(row=2, column=0);
+backButton = tk.Button(text = "Back",
+                         width=5,
+                         height=2,
+                         bg="AntiqueWhite",
+                         command=goBack)
 
-buttonReservation.grid(row=0, column=1);
+homeButton = tk.Button(text = "Home",
+                         width=5,
+                         height=2,
+                         bg="AntiqueWhite",
+                         command=goHome)
 
-buttonFines.grid(row=1, column=1);
+titleLabel.grid(row=0, column=0);
+backButton.grid(row=0, column=1);
+homeButton.grid(row=0, column=2);
 
-buttonReports.grid(row=2, column=1);
+bookNumLabel.grid(row=1, column=0);
+bookNumEntry.grid(row=1, column=2);
 
-
+returnBookButton.grid(row=2, column=1);
 
 window.mainloop()
 
