@@ -3,23 +3,15 @@ from tkinter import filedialog
 from PIL import ImageTk, Image
 
 # Not added/To be fixed
-# 1. backToMain function
-# 2. Picture in membership Menu not showing up
-# 3. Check which entry box looks nicer - either in deletion or creation
-# 4. Add a return membership menu function
-# 5. Complete SQLAlchemy Linkage
+# 1. Picture in membership Menu not showing up
+# 2. Check which entry box looks nicer - either in deletion or creation
+# 3. Complete SQLAlchemy functions
+# 4. Flow control for various errors
 
-### Return to Main Menu/Landing Page ###
-def backToMain():
+### Membership Landing Window ###
+def destroyMemMenu():
+    memMenu.destroy();
 
-    # TO BE ADDED
-    return
-
-def backToMemMenu():
-    # To be added
-    return
-
-### 1 Membership Landing Page ###
 def membershipMenu():
     global memMenu
     memMenu = tk.Toplevel();
@@ -89,14 +81,21 @@ def membershipMenu():
                                   bg="aquamarine",
                                   borderwidth = 4,
                                   relief = "solid",
-                                  command=backToMain)
+                                  command=destroyMemMenu)
     goMainFromMemMenu.place(x=140,y=700, width=1000, height=80);
 
 
+### Member Creation Window ###
 
-### 2 Member Creation Page ###
+def destroyCreateMenu():
+    createMemMenu.destroy();
 
 def memberCreation():
+
+    # To add:
+    # If-Else for Success/Error messages
+    # SQLAlchemy retrieval
+    
     global createMemMenu
     createMemMenu = tk.Toplevel()
     createMemMenu.geometry("750x820")
@@ -181,11 +180,19 @@ def memberCreation():
                            text = "Back to Main Menu",
                            font=("Arial, 18"),
                            bg="aquamarine",
-                           command=backToMemMenu)
+                           command=destroyCreateMenu)
     backButton.place(x=420, y=710, width=250, height=80);
 
+### Membership Deletion Window ###
+
+def destroyDeleteMenu():
+    deleteMemMenu.destroy();
 
 def memberDeletion():
+    # To add:
+    # If-Else for Success/Error messages
+    # SQLAlchemy retrieval
+    
     global deleteMemMenu
     deleteMemMenu = tk.Toplevel()
     deleteMemMenu.geometry("750x420")
@@ -221,10 +228,13 @@ def memberDeletion():
                            text = "Back to Main Menu",
                            font=("Arial, 18"),
                            bg="aquamarine",
-                           command=backToMemMenu)
+                           command=destroyDeleteMenu)
     backButton.place(x=420, y=320, width=250, height=80);
 
-
+### Update Landing Window ###
+def destroyUpdateLandingMenu():
+    updateInputId.destroy();
+    
 def memberUpdateLanding():
     global updateInputId
     updateInputId = tk.Toplevel()
@@ -262,10 +272,21 @@ def memberUpdateLanding():
                            text = "Back to Main Menu",
                            font=("Arial, 18"),
                            bg="aquamarine",
-                           command=backToMemMenu)
+                           command=destroyUpdateLandingMenu)
     backButton.place(x=420, y=320, width=250, height=80);
 
+### Update Member Details Window ###
+    
+def destroyUpdateMenu():
+    updateMemMenu.destroy();
+    
 def updateMenu():
+    # To add:
+    # If-Else for Success/Error messages
+    # SQLAlchemy retrieval
+    
+    updateInputId.destroy();
+    
     global updateMemMenu
     updateMemMenu = tk.Toplevel()
     updateMemMenu.geometry("750x820")
@@ -362,13 +383,13 @@ def updateMenu():
                            text = "Back to Main Menu",
                            font=("Arial, 18"),
                            bg="aquamarine",
-                           command=backToMemMenu)
+                           command=destroyUpdateMenu)
     backButton.place(x=420, y=710, width=250, height=80);
 
 
 
 
-### LANDING PAGE FUNCTIONS ###
+### LANDING PAGE WINDOW ###
 window = tk.Tk()
 
 def openLoans():
