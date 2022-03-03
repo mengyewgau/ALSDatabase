@@ -3,7 +3,6 @@ from tkinter import filedialog
 from PIL import ImageTk, Image
 
 # Not added/To be fixed
-# 1. Picture in membership Menu not showing up
 # 2. Check which entry box looks nicer - either in deletion or creation
 # 3. Complete SQLAlchemy functions
 # 4. Flow control for various errors
@@ -11,6 +10,7 @@ from PIL import ImageTk, Image
 ### Membership Landing Window ###
 def destroyMemMenu():
     memMenu.destroy();
+    
 
 def membershipMenu():
     global memMenu
@@ -28,10 +28,11 @@ def membershipMenu():
 
     ## Picture Left Side
 
-    # Not sure why pic is not showing but i rly want to fuking die
-    im = ImageTk.PhotoImage(Image.open("als.jpg"))
-    displayImg = tk.Label(memMenu, image=im);
-    displayImg.place(x=0, y=220, width=400, height=180);
+    global createIm
+    createIm = ImageTk.PhotoImage(Image.open("als.jpg").resize((400,360)))
+    displayImg = tk.Label(memMenu, image=createIm);
+    displayImg.place(x=40, y=260, width=400, height=360);
+
 
     ## Go to member creation menu
     memCreationButton = tk.Button(memMenu,
