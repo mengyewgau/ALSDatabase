@@ -392,6 +392,8 @@ def updateMenu():
 ### LANDING PAGE WINDOW ###
 window = tk.Tk()
 
+
+# Delete openLoans and openBooks
 def openLoans():
     window.destroy()
     import loans
@@ -440,15 +442,10 @@ buttonReports = tk.Button(window,
                           bg="peru")
 
 buttonMember.grid(row=0, column=0);
-
 buttonBooks.grid(row=1, column=0);
-
 buttonLoans.grid(row=2, column=0);
-
 buttonReservation.grid(row=0, column=1);
-
 buttonFines.grid(row=1, column=1);
-
 buttonReports.grid(row=2, column=1);
 
 
