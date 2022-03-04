@@ -12,7 +12,8 @@ window.configure(bg="white")
 def openLoans():
     return
 def openBooks():
-    return
+    import books
+    
 def membershipMenu():
     return
 
