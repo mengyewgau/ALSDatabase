@@ -1,6 +1,8 @@
 import tkinter as tk
-from tkinter import filedialog
 from PIL import ImageTk, Image
+import sqlalchemy as db
+
+engine = db.create_engine("")
 
 # Not added/To be fixed
 # 2. Check which entry box looks nicer - either in deletion or creation
@@ -185,6 +187,19 @@ def memberCreation():
     backButton.place(x=420, y=710, width=250, height=80);
 
 ### Membership Deletion Window ###
+
+def deleteMemFunc(memId):
+
+    ## Query DB to check if membership Id exists
+
+    ## If exists, execute engine
+##    query = 'DELETE FROM member WHERE membershipId = ' + memId
+##    rs = engine.execute(q);
+
+    ## Catch exceptions and throw error window
+
+def deleteFailed():
+    
 
 def destroyDeleteMenu():
     deleteMemMenu.destroy();
