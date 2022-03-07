@@ -50,7 +50,7 @@ memberIdLabel = tk.Label(
 memberIdEntry = tk.Entry(window);
 
 borrowBookButton = tk.Button(
-    text="Confirm",
+    text="Borrow",
     width=8,
     height=2,
     command=borrowBook)
