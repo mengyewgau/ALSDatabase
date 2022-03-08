@@ -5,6 +5,24 @@ from PIL import ImageTk, Image
 
 def destroyBookMenu():
     bookMenu.destroy()
+
+def navFromBookToBookAcq():
+    createBookAcquisition()
+    destroyBookMenu()
+    bookAcq.lift()
+    bookAcq.lift()
+	
+def navFromBookToBookWith():
+    createBookWithdrawal()
+    destroyBookMenu()
+    bookWith.lift()
+    bookWith.lift()
+
+def navFromBookToLP():
+    landingPageFunc()
+    destroyBookMenu()
+    landingPage.lift()
+    landingPage.lift()
     
 def createBookMenu():
     ##Book Page Background
@@ -37,7 +55,7 @@ def createBookMenu():
         font = ("calibre", 30, "bold"),
         fg = "lavender blush",
         bg = "dodgerBlue2",
-        command = createBookAcquisition)
+        command = navFromBookToBookAcq)
 
     buttonAcquisition.place(x=580, y=250, width=650, height=100)
 
@@ -47,7 +65,7 @@ def createBookMenu():
         font = ("calibre", 30, "bold"),
         fg = "lavender blush",
         bg = "SteelBlue2",
-        command = createBookWithdrawal)
+        command = navFromBookToBookWith)
 
     buttonWithdrawal.place(x=580, y=450, width=650, height=100)
 
@@ -57,7 +75,7 @@ def createBookMenu():
         font = ("calibre", 15, "bold"),
         fg = "grey39",
         bg = "snow3",
-        command = destroyBookMenu)
+        command = navFromBookToLP)
 
     buttonBack.place(x=1090, y=650, width=140, height=40)
 
@@ -69,7 +87,7 @@ def createBookMenu():
 
 def destroyAcqError():
     acqError.destroy()
-    
+
 def createAcqError():
     global acqError
     acqError = Toplevel()
@@ -178,6 +196,12 @@ def createSuccessWith():
 
 def destroyBookAcquisition():
     bookAcq.destroy()
+
+def navFromBookAcqToBook():
+    createBookMenu()
+    destroyBookAcquisition()
+    bookMenu.lift()
+    bookMenu.lift()
 
 def submitAcq():
     accessionNum = str(accAcqEntry.get())
@@ -301,7 +325,7 @@ def createBookAcquisition():
         font = ("calibre", 15, "bold"),
         fg = "grey39",
         bg = "snow3",
-        command = destroyBookAcquisition)
+        command = navFromBookAcqToBook)
 
     buttonAcqBack.place(x=1100, y=600, width=140, height=40)
 
@@ -351,7 +375,13 @@ def submitWith():
         command = destroySubmitWith)
 
     buttonWithBack.place(x=280, y=350, width=150, height=40)
-    
+
+def navFromBookAcqToBook():
+    createBookMenu()
+    destroyBookWithdrawal()
+    bookMenu.lift()
+    bookMenu.lift()
+
 def createBookWithdrawal():
     global bookWith
     bookWith = Toplevel()
@@ -394,114 +424,137 @@ def createBookWithdrawal():
         font = ("calibre", 15, "bold"),
         fg = "grey39",
         bg = "snow3",
-        command = destroyBookWithdrawal)
+        command = navFromBookAcqToBook)
 
     buttonWithBack.place(x=1100, y=600, width=140, height=40)
 ################################################################################
 
 ## LANDING PAGE ################################################################
 
-window = Tk()
-window.geometry("1280x750");
-window.configure(bg="white")
+def destroyLandingPage():
+    landingPage.destroy()
 
-##EMPTY FUNCTION
-def empty():
-    global emptyPage
-    emptyPage = Toplevel()
-    emptyPage.geometry("1280x820")
-    emptyPageLabel = Label(emptyPage,
-                             text = "Under Construction",
-                             font=("Arial, 20"),
-                             borderwidth = 4,
-                             relief = "solid",
-                             bg="paleturquoise1");
-    emptyPageLabel.place(x=140, y=0, width=1000, height=200)
+def navFromLpToBooks(): #navigate from LP to Books
+    createBookMenu()
+    destroyLandingPage()
+    bookMenu.lift()
+    bookMenu.lift()
 
-## (ALS) title centred in the screen
-titleLabel = Label(window,
-                      text = "(ALS)",
-                      font=("calibre, 40"),
-                      bg="white")
-titleLabel.place(x=0,y=20, width=1280, height=100)
+def landingPageFunc():
+    global landingPage
+    landingPage = Toplevel()
+    landingPage.title("Landing Page")
+    landingPage.geometry("1280x820")
 
-## First row, leftmost button and icon
-global memIm
-memIm = ImageTk.PhotoImage(Image.open("membersIm.jpg").resize((250,200)))
-displayMemIm = Label(window, image=memIm);
-displayMemIm.place(x=200, y=120, width=250, height=200);
+    ##EMPTY FUNCTION
+    def empty():
+        global emptyPage
+        emptyPage = Toplevel()
+        emptyPage.geometry("1280x820")
+        emptyPageLabel = Label(emptyPage,
+                                 text = "Under Construction",
+                                 font=("Arial, 20"),
+                                 borderwidth = 4,
+                                 relief = "solid",
+                                 bg="paleturquoise1");
+        emptyPageLabel.place(x=140, y=0, width=1000, height=200)
 
-buttonMember = Button(window,
-                         text = "Membership",
-                         font=("Arial, 18"),
-                         bg="indianred",
-                         command=empty)
-buttonMember.place(x=200, y=325, width=250, height=50)
+    ## (ALS) title centred in the screen
+    titleLabel = Label(landingPage,
+                          text = "(ALS)",
+                          font=("calibre, 40"),
+                          bg="white")
+    titleLabel.place(x=0,y=20, width=1280, height=100)
 
-## First row, middle button and icon
-global bookIm
-bookIm = ImageTk.PhotoImage(Image.open("booksIm.jpg").resize((250,200)))
-displayBkIm = Label(window, image=bookIm);
-displayBkIm.place(x=515, y=120, width=250, height=200);
+    ## First row, leftmost button and icon
+    global memIm
+    memIm = ImageTk.PhotoImage(Image.open("membersIm.jpg").resize((250,200)))
+    displayMemIm = Label(landingPage, image=memIm);
+    displayMemIm.place(x=200, y=120, width=250, height=200);
 
-buttonBooks = Button(window,
-                        text = "Books",
-                        font=("Arial, 18"),
-                        bg="aquamarine",
-                        command=createBookMenu)
-buttonBooks.place(x=515, y=325, width=250, height=50)
+    buttonMember = Button(landingPage,
+                             text = "Membership",
+                             font=("Arial, 18"),
+                             bg="indianred",
+                             command=empty)
+    buttonMember.place(x=200, y=325, width=250, height=50)
+
+    ## First row, middle button and icon
+    global bookIm
+    bookIm = ImageTk.PhotoImage(Image.open("booksIm.jpg").resize((250,200)))
+    displayBkIm = Label(landingPage, image=bookIm);
+    displayBkIm.place(x=515, y=120, width=250, height=200);
+
+    buttonBooks = Button(landingPage,
+                            text = "Books",
+                            font=("Arial, 18"),
+                            bg="aquamarine",
+                            command=navFromLpToBooks)
+    buttonBooks.place(x=515, y=325, width=250, height=50)
 
 
-## First row, rightmost button and icon
-global loanIm
-loanIm = ImageTk.PhotoImage(Image.open("loansIm.jpg").resize((250,200)))
-displayLoanIm = Label(window, image=loanIm);
-displayLoanIm.place(x=830, y=120, width=250, height=200);
+    ## First row, rightmost button and icon
+    global loanIm
+    loanIm = ImageTk.PhotoImage(Image.open("loansIm.jpg").resize((250,200)))
+    displayLoanIm = Label(landingPage, image=loanIm);
+    displayLoanIm.place(x=830, y=120, width=250, height=200);
 
-buttonLoans = Button(window,
-                        text = "Loans",
-                        font=("Arial, 18"),
-                        bg="darksalmon",
-                        command=empty)
-buttonLoans.place(x=830, y=325, width=250, height=50)
+    buttonLoans = Button(landingPage,
+                            text = "Loans",
+                            font=("Arial, 18"),
+                            bg="darksalmon",
+                            command=empty)
+    buttonLoans.place(x=830, y=325, width=250, height=50)
 
-## Second row, leftmost button and icon
-global reserveIm
-reserveIm = ImageTk.PhotoImage(Image.open("reserveIm.jpg").resize((250,200)))
-displayResIm = Label(window, image=reserveIm);
-displayResIm.place(x=200, y=410, width=250, height=200);
+    ## Second row, leftmost button and icon
+    global reserveIm
+    reserveIm = ImageTk.PhotoImage(Image.open("reserveIm.jpg").resize((250,200)))
+    displayResIm = Label(landingPage, image=reserveIm);
+    displayResIm.place(x=200, y=410, width=250, height=200);
 
-buttonReservation = Button(window,
-                              text = "Reservation",
+    buttonReservation = Button(landingPage,
+                                  text = "Reservation",
+                                  font=("Arial, 18"),
+                                  bg="darkseagreen")
+    buttonReservation.place(x=200, y=615, width=250, height=50)
+
+    ## Second row, middle button and icon
+    global fineIm
+    fineIm = ImageTk.PhotoImage(Image.open("fineIm.jpg").resize((250,200)))
+    displayFineIm = Label(landingPage, image=fineIm);
+    displayFineIm.place(x=515, y=410, width=250, height=200);
+
+    buttonFines = Button(landingPage,
+                            text = "Fines",
+                            font=("Arial, 18"),
+                            bg="cadetblue")
+    buttonFines.place(x=515, y=615, width=250, height=50)
+
+
+    ## Second row, rightmost button and icon
+    global reportIm
+    reportIm = ImageTk.PhotoImage(Image.open("reportIm.jpg").resize((250,200)))
+    displayReportIm = Label(landingPage, image=reportIm);
+    displayReportIm.place(x=830, y=410, width=250, height=200);
+
+    buttonReports = Button(landingPage,
+                              text = "Reports",
                               font=("Arial, 18"),
-                              bg="darkseagreen")
-buttonReservation.place(x=200, y=615, width=250, height=50)
-
-## Second row, middle button and icon
-global fineIm
-fineIm = ImageTk.PhotoImage(Image.open("fineIm.jpg").resize((250,200)))
-displayFineIm = Label(window, image=fineIm);
-displayFineIm.place(x=515, y=410, width=250, height=200);
-
-buttonFines = Button(window,
-                        text = "Fines",
-                        font=("Arial, 18"),
-                        bg="cadetblue")
-buttonFines.place(x=515, y=615, width=250, height=50)
-
-
-## Second row, rightmost button and icon
-global reportIm
-reportIm = ImageTk.PhotoImage(Image.open("reportIm.jpg").resize((250,200)))
-displayReportIm = Label(window, image=reportIm);
-displayReportIm.place(x=830, y=410, width=250, height=200);
-
-buttonReports = Button(window,
-                          text = "Reports",
-                          font=("Arial, 18"),
-                          bg="peru")
-buttonReports.place(x=830, y=615, width=250, height=50)
+                              bg="peru")
+    buttonReports.place(x=830, y=615, width=250, height=50)
 
 ################################################################################
+
+
+def openMain():
+	landingPageFunc()
+	
+window = Tk()
+
+window.configure(bg="white")
+startButton = Button(window, text = "Start", command = openMain, fg = "lightblue",
+		bg = "black", font = ("Mincho", 20))
+
+startButton.pack()
 
 window.mainloop()
