@@ -19,9 +19,8 @@ def openBorrow():
 def openReturn():
     loansReturnMenuFunc()
     destroyLoansMenu()
-    loansReturnsMenu.lift()
-    loansReturnsMenu.lift()
-
+    loansReturnMenu.lift()
+    loansReturnMenu.lift()
 
 def goHome():
     window.destroy()
@@ -33,57 +32,58 @@ def loansMenuFunc():
     loansMenu.title("Loans Menu")
     loansMenu.geometry("1280x720")
 
-    topleftheader = Label(loansMenu,
-    	text = "BT2102",
-    	bg = "lightblue",
-    	borderwidth = 2,
-    	relief = "solid",
-    	font = ("Mincho", 40))
-    topleftheader.place(x = 0, y = 0, width = 280, height = 100)
+    ## Information Header
+    reportsLabel = Label(loansMenu,
+                       text = "Select one of the Options below",
+                       font =("calibre", 20, "bold"),
+                       bg = "Slategray1")
+    reportsLabel.place(x=0, y=0, width=1280, height=80);
 
-    topbar = Label(loansMenu,
-    	text = "ALS",
-    	bg = "lightblue", 
-    	borderwidth = 2,
-    	relief = "ridge",
-    	font = ("Mincho", 40))
-    topbar.place(x = 280, y = 0, width = 1000, height = 100)
+    ##Reports Image Leftmost Label
+    global loansIm
+    loansIm = ImageTk.PhotoImage(Image.open("loansIm.jpg").resize((250,200)))
+    displayLoansIm = Label(loansMenu,
+                             image=loansIm);
+    displayLoansText = Label(loansMenu,
+                             text = "Loans",
+                             font = ("calibre", 30, "italic", "bold"),
+                             fg = "lavender",
+                             bg = "black")
+    displayLoansIm.place(x=40, y=160, width = 500, height = 500);
+    displayLoansText.place(x=160, y=560, width = 250, height = 70);
 
-    sidebar = Label(loansMenu,
-    	text = "Loans",
-    	bg = "lightblue", 
-    	borderwidth = 2,
-    	relief = "ridge",
-    	font = ("Mincho", 28))
-    sidebar.place(x = 0, y = 100, width = 280, height = 620)    
+    ##Book Borrow Button
+    bookBorrowButton = Button(loansMenu,
+        text = "Book Borrow",
+        font = ("calibre", 30, "bold"),
+        fg = "lavender blush",
+        bg = "dodgerBlue2",
+        command = openBorrow)
 
-    homeButton = Button(loansMenu,
-                        text = "Back",
-                         width=10,
-                         height=2,
-                         bg="AntiqueWhite",
-                         command=goHome)
-    homeButton.place(x=660, y=200, width=150, height=50)
+    bookBorrowButton.place(x=580, y=240, width=650, height=100)
 
+    ##Book Return Button
+    bookReturnButton = Button(loansMenu,
+        text = "Book Return",
+        font = ("calibre", 30, "bold"),
+        fg = "lavender blush",
+        bg = "dodgerBlue2",
+        command = openReturn)
 
-    buttonBorrow = Button(loansMenu,
-    					text = "Borrow",
-                         width=25,
-                         height=5,
-                         bg="indianred",
-                         command=openBorrow)
-    buttonBorrow.place(x=360, y=400, width=250, height=100)
+    bookReturnButton.place(x=580, y=360, width=650, height=100)
+    
+    ##Back Button
+    backButton = Button(loansMenu,
+        text = "Back",
+        font = ("calibre", 15, "bold"),
+        fg = "grey39",
+        bg = "snow3",
+        command = goHome)
+    backButton.place(x=220, y=650, width=140, height=40)
 
-
-    buttonReturn = Button(loansMenu,
-                          text = "Return",
-                          width=25,
-                          height=5,
-                          bg="aquamarine",
-                          command=openReturn)
-    buttonReturn.place(x=960, y=400, width=250, height=100)
-
-## Loans Borrow Page
+############################################
+## Loans 2 - Book Borrow 
+############################################
 def destroyLoansBorrowMenu():
     loansBorrowMenu.destroy()
 
@@ -113,82 +113,64 @@ def loansBorrowMenuFunc():
     	messagebox.showerror(
        		"Filler Error",
         	"Error: Function not complete yet!")
+    	
+    ## Information Header
+    loansBorrowLabel = Label(loansBorrowMenu,
+                       text = "To Borrow a Book, Please Enter Information Below",
+                       font =("calibre", 20, "bold"),
+                       bg = "LightSteelBlue2")
+    loansBorrowLabel.place(x=0, y=0, width=1280, height=80);
 
-    topleftheader = Label(loansBorrowMenu,
-    	text = "BT2102",
-    	bg = "lightblue",
-    	borderwidth = 2,
-    	relief = "solid",
-    	font = ("Mincho", 40))
-    topleftheader.place(x = 0, y = 0, width = 280, height = 100)
+    ## Book Accession Num Input Field
+    loansBorrowAccNumLabel = Label(loansBorrowMenu,
+                              text = "Book Accession Number",
+                              font = ("calibre", 15),
+                              bg = "powder blue")
+    loansBorrowAccNumLabel.place(x=50, y=250, width=220, height=80)
 
-    topbar = Label(loansBorrowMenu,
-    	text = "ALS",
-    	bg = "lightblue", 
-    	borderwidth = 2,
-    	relief = "ridge",
-    	font = ("Mincho", 40))
-    topbar.place(x = 280, y = 0, width = 1000, height = 100)
+    global loansBorrowAccNumEntry
+    loansBorrowAccNumEntry = Entry(loansBorrowMenu,
+                        font = ("calibre", 10, "italic"),
+                        fg = "blue2")
+    loansBorrowAccNumEntry.place(x=320, y=270, width=700, height=30)
 
-    sidebar = Label(loansBorrowMenu,
-    	text = "Loans",
-    	bg = "lightblue", 
-    	borderwidth = 2,
-    	relief = "ridge",
-    	font = ("Mincho", 28))
-    sidebar.place(x = 0, y = 100, width = 280, height = 620)   
+    ## MembershipId Input Field
+    loansBorrowMemberIdLabel = Label(loansBorrowMenu,
+                              text = "MembershipId",
+                              font = ("calibre", 15),
+                              bg = "LightSkyBlue2")
+    loansBorrowMemberIdLabel.place(x=50, y=400, width=220, height=80)
 
-    titleLabel = Label(loansBorrowMenu,
-	    text="Book Borrowing",
-	    bg="cornsilk",
-	    font=("Mincho", 24))
-    titleLabel.place(x=360, y=180)
+    global loansBorrowMemberIdEntry
+    loansBorrowMemberIdEntry = Entry(loansBorrowMenu,
+                        font = ("calibre", 10, "italic"),
+                        fg = "blue2")
+    loansBorrowMemberIdEntry.place(x=320, y=420, width=700, height=30)
 
+    ## Book Borrow Button
+    loansBorrowBookButton = Button(loansBorrowMenu,
+        text = "Borrow",
+        font = ("calibre", 10, "bold"),
+        fg = "black",
+        bg = "plum2",
+        command = borrowBook)
+    loansBorrowBookButton.place(x=360, y=670, width=150, height=40)
 
-    bookNumLabel = Label(loansBorrowMenu,
-                         text="Please Insert Book Accession Number")
-    bookNumLabel.place(x=460, y=300)
-
-
-    bookNumEntry = Entry(loansBorrowMenu)
-    bookNumEntry.place(x=760, y=300)
-
-    memberIdLabel = Label(loansBorrowMenu,
-                          text="Please Insert Member Id")
-    memberIdLabel.place(x=460, y=400)
-
-
-    memberIdEntry = Entry(loansBorrowMenu)
-    memberIdEntry.place(x=760, y=400)
-
-    borrowBookButton = Button(
-        loansBorrowMenu,
-        text="Borrow",
-	width=8,
-	height=2,
-	command=borrowBook)
-    borrowBookButton.place(x=660, y=500, width=250, height=100)
-
-    homeButton = Button(
-	loansBorrowMenu,
-	text = "Home",
-        width=5,
-        height=2,
-        bg="AntiqueWhite",
-        command=goHome)
-    homeButton.place(x=810, y=100, width=150, height=50)
-
+    ##Back Button
     backButton = Button(loansBorrowMenu,
-    	text = "Back",
-    	width=10,
-    	height=2,
-    	bg="AntiqueWhite",
-    	command=navFromLoansBorrowToLoans)
-    backButton.place(x=560, y=100, width=150, height=50)
+        text = "Back",
+        font = ("calibre", 15, "bold"),
+        fg = "grey39",
+        bg = "snow3",
+        command = navFromLoansBorrowToLoans)
+    backButton.place(x=860, y=670, width=150, height=40)
 
 
 
-## Loans Return Page
+
+############################################
+## Loans 3 - Book Returns 
+############################################
 def destroyLoansReturnMenu():
     loansReturnMenu.destroy()
 
@@ -201,7 +183,7 @@ def navFromLoansReturnToLoans():
 def loansReturnMenuFunc():
     global loansReturnMenu
     loansReturnMenu = Toplevel()
-    loansReturnMenu.title("Borrow a Book")
+    loansReturnMenu.title("Return a Book")
     loansReturnMenu.geometry("1280x720")
 
     def returnBook():
@@ -219,68 +201,56 @@ def loansReturnMenuFunc():
             "Filler Error",
             "Error: Function not complete yet!")
 
-    topleftheader = Label(loansReturnMenu,
-    	text = "BT2102",
-    	bg = "lightblue",
-    	borderwidth = 2,
-    	relief = "solid",
-    	font = ("Mincho", 40))
-    topleftheader.place(x = 0, y = 0, width = 280, height = 100)
+    ## Information Header
+    loansReturnLabel = Label(loansReturnMenu,
+                       text = "To Return a Book, Please Enter Information Below",
+                       font =("calibre", 20, "bold"),
+                       bg = "LightSteelBlue2")
+    loansReturnLabel.place(x=0, y=0, width=1280, height=80);
 
-    topbar = Label(loansReturnMenu,
-    	text = "ALS",
-    	bg = "lightblue", 
-    	borderwidth = 2,
-    	relief = "ridge",
-    	font = ("Mincho", 40))
-    topbar.place(x = 280, y = 0, width = 1000, height = 100)
+    ## Book Accession Num Input Field
+    loansReturnAccNumLabel = Label(loansReturnMenu,
+                              text = "Book Accession Number",
+                              font = ("calibre", 15),
+                              bg = "powder blue")
+    loansReturnAccNumLabel.place(x=50, y=250, width=220, height=80)
 
-    sidebar = Label(loansReturnMenu,
-    	text = "Loans",
-    	bg = "lightblue", 
-    	borderwidth = 2,
-    	relief = "ridge",
-    	font = ("Mincho", 28))
-    sidebar.place(x = 0, y = 100, width = 280, height = 620)   
+    global loansReturnAccNumEntry
+    loansReturnAccNumEntry = Entry(loansReturnMenu,
+                        font = ("calibre", 10, "italic"),
+                        fg = "blue2")
+    loansReturnAccNumEntry.place(x=320, y=270, width=700, height=30)
 
-    titleLabel = Label(loansReturnMenu,
-	    text="Book Returning",
-	    bg="cornsilk",
-	    font=("Mincho", 24))
-    titleLabel.place(x=360, y=180)
+    ## Return Date Field
+    loansReturnDateLabel = Label(loansReturnMenu,
+                              text = "Return Date",
+                              font = ("calibre", 15),
+                              bg = "LightSkyBlue2")
+    loansReturnDateLabel.place(x=50, y=400, width=220, height=80)
 
+    global loansReturnDateEntry
+    loansReturnDateEntry = Entry(loansReturnMenu,
+                        font = ("calibre", 10, "italic"),
+                        fg = "blue2")
+    loansReturnDateEntry.place(x=320, y=420, width=700, height=30)
 
-    bookNumLabel = Label(loansReturnMenu,
-                         text="Please Insert Book Accession Number")
-    bookNumLabel.place(x=460, y=300)
+    ## Book Return Button
+    returnBookButton = Button(loansReturnMenu,
+        text = "Return",
+        font = ("calibre", 10, "bold"),
+        fg = "black",
+        bg = "plum2",
+        command = returnBook)
+    returnBookButton.place(x=360, y=670, width=150, height=40)
 
-
-    bookNumEntry = Entry(loansReturnMenu)
-    bookNumEntry.place(x=760, y=300)
-
-    returnBookButton = Button(
-        loansReturnMenu,
-        text="Confirm",
-	width=8,
-	height=2,
-	command=returnBook)
-    returnBookButton.place(x=660, y=500, width=250, height=100)
-
-    homeButton = Button(loansReturnMenu,
-	text = "Home",
-        width=5,
-        height=2,
-        bg="AntiqueWhite",
-        command=goHome)
-    homeButton.place(x=810, y=100, width=150, height=50)
-
+    ## Back Button
     backButton = Button(loansReturnMenu,
-    	text = "Back",
-    	width=10,
-    	height=2,
-    	bg="AntiqueWhite",
-    	command=navFromLoansReturnToLoans)
-    backButton.place(x=560, y=100, width=150, height=50)
+        text = "Back",
+        font = ("calibre", 15, "bold"),
+        fg = "grey39",
+        bg = "snow3",
+        command = navFromLoansReturnToLoans)
+    backButton.place(x=860, y=670, width=150, height=40)
 
 
 ## Dont delete - used to start the app

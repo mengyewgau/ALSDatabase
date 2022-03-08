@@ -6,7 +6,7 @@ from PIL import ImageTk, Image
 window = Tk()
 
 
-## Loans Landing Page
+## Reports Landing Page
 def destroyReportsMenu():
     reportsMenu.destroy()
 
@@ -240,11 +240,11 @@ def bookSearchMenuFunc():
         return
     
     ## Information Header
-    reportsLabel = Label(bookSearchMenu,
+    bookSearchMenuLabel = Label(bookSearchMenu,
                        text = "Please Enter Requested Information Below",
                        font =("calibre", 20, "bold"),
                        bg = "LightSteelBlue2")
-    reportsLabel.place(x=0, y=0, width=1280, height=80);
+    bookSearchMenuLabel.place(x=0, y=0, width=1280, height=80);
                          
 
     ## Book Title Input Field
@@ -315,7 +315,7 @@ def bookSearchMenuFunc():
     ## Book Search Button
     bookSearchButton = Button(bookSearchMenu,
         text = "Search",
-        font = ("Arial", 10, "bold"),
+        font = ("calibre", 10, "bold"),
         fg = "black",
         bg = "plum2",
         command = searchForBook)
@@ -355,25 +355,25 @@ def booksOnLoanToMemberMenuFunc():
         return
     
     ## Information Header
-    reportsLabel = Label(booksOnLoanToMemberMenu,
-                       text = "Books on Loan to Member",
-                       font =("calibre", 20, "bold"),
-                       bg = "LightSteelBlue2")
-    reportsLabel.place(x=0, y=0, width=1280, height=80);
+    booksOnLoanToMemberLabel = Label(booksOnLoanToMemberMenu,
+                                     text = "Books on Loan to Member",
+                                     font =("calibre", 20, "bold"),
+                                     bg = "LightSteelBlue2")
+    booksOnLoanToMemberLabel.place(x=0, y=0, width=1280, height=80);
                          
 
     ## MembershipId Input Field
-    booksOnLoanToMemberTitleLabel = Label(booksOnLoanToMemberMenu,
+    booksOnLoanToMemberIdLabel = Label(booksOnLoanToMemberMenu,
                               text = "MembershipId",
                               font = ("calibre", 15),
                               bg = "LightSkyBlue2")
-    booksOnLoanToMemberTitleLabel.place(x=50, y=150, width=200, height=80)
+    booksOnLoanToMemberIdLabel.place(x=50, y=150, width=200, height=80)
 
-    global booksOnLoanToMemberTitleEntry
-    booksOnLoanToMemberTitleEntry = Entry(booksOnLoanToMemberMenu,
+    global booksOnLoanToMemberIdEntry
+    booksOnLoanToMemberIdEntry = Entry(booksOnLoanToMemberMenu,
                         font = ("calibre", 10, "italic"),
                         fg = "blue2")
-    booksOnLoanToMemberTitleEntry.place(x=300, y=170, width=700, height=30)
+    booksOnLoanToMemberIdEntry.place(x=300, y=170, width=700, height=30)
 
     ## Member Search Button
     booksOnLoanToMemberSearchButton = Button(booksOnLoanToMemberMenu,
