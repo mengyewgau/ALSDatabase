@@ -1,5 +1,5 @@
 import sqlalchemy as db
-engine = db.create_engine('mysql+pymysql://root:poto0702@127.0.0.1:3306/als')
+engine = db.create_engine('mysql+pymysql://root:password@127.0.0.1:3306/alsdatabase')
 
 #mysql+pymysql://<USERNAME>:<PASSWORD>@<HOST>/<DATABASENAME>
 
@@ -16,8 +16,43 @@ engine = db.create_engine('mysql+pymysql://root:poto0702@127.0.0.1:3306/als')
 ##  -> username will be the same result as SELECT CURRENT_USER();
 ##  -> ip address will be put under host
 
-q = "SELECT * FROM als.member LIMIT 0,5"
-rs = engine.execute(q)
-for i in rs:
-    print(i)
+## Creation
 
+membershipId = "A101A"
+memName = "Hermione Granger"
+memFace = "Science"
+memPhone = "33336663"
+memEmail = "flying@als.edu"
+
+##try:
+##    createMem = 'INSERT INTO member VALUES ("{0}","{1}", "{2}", "{3}", "{4}", 5.00)'.format(membershipId,
+##                                                                                            memName,
+##                                                                                            memFace,
+##                                                                                            memPhone,
+##                                                                                            memEmail)
+##    engine.execute(createMem)
+##except:
+##    print("Creation Error")
+
+
+## Deletion
+fine = -1
+retrieveFine = 'SELECT currFine FROM member WHERE membershipId = "{0}"'.format(membershipId)
+fineResult = engine.execute(retrieveFine)
+for n in fineResult:
+    fine = n[0]
+
+if fine == 0:
+    deleteMem = 'DELETE FROM member WHERE membershipId="{0}" and currFine=0.00'.format(membershipId)
+    engine.execute(deleteMem)
+else:
+    print("Deletion Error")
+
+
+## Updating Records
+
+q = "SELECT * FROM member LIMIT 0,5"
+rs = engine.execute(q)
+
+for r in rs:
+    print(r)
