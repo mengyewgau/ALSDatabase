@@ -1,4 +1,4 @@
-import tkinter as tk
+from tkinter import *
 from PIL import ImageTk, Image
 
 ##Book Landing Window###########################################################
@@ -9,21 +9,21 @@ def destroyBookMenu():
 def createBookMenu():
     ##Book Page Background
     global bookMenu
-    bookMenu = tk.Toplevel()
+    bookMenu = Toplevel()
     bookMenu.geometry("1280x750");
     bookMenu.configure(bg="Slategray2")
 
     ##Book Page Header
-    bookLabel = tk.Label(bookMenu,
+    bookLabel = Label(bookMenu,
                          text = "Please select one of the following options:",
                          font=("calibre", 20, "bold"),
                          bg = "Slategray1")
     bookLabel.place(x=0,y=0, width=1280, height=80)
 
     ##Book Image Leftmost Label
-    displayBookIm = tk.Label(bookMenu,
+    displayBookIm = Label(bookMenu,
                              image=memIm);
-    displayBookText = tk.Label(bookMenu,
+    displayBookText = Label(bookMenu,
                              text = "Books",
                              font = ("calibre", 30, "italic", "bold"),
                              fg = "lavender",
@@ -32,7 +32,7 @@ def createBookMenu():
     displayBookText.place(x=160, y=560, width = 250, height = 70);
 
     ##Acquisition Button
-    buttonAcquisition = tk.Button(bookMenu,
+    buttonAcquisition = Button(bookMenu,
         text = "Acquisition",
         font = ("calibre", 30, "bold"),
         fg = "lavender blush",
@@ -42,7 +42,7 @@ def createBookMenu():
     buttonAcquisition.place(x=580, y=250, width=650, height=100)
 
     ##Withdrawal Button
-    buttonWithdrawal = tk.Button(bookMenu,
+    buttonWithdrawal = Button(bookMenu,
         text = "Withdrawal",
         font = ("calibre", 30, "bold"),
         fg = "lavender blush",
@@ -52,7 +52,7 @@ def createBookMenu():
     buttonWithdrawal.place(x=580, y=450, width=650, height=100)
 
     ##Back Button
-    buttonBack = tk.Button(bookMenu,
+    buttonBack = Button(bookMenu,
         text = "Back",
         font = ("calibre", 15, "bold"),
         fg = "grey39",
@@ -72,19 +72,19 @@ def destroyAcqError():
     
 def createAcqError():
     global acqError
-    acqError = tk.Toplevel()
+    acqError = Toplevel()
     acqError.geometry("500x500")
     acqError.configure(bg = "firebrick1")
 
     ## Error Message
-    createAcqErrorLabel1 = tk.Label(acqError,           
+    createAcqErrorLabel1 = Label(acqError,           
                        text = "ERROR!",
                        font =("calibre", 40, "bold"),
                        bg = "firebrick4",
                        fg = "gold")
     createAcqErrorLabel1.place(x=25, y=20, width=450, height=80);
 
-    createAcqErrorLabel2 = tk.Label(acqError,           
+    createAcqErrorLabel2 = Label(acqError,           
                        text = "Book Already Added;\nDuplicate, Missing or\nIncomplete fields.",
                        font =("calibre", 20, "bold"),
                        bg = "firebrick1",
@@ -92,7 +92,7 @@ def createAcqError():
     createAcqErrorLabel2.place(x=25, y=120, width=450, height=200);
 
     ## Error Back Button
-    buttonAcqBack = tk.Button(acqError,
+    buttonAcqBack = Button(acqError,
         text = "Back",
         font = ("calibre", 15, "bold"),
         fg = "grey39",
@@ -106,19 +106,19 @@ def destroySuccessAcq():
     
 def createSuccessAcq():
     global successAcq
-    successAcq = tk.Toplevel()
+    successAcq = Toplevel()
     successAcq.geometry("500x500")
     successAcq.configure(bg = "limegreen")
 
     ## Success Message
-    createAcqSuccessLabel1 = tk.Label(successAcq,           
+    createAcqSuccessLabel1 = Label(successAcq,           
                        text = "SUCCESS!",
                        font =("calibre", 40, "bold"),
                        bg = "green yellow",
                        fg = "black")
     createAcqSuccessLabel1.place(x=25, y=20, width=450, height=80);
 
-    createAcqSucessLabel2 = tk.Label(successAcq,           
+    createAcqSucessLabel2 = Label(successAcq,           
                        text = "New Book added in Library",
                        font =("calibre", 20, "bold"),
                        bg = "limegreen",
@@ -126,7 +126,7 @@ def createSuccessAcq():
     createAcqSucessLabel2.place(x=25, y=120, width=450, height=200);
 
     ## Success Back Button
-    buttonAcqBack = tk.Button(successAcq,
+    buttonAcqBack = Button(successAcq,
         text = "Back",
         font = ("calibre", 15, "bold"),
         fg = "grey39",
@@ -140,19 +140,19 @@ def destroySuccessWith():
 
 def createSuccessWith():
     global successWith
-    successWith = tk.Toplevel()
+    successWith = Toplevel()
     successWith.geometry("500x500")
     successWith.configure(bg = "limegreen")
 
     ## Success Message
-    createWithSuccessLabel1 = tk.Label(successWith,           
+    createWithSuccessLabel1 = Label(successWith,           
                        text = "SUCCESS!",
                        font =("calibre", 40, "bold"),
                        bg = "green yellow",
                        fg = "black")
     createWithSuccessLabel1.place(x=25, y=20, width=450, height=80);
 
-    createWithSuccessLabel2 = tk.Label(successWith,           
+    createWithSuccessLabel2 = Label(successWith,           
                        text = "Book withdrawn from Library",
                        font =("calibre", 20, "bold"),
                        bg = "limegreen",
@@ -160,7 +160,7 @@ def createSuccessWith():
     createWithSuccessLabel2.place(x=25, y=120, width=450, height=200);
 
     ## Success Back Button
-    buttonWithBack = tk.Button(successWith,
+    buttonWithBack = Button(successWith,
         text = "Back",
         font = ("calibre", 15, "bold"),
         fg = "grey39",
@@ -194,26 +194,26 @@ def submitAcq():
     
 def createBookAcquisition():
     global bookAcq
-    bookAcq = tk.Toplevel()
+    bookAcq = Toplevel()
     bookAcq.geometry("1280x750")
     bookAcq.configure(bg = "LightSteelBlue1")
 
     ## Information Header
-    createAcqHeader = tk.Label(bookAcq,
+    createAcqHeader = Label(bookAcq,
                        text = "Please fill in the information below for a new book acquisition",
                        font =("calibre", 20, "bold"),
                        bg = "LightSteelBlue2")
     createAcqHeader.place(x=0, y=0, width=1280, height=80);
 
     ## Accession Number Input Field
-    accInputLabel = tk.Label(bookAcq,
+    accInputLabel = Label(bookAcq,
                               text = "Accession Number",
                               font = ("calibre", 15),
                               bg = "SkyBlue2")
     accInputLabel.place(x=50, y=100, width=200, height=80)
 
     global accAcqEntry
-    accAcqEntry = tk.Entry(bookAcq,
+    accAcqEntry = Entry(bookAcq,
                         font = ("calibre", 10, "italic"),
                         fg = "blue2")
 
@@ -221,72 +221,72 @@ def createBookAcquisition():
                          
 
     ## Book Title Input Field
-    bookTitleLabel = tk.Label(bookAcq,
+    bookTitleLabel = Label(bookAcq,
                               text = "Title",
                               font = ("calibre", 15),
                               bg = "LightSkyBlue2")
     bookTitleLabel.place(x=50, y=200, width=200, height=80)
 
     global bookTitleEntry
-    bookTitleEntry = tk.Entry(bookAcq,
+    bookTitleEntry = Entry(bookAcq,
                         font = ("calibre", 10, "italic"),
                         fg = "blue2")
     bookTitleEntry.place(x=300, y=220, width=700, height=30)
                          
     ## Authors Input Field
-    authorInputLabel = tk.Label(bookAcq,
+    authorInputLabel = Label(bookAcq,
                               text = "Authors",
                               font = ("calibre", 15),
                               bg = "powder blue")
     authorInputLabel.place(x=50, y=300, width=200, height=80)
 
     global authorEntry
-    authorEntry = tk.Entry(bookAcq,
+    authorEntry = Entry(bookAcq,
                         font = ("calibre", 10, "italic"),
                         fg = "blue2")
     authorEntry.place(x=300, y=320, width=700, height=30)
 
     ## ISBN Input Field
-    ISBNInputLabel = tk.Label(bookAcq,
+    ISBNInputLabel = Label(bookAcq,
                               text = "ISBN",
                               font = ("calibre", 15),
                               bg = "LightBlue1")
     ISBNInputLabel.place(x=50, y=400, width=200, height=80)
 
     global ISBNEntry
-    ISBNEntry = tk.Entry(bookAcq,
+    ISBNEntry = Entry(bookAcq,
                         font = ("calibre", 10, "italic"),
                         fg = "blue2")
     ISBNEntry.place(x=300, y=420, width=700, height=30)
 
     ## Publisher Input Field
-    publisherInputLabel = tk.Label(bookAcq,
+    publisherInputLabel = Label(bookAcq,
                               text = "Publisher",
                               font = ("calibre", 15),
                               bg = "LightCyan2")
     publisherInputLabel.place(x=50, y=500, width=200, height=80)
 
     global publisherEntry
-    publisherEntry = tk.Entry(bookAcq,
+    publisherEntry = Entry(bookAcq,
                         font = ("calibre", 10, "italic"),
                         fg = "blue2")
     publisherEntry.place(x=300, y=520, width=700, height=30)
 
     ## Publication Year Input Field
-    publicationYearInputLabel = tk.Label(bookAcq,
+    publicationYearInputLabel = Label(bookAcq,
                               text = "Publication Year",
                               font = ("calibre", 15),
                               bg = "CadetBlue1")
     publicationYearInputLabel.place(x=50, y=600, width=200, height=80)
 
     global publicationYearEntry
-    publicationYearEntry = tk.Entry(bookAcq,
+    publicationYearEntry = Entry(bookAcq,
                         font = ("calibre", 10, "italic"),
                         fg = "blue2")
     publicationYearEntry.place(x=300, y=620, width=700, height=30)
 
     ## Acquisition Submit Button
-    buttonSubmitAcq = tk.Button(bookAcq,
+    buttonSubmitAcq = Button(bookAcq,
         text = "Submit\nNew\nBook",
         font = ("Arial", 20, "bold"),
         fg = "ghost white",
@@ -296,7 +296,7 @@ def createBookAcquisition():
     
 
     ## Back Button
-    buttonAcqBack = tk.Button(bookAcq,
+    buttonAcqBack = Button(bookAcq,
         text = "Back",
         font = ("calibre", 15, "bold"),
         fg = "grey39",
@@ -322,19 +322,19 @@ def destroySubmitWith():
     
 def submitWith():
     global submitWith
-    submitWith = tk.Toplevel()
+    submitWith = Toplevel()
     submitWith.geometry("500x400")
     submitWith.configure(bg = "honeydew3")
 
     ## Information Header
-    submitWithHeader = tk.Label(submitWith,
+    submitWithHeader = Label(submitWith,
                        text = "Please Confirm Details\nto Be Correct:",
                        font =("calibre", 20, "bold"),
                        bg = "honeydew3")
     submitWithHeader.place(x=0, y=0, width=500, height=80);
 
     ## Withdraw Submit Button
-    buttonConfirmWith = tk.Button(submitWith,
+    buttonConfirmWith = Button(submitWith,
         text = "Withdraw Book",
         font = ("Arial", 10, "bold"),
         fg = "black",
@@ -343,7 +343,7 @@ def submitWith():
     buttonConfirmWith.place(x=80, y=350, width=150, height=40)
 
     ## Back Button
-    buttonWithBack = tk.Button(submitWith,
+    buttonWithBack = Button(submitWith,
         text = "Back",
         font = ("calibre", 15, "bold"),
         fg = "grey39",
@@ -354,33 +354,33 @@ def submitWith():
     
 def createBookWithdrawal():
     global bookWith
-    bookWith = tk.Toplevel()
+    bookWith = Toplevel()
     bookWith.geometry("1280x750")
     bookWith.configure(bg = "azure2")
 
     ## Information Header
-    createWithHeader = tk.Label(bookWith,
+    createWithHeader = Label(bookWith,
                        text = "To Remove Outdated Books From System, Please Enter Required Information Below:",
                        font =("calibre", 20, "bold"),
                        bg = "azure3")
     createWithHeader.place(x=0, y=0, width=1280, height=80);
 
     ## Accession Number Input Field
-    accInputLabel = tk.Label(bookWith,
+    accInputLabel = Label(bookWith,
                               text = "Accession Number",
                               font = ("calibre", 15),
                               bg = "SkyBlue2")
     accInputLabel.place(x=200, y=100, width=200, height=80)
 
     global accWithEntry
-    accWithEntry = tk.Entry(bookWith,
+    accWithEntry = Entry(bookWith,
                         font = ("calibre", 10, "italic"),
                         fg = "blue2")
 
     accWithEntry.place(x=500, y=120, width=700, height=30)
 
     ## Withdraw Submit Button
-    buttonSubmitWith = tk.Button(bookWith,
+    buttonSubmitWith = Button(bookWith,
         text = "Withdraw Book",
         font = ("Arial", 30, "bold"),
         fg = "ghost white",
@@ -389,7 +389,7 @@ def createBookWithdrawal():
     buttonSubmitWith.place(x=500, y=300, width=300, height=100)
 
     ## Back Button
-    buttonWithBack = tk.Button(bookWith,
+    buttonWithBack = Button(bookWith,
         text = "Back",
         font = ("calibre", 15, "bold"),
         fg = "grey39",
@@ -401,16 +401,16 @@ def createBookWithdrawal():
 
 ## LANDING PAGE ################################################################
 
-window = tk.Tk()
+window = Tk()
 window.geometry("1280x750");
 window.configure(bg="white")
 
 ##EMPTY FUNCTION
 def empty():
     global emptyPage
-    emptyPage = tk.Toplevel()
+    emptyPage = Toplevel()
     emptyPage.geometry("1280x820")
-    emptyPageLabel = tk.Label(emptyPage,
+    emptyPageLabel = Label(emptyPage,
                              text = "Under Construction",
                              font=("Arial, 20"),
                              borderwidth = 4,
@@ -419,7 +419,7 @@ def empty():
     emptyPageLabel.place(x=140, y=0, width=1000, height=200)
 
 ## (ALS) title centred in the screen
-titleLabel = tk.Label(window,
+titleLabel = Label(window,
                       text = "(ALS)",
                       font=("calibre, 40"),
                       bg="white")
@@ -428,10 +428,10 @@ titleLabel.place(x=0,y=20, width=1280, height=100)
 ## First row, leftmost button and icon
 global memIm
 memIm = ImageTk.PhotoImage(Image.open("membersIm.jpg").resize((250,200)))
-displayMemIm = tk.Label(window, image=memIm);
+displayMemIm = Label(window, image=memIm);
 displayMemIm.place(x=200, y=120, width=250, height=200);
 
-buttonMember = tk.Button(window,
+buttonMember = Button(window,
                          text = "Membership",
                          font=("Arial, 18"),
                          bg="indianred",
@@ -441,10 +441,10 @@ buttonMember.place(x=200, y=325, width=250, height=50)
 ## First row, middle button and icon
 global bookIm
 bookIm = ImageTk.PhotoImage(Image.open("booksIm.jpg").resize((250,200)))
-displayBkIm = tk.Label(window, image=bookIm);
+displayBkIm = Label(window, image=bookIm);
 displayBkIm.place(x=515, y=120, width=250, height=200);
 
-buttonBooks = tk.Button(window,
+buttonBooks = Button(window,
                         text = "Books",
                         font=("Arial, 18"),
                         bg="aquamarine",
@@ -455,10 +455,10 @@ buttonBooks.place(x=515, y=325, width=250, height=50)
 ## First row, rightmost button and icon
 global loanIm
 loanIm = ImageTk.PhotoImage(Image.open("loansIm.jpg").resize((250,200)))
-displayLoanIm = tk.Label(window, image=loanIm);
+displayLoanIm = Label(window, image=loanIm);
 displayLoanIm.place(x=830, y=120, width=250, height=200);
 
-buttonLoans = tk.Button(window,
+buttonLoans = Button(window,
                         text = "Loans",
                         font=("Arial, 18"),
                         bg="darksalmon",
@@ -468,10 +468,10 @@ buttonLoans.place(x=830, y=325, width=250, height=50)
 ## Second row, leftmost button and icon
 global reserveIm
 reserveIm = ImageTk.PhotoImage(Image.open("reserveIm.jpg").resize((250,200)))
-displayResIm = tk.Label(window, image=reserveIm);
+displayResIm = Label(window, image=reserveIm);
 displayResIm.place(x=200, y=410, width=250, height=200);
 
-buttonReservation = tk.Button(window,
+buttonReservation = Button(window,
                               text = "Reservation",
                               font=("Arial, 18"),
                               bg="darkseagreen")
@@ -480,10 +480,10 @@ buttonReservation.place(x=200, y=615, width=250, height=50)
 ## Second row, middle button and icon
 global fineIm
 fineIm = ImageTk.PhotoImage(Image.open("fineIm.jpg").resize((250,200)))
-displayFineIm = tk.Label(window, image=fineIm);
+displayFineIm = Label(window, image=fineIm);
 displayFineIm.place(x=515, y=410, width=250, height=200);
 
-buttonFines = tk.Button(window,
+buttonFines = Button(window,
                         text = "Fines",
                         font=("Arial, 18"),
                         bg="cadetblue")
@@ -493,10 +493,10 @@ buttonFines.place(x=515, y=615, width=250, height=50)
 ## Second row, rightmost button and icon
 global reportIm
 reportIm = ImageTk.PhotoImage(Image.open("reportIm.jpg").resize((250,200)))
-displayReportIm = tk.Label(window, image=reportIm);
+displayReportIm = Label(window, image=reportIm);
 displayReportIm.place(x=830, y=410, width=250, height=200);
 
-buttonReports = tk.Button(window,
+buttonReports = Button(window,
                           text = "Reports",
                           font=("Arial, 18"),
                           bg="peru")
