@@ -1,5 +1,68 @@
 import tkinter as tk
 from PIL import ImageTk, Image
+def destroyCreateSc():
+    createSuc.destroy();
+    
+def creationSuccess():
+    global createSuc
+    createSuc = Toplevel();
+    createSuc.configure(bg="chartreuse2")
+    createSuc.geometry("450x400")
+    ## Error Title Label
+    errorTitle = Label(createSuc,
+                        text = "Error!",
+                        font=("Arial", 40,"bold"),
+                        bg="chartreuse2",
+                        fg="Black");
+    errorTitle.place(x=0, y=100, width=450, height=100);
+    ## Error Message Label
+    errorMsg = Label(createSuc,
+                        text = "ALS Membership created.",
+                        font=("Arial", 16,"bold"),
+                        bg="chartreuse2",
+                        fg="black");
+    errorMsg.place(x=0, y=200, width=450, height=100);
+    ## Return to
+    errorMsg = Button(createSuc,
+                         text="Back to \n Create \n Function",
+                         font=("Arial", 12,"bold"),
+                         borderwidth=8,
+                         bg="aquamarine",
+                         command=destroyCreateSc);
+    errorMsg.place(x=125, y=300, width=200, height=80)
+##  Member Creation Failed Popup
+def destroyCreateFail():
+    createFail.destroy();
+def creationFail():
+    global createFail
+    createFail = Toplevel();
+    createFail.configure(bg="red")
+    createFail.geometry("450x400")
+
+    ## Error Title Label
+    errorTitle = Label(createFail,
+                        text = "Error!",
+                        font=("Arial", 40,"bold"),
+                        bg="red",
+                        fg="yellow");
+    errorTitle.place(x=0, y=100, width=450, height=100);
+
+    ## Error Message Label
+    errorMsg = Label(createFail,
+                        text = "Member already exist; Missing or\n Incomplete fields.",
+                        font=("Arial", 16,"bold"),
+                        bg="red",
+                        fg="yellow");
+    errorMsg.place(x=0, y=200, width=450, height=100);
+
+    ## Return to
+    errorMsg = Button(createFail,
+                         text="Back to \n Create \n Function",
+                         font=("Arial", 12,"bold"),
+                         borderwidth=6,
+                         bg="aquamarine",
+                         command=destroyCreateFail);
+    errorMsg.place(x=125, y=300, width=200, height=80)
    
 def destroyDelSc():
     delSc.destroy();

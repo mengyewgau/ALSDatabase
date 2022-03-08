@@ -422,7 +422,6 @@ def memberUpdateLanding():
                                 font=("Arial, 18"),
                                 bg="aquamarine");
     updateTitleLabel.place(x=0, y=0, width=750, height=180);
-
     ## Membership Id Input Field
     updateMemberIdLabel = Label(updateInputId,
                                    text = "Membership ID",
@@ -430,11 +429,8 @@ def memberUpdateLanding():
                                    bg="DodgerBlue3",
                                    fg="white")
     updateMemberIdLabel.place(x=0, y=200, width=300, height=100);
-    
-    entryMemberId = Entry(updateInputId,
-                             font=('Arial',10,'normal'))
+    entryMemberId = Entry(updateInputId, font=('Arial',10,'normal'))
     entryMemberId.place(x=300, y=260, width=450, height=40);
-
     ## Membership Update Button
     updateRecordButton = Button(updateInputId,
                                    text = "Update Member",
@@ -442,13 +438,12 @@ def memberUpdateLanding():
                                    bg="aquamarine",
                                    command=openUpdateMenu)
     updateRecordButton.place(x=80, y=320, width=250, height=80);
-
     ## Return to Main Menu Button
     backButton = Button(updateInputId,
                            text = "Back to Main Menu",
                            font=("Arial, 18"),
                            bg="aquamarine",
-                           command=goToMemMenuFromUpdate)
+                           command=goToMemMenuFromUpdateLanding)
     backButton.place(x=420, y=320, width=250, height=80);
 
 ### Update Member Details Window ###
@@ -472,35 +467,35 @@ def updateMenu():
 
     ## Title Label
     updateTitleLabel = Label(updateMemMenu,
-                                text = "Please Enter Requested Information Below:",
-                                font=("Arial, 18"),                                
-                                bg="aquamarine");
+                             text = "Please Enter Requested Information Below:",
+                             font=("Arial, 18"),
+                             bg="aquamarine");
     updateTitleLabel.place(x=0, y=0, width=750, height=200);
 
-    ## Membership Id Input Field
+    # Membership Id Input Field
     updateMemberIdLabel = Label(updateMemMenu,
-                                   text = "Membership ID",
-                                   borderwidth=2,
-                                   relief="solid",
-                                   font=("Arial, 10"),
-                                   bg="SlateBlue")
+                                text = "Membership ID",
+                                borderwidth=2,
+                                relief="solid",
+                                font=("Arial, 10"),
+                                bg="SlateBlue")
     updateMemberIdLabel.place(x=0, y=200, width=300, height=100);
     
     enteredMemberId = Label(updateMemMenu,
-                                   text = "A01234567B",
-                                   borderwidth=2,
-                                   relief="solid",
-                                   font=("Arial, 12"))
+                            text = "A01234567B",
+                            borderwidth=2,
+                            relief="solid",
+                            font=("Arial, 12"))
     enteredMemberId.place(x=300, y=260, width=450, height=40);
 
     ## Membership Name Input Field
     updateNameLabel = Label(updateMemMenu,
-                               text = "Name",
-                               font=("Arial, 10"),
-                               borderwidth=2,
-                               relief="solid",
-                               bg="SlateBlue",
-                               fg="white")
+                            text = "Name",
+                            font=("Arial, 10"),
+                            borderwidth=2,
+                            relief="solid",
+                            bg="SlateBlue",
+                            fg="white")
     updateNameLabel.place(x=0, y=300, width=300, height=100);
 
     entryName = Entry(updateMemMenu,
@@ -509,16 +504,14 @@ def updateMenu():
 
     ## Membership Faculty Input Field
     updateFacLabel = Label(updateMemMenu,
-                              text = "Faculty",
-                              font=("Arial, 10"),
-                              borderwidth=2,
-                              relief="solid",
-                              bg="SlateBlue",
-                              fg="white")
+                           text = "Faculty",
+                           font=("Arial, 10"),
+                           borderwidth=2,
+                           relief="solid",
+                           bg="SlateBlue",
+                           fg="white")
     updateFacLabel.place(x=0, y=400, width=300, height=100);
-
-    entryFac = Entry(updateMemMenu,
-                        font=('Arial',10,'normal'))
+    entryFac = Entry(updateMemMenu, font=('Arial',10,'normal'))
     entryFac.place(x=300, y=460, width=450, height=40);
 
 
