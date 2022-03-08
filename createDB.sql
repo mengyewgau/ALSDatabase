@@ -1,2 +1,1 @@
-CREATE DATABASE ALSInterface;
-#Test
+CREATE DATABASE ALSDatabase
