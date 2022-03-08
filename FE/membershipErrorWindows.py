@@ -1,40 +1,107 @@
 import tkinter as tk
 from PIL import ImageTk, Image
-
-def destroyButton():
-    delFailWin.destroy();
+   
+def destroyDelSc():
+    delSc.destroy();
     
+def delSuccess():
+    global delSc
+    delSc = tk.Toplevel();
+    delSc.configure(bg="chartreuse2")
+    delSc.geometry("450x400")
 
-def deletionFailWindow():
-    global delFailWin
-    delFailWin = tk.Toplevel();
-    delFailWin.configure(bg="red")
-    delFailWin.geometry("450x450")
+    # ## Title Label
+    titleLabel = tk.Label(delSc,
+                                text = "Please Confirm Details to \n Be Correct",
+                                font=("Arial", 20, "bold"),
+                                bg="chartreuse2");
+    titleLabel.place(x=0, y=0, width=450, height=140);
+
+    ## Membership Id Field
+    memberIdLabel = tk.Label(delSc,
+                             text = "Membership ID (placeholder)",
+                             font=("Arial, 14"),
+                             bg="chartreuse2",
+                             anchor="w")
+    memberIdLabel.place(x=50, y=100, width=380, height=40);
+    ## Membership Name Field
+    nameLabel = tk.Label(delSc,
+                         text = "Name (placeholder)",
+                         font=("Arial, 14"),
+                         bg="chartreuse2",
+                         anchor="w")
+    nameLabel.place(x=50, y=140, width=380, height=40);
+    ## Membership Faculty Input Field
+    facLabel = tk.Label(delSc,
+                        text = "Faculty (placeholder)",
+                        font=("Arial, 14"),
+                        bg="chartreuse2",
+                        anchor="w")
+    facLabel.place(x=50, y=180, width=380, height=40);
+    ## Membership Phone Input Field
+    phoneLabel = tk.Label(delSc,
+                          text = "Phone (placeholder)",
+                          font=("Arial, 14"),
+                          bg="chartreuse2",
+                          anchor="w")
+    phoneLabel.place(x=50, y=220, width=380, height=40);
+        ## Membership Faculty Input Field
+    emailLabel = tk.Label(delSc,
+                          text = "Email (placeholder)",
+                          font=("Arial, 14"),
+                          bg="chartreuse2",
+                          anchor="w")
+    emailLabel.place(x=50, y=260, width=380, height=40);
+    ## TO IMPLEMENT SQL FUNCTION FOR CONFIRM DELETION
+    confirm = tk.Button(delSc,
+                        text="Confirm \n Deletion",
+                        font=("Arial", 12,"bold"),
+                        borderwidth=6,
+                        bg="aquamarine",
+                        command=destroyDelSc);
+    confirm.place(x=20, y=300, width=180, height=80)
+    ## Return to
+    returnTo = tk.Button(delSc,
+                         text="Back to \n Delete \n Function",
+                         font=("Arial", 12,"bold"),
+                         borderwidth=6,
+                         bg="aquamarine",
+                         command=destroyDelSc);
+    returnTo.place(x=250, y=300, width=180, height=80)
+def destroyDelFail():
+    delFail.destroy();
+    
+def delFail():
+    global delFail
+    delFail = tk.Toplevel();
+    delFail.configure(bg="red")
+    delFail.geometry("450x400")
 
     ## Error Title Label
-    errorTitle = tk.Label(delFailWin,
+    errorTitle = tk.Label(delFail,
                         text = "Error!",
                         font=("Arial", 40,"bold"),
                         bg="red",
                         fg="yellow");
-    errorTitle.place(x=0, y=0, width=450, height=250);
+    errorTitle.place(x=0, y=100, width=450, height=100);
 
     ## Error Message Label
-    errorMsg = tk.Label(delFailWin,
-                        text = "Book already added;\n Duplicate, Missing or\n Incomplete fields.",
-                        font=("Arial", 12,"bold"),
+    errorMsg = tk.Label(delFail,
+                        text = "Member has loans,\n reservations or outstanding fines.",
+                        font=("Arial", 16,"bold"),
                         bg="red",
                         fg="yellow");
-    errorMsg.place(x=0, y=250, width=450, height=100);
+    errorMsg.place(x=0, y=200, width=450, height=100);
 
     ## Return to
-    errorMsg = tk.Button(delFailWin,
-                         text="Back to Acquisition Function",
+    errorMsg = tk.Button(delFail,
+                         text="Back to \n Delete \n Function",
                          font=("Arial", 12,"bold"),
-                         borderwidth=4,
+                         borderwidth=6,
                          bg="aquamarine",
-                         command=destroyButton);
-    errorMsg.place(x=75, y=350, width=300, height=80)
-    
+                         command=destroyDelFail);
+    errorMsg.place(x=125, y=300, width=200, height=80)
 
-deletionFailWindow()
+
+
+delFail()
