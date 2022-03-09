@@ -22,7 +22,6 @@ CREATE TABLE Book(
 CREATE TABLE BookAuthor(
 	accessionNum 	VARCHAR(25) 	NOT NULL,
     authorName		VARCHAR(50) 	NOT NULL,
-    PRIMARY KEY 	(authorName),
     FOREIGN key 	(accessionNum) REFERENCES Book(accessionNum));
     
 CREATE TABLE Payment( 
@@ -35,11 +34,11 @@ CREATE TABLE Payment(
 CREATE TABLE Reservation(
 	accessionNum 	VARCHAR(25) 	NOT NULL,
     membershipId	VARCHAR(50) 	NOT NULL,
-    date	 		DATETIME		NOT NULL,
+    date	 		DATE			NOT NULL,
     PRIMARY KEY 	(accessionNum, membershipId),
     FOREIGN key 	(accessionNum) 
-		REFERENCES Book(accessionNum)
-        ON DELETE CASCADE,
+		REFERENCES 	Book(accessionNum)
+        ON DELETE RESTRICT,
     FOREIGN key 	(membershipId) 
-		REFERENCES Member(membershipId)
+		REFERENCES 	Member(membershipId)
         ON DELETE CASCADE);
