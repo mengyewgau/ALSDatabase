@@ -12,7 +12,7 @@ CREATE TABLE Book(
 	ISBN			VARCHAR(25)		NOT NULL,
 	publisher		VARCHAR(25)		NOT NULL,
 	pubYear  		YEAR			NOT NULL,
-    date			DATE,
+    dueDate			DATE,
     membershipId	VARCHAR(25),
 	PRIMARY KEY 	(accessionNum),
     FOREIGN KEY 	(membershipId) 
@@ -22,7 +22,9 @@ CREATE TABLE Book(
 CREATE TABLE BookAuthor(
 	accessionNum 	VARCHAR(25) 	NOT NULL,
     authorName		VARCHAR(50) 	NOT NULL,
-    FOREIGN key 	(accessionNum) REFERENCES Book(accessionNum));
+    FOREIGN key 	(accessionNum) 
+		REFERENCES Book(accessionNum)
+        ON DELETE CASCADE);
     
 CREATE TABLE Payment( 
 	membershipId	VARCHAR(25)		NOT NULL,
