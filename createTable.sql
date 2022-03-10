@@ -1,37 +1,46 @@
 CREATE TABLE Member(  
-     membershipId	VARCHAR(25)    NOT NULL,
-     name			VARCHAR(25)   NOT NULL,
-     memberFac        VARCHAR(25)   NOT NULL,
-     memberPhone VARCHAR(8) NOT NULL,
-     memberEmail    VARCHAR(25)	NOT NULL,
-	 PRIMARY KEY (membershipId)); 
+     membershipId	VARCHAR(25)   	NOT NULL,
+     memberName		VARCHAR(25)   	NOT NULL,
+     memberFac      VARCHAR(25)   	NOT NULL,
+     memberPhone    VARCHAR(8)	  	NOT NULL,
+     memberEmail 	VARCHAR(25)		NOT NULL,
+     currFine		INT 			NOT NULL,
+	 PRIMARY KEY 	(membershipId)); 
 CREATE TABLE Book( 
-     ISBN    VARCHAR(25)    NOT NULL,
-     bookTitle    VARCHAR(4)    NOT NULL,
-	 publisher     VARCHAR(5)    NOT NULL,
-     pubYear  YEAR,
-     PRIMARY KEY (ISBN));
-CREATE TABLE BookCopy(
-     accessionNum    VARCHAR(25)    NOT NULL,
-     ISBN       VARCHAR(25)	NOT NULL,
-     PRIMARY KEY (accessionNum),
-     FOREIGN KEY (ISBN) REFERENCES Book(ISBN));
-CREATE TABLE Fine( 
-     membershipId     VARCHAR(5)    NOT NULL,
-     paidDate       DATE NOT NULL,
-     paidAmt       DECIMAL(2) NOT NULL,
-     PRIMARY KEY (membershipId, paidDate, paidAmt),
-     FOREIGN KEY (membershipId) REFERENCES Member(membershipId)); 
-CREATE TABLE Author(
-     authorName     VARCHAR(25)    NOT NULL,
-     authorId       VARCHAR(25) NOT NULL,
-#     ISBN       VARCHAR(25),
-	 PRIMARY KEY (authorId));
-#     FOREIGN KEY (ISBN)    REFERENCES Book(ISBN));
-
-CREATE TABLE BookAuthors(
-	ISBN VARCHAR(25) NOT NULL,
-    authorId VARCHAR(25) NOT NULL,
-    primary key (ISBN, authorId),
-    foreign key (ISBN) REFERENCES Book(ISBN),
-    FOREIGN KEY (authorId) references Author(authorId));
+	accessionNum	VARCHAR(25) 	NOT NULL,
+    title    		VARCHAR(25)		NOT NULL, #Authors will have to be referenced directly to BookAuthor
+	ISBN			VARCHAR(25)		NOT NULL,
+	publisher		VARCHAR(25)		NOT NULL,
+	pubYear  		YEAR			NOT NULL,
+    dueDate			DATE,
+    membershipId	VARCHAR(25),
+	PRIMARY KEY 	(accessionNum),
+    FOREIGN KEY 	(membershipId) 
+		REFERENCES Member(membershipId)
+        ON DELETE RESTRICT); 
+    
+CREATE TABLE BookAuthor(
+	accessionNum 	VARCHAR(25) 	NOT NULL,
+    authorName		VARCHAR(50) 	NOT NULL,
+    FOREIGN key 	(accessionNum) 
+		REFERENCES Book(accessionNum)
+        ON DELETE CASCADE);
+    
+CREATE TABLE Payment( 
+	membershipId	VARCHAR(25)		NOT NULL,
+	paidDate 		DATE 			NOT NULL,
+    paidAmt			INT 			NOT NULL,
+    PRIMARY KEY 	(membershipId, paidDate, paidAmt),
+    FOREIGN KEY 	(membershipId) REFERENCES Member(membershipId)); 
+    
+CREATE TABLE Reservation(
+	accessionNum 	VARCHAR(25) 	NOT NULL,
+    membershipId	VARCHAR(50) 	NOT NULL,
+    date	 		DATE			NOT NULL,
+    PRIMARY KEY 	(accessionNum, membershipId),
+    FOREIGN key 	(accessionNum) 
+		REFERENCES 	Book(accessionNum)
+        ON DELETE RESTRICT,
+    FOREIGN key 	(membershipId) 
+		REFERENCES 	Member(membershipId)
+        ON DELETE CASCADE);
