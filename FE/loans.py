@@ -99,20 +99,108 @@ def loansBorrowMenuFunc():
     loansBorrowMenu.title("Borrow a Book")
     loansBorrowMenu.geometry("1280x720")
 
+    def closeBorrowDialog():
+        loansBorrowMenu.lift()
+        borrowConfirmDialog.destroy()
+
+    ############################################
+    ## Loans 2.1 - Borrow Confirmation 
+    ############################################
     def borrowBook():
-    	messagebox.showerror(
-        	"Filler Error",
-        	"Error: Function not complete yet!")
+        global borrowConfirmDialog
+        borrowConfirmDialog = Toplevel()
+        borrowConfirmDialog.geometry("750x800")
+        borrowConfirmDialog.configure(bg = "limegreen")
 
-    def isBookBorrowed():
-    	messagebox.showerror(
-        	"Filler Error",
-        	"Error: Function not complete yet!")
+        def isBookBorrowed():
+            return True
 
-    def canMemberBorrow():
-    	messagebox.showerror(
-       		"Filler Error",
-        	"Error: Function not complete yet!")
+        def isLoanQuotaExceeded():
+            return False
+
+        def doesMemberHaveFine():
+            return False
+
+
+        def confirmBorrowBook():
+            if isBookBorrowed():
+                messagebox.showerror(
+                    "Book Borrow Error",
+                    "Error: Book currently on Loan until: {0}".format("DD/MM/YYYY"))
+                closeBorrowDialog()
+            else:
+                if isLoanQuotaExceeded():
+                    if doesMemberHaveFine():
+                        messagebox.showerror(
+                            "Book Borrow Error",
+                            "Error: Member has outstanding fines")
+                        closeBorrowDialog()
+                    else:
+                        ## Borrowing SQL call goes here
+                        closeBorrowDialog()
+                else:
+                    messagebox.showerror(
+                            "Book Borrow Error",
+                            "Error: Member loan quota exceeded")
+                    closeBorrowDialog()
+ 
+
+        ## Information Header
+        borrowConfirmTitleLabel = Label(borrowConfirmDialog,
+                           text = "Confirm Loan Details",
+                           font =("calibre", 32, "bold"),
+                           bg = "LightSteelBlue2")
+        borrowConfirmTitleLabel.place(x=0, y=0, width=750, height=100);
+
+        ## Accession Number Field
+        borrowConfirmAccInputLabel = Label(borrowConfirmDialog,
+                                  text = "Accession Number: {0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        borrowConfirmAccInputLabel.place(x=100, y=100, width=550, height=80)   
+
+        ## Book Title Field
+        borrowConfirmBookTitleLabel = Label(borrowConfirmDialog,
+                                  text = "Book Title: {0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        borrowConfirmBookTitleLabel.place(x=100, y=200, width=550, height=80)
+                             
+        ## MembershipId Field
+        borrowMembershipIdLabel = Label(borrowConfirmDialog,
+                                  text = "Membership ID: {0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        borrowMembershipIdLabel.place(x=100, y=300, width=550, height=80)
+
+        ## Member Name Field
+        borrowMemberNameLabel = Label(borrowConfirmDialog,
+                                  text = "Membership ID: {0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        borrowMemberNameLabel.place(x=100, y=400, width=550, height=80)
+
+        ## Borrow Due Date Field
+        borrowDueDateLabel = Label(borrowConfirmDialog,
+                                  text = "Return Date: {0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        borrowDueDateLabel.place(x=50, y=500, width=550, height=80)
+
+
+        ## Confirm Return Button
+        borrowBookCloseButton = Button(borrowConfirmDialog,
+            text = "Confirm\nReturn",
+            font = ("Arial", 20, "bold"),
+            fg = "ghost white",
+            bg = "magenta2",
+            command = confirmBorrowBook)
+        borrowBookCloseButton.place(x=300, y=700, width=150, height=80)
     	
     
 
@@ -159,6 +247,9 @@ def loansReturnMenuFunc():
         loansReturnMenu.lift()
         returnConfirmDialog.destroy()
 
+    ############################################
+    ## Loans 3.1 - Return Confirmation 
+    ############################################
     def returnBook():
         global returnConfirmDialog
         returnConfirmDialog = Toplevel()
@@ -232,15 +323,6 @@ def loansReturnMenuFunc():
                                   bg = "SkyBlue2")
         returnDateLabel.place(x=50, y=500, width=550, height=80)
 
-
-
-        ## Fine Field
-        returnFineLabel = Label(returnConfirmDialog,
-                                  text = "Fine Amt: ${0}"
-                                           .format("Sample"),
-                                  font = ("calibre", 15),
-                                  bg = "SkyBlue2")
-        returnFineLabel.place(x=100, y=600, width=550, height=80)
 
         ## Confirm Return Button
         returnBookCloseButton = Button(returnConfirmDialog,
