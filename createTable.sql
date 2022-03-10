@@ -4,7 +4,7 @@ CREATE TABLE Member(
      memberFac      VARCHAR(25)   	NOT NULL,
      memberPhone    VARCHAR(8)	  	NOT NULL,
      memberEmail 	VARCHAR(25)		NOT NULL,
-     currFine		DECIMAL(2) 		NOT NULL,
+     currFine		INT 			NOT NULL,
 	 PRIMARY KEY 	(membershipId)); 
 CREATE TABLE Book( 
 	accessionNum	VARCHAR(25) 	NOT NULL,
@@ -12,28 +12,35 @@ CREATE TABLE Book(
 	ISBN			VARCHAR(25)		NOT NULL,
 	publisher		VARCHAR(25)		NOT NULL,
 	pubYear  		YEAR			NOT NULL,
-    borrowDate		DATE,
+    dueDate			DATE,
     membershipId	VARCHAR(25),
 	PRIMARY KEY 	(accessionNum),
-    FOREIGN KEY 	(membershipId) REFERENCES Member(membershipId)); 
+    FOREIGN KEY 	(membershipId) 
+		REFERENCES Member(membershipId)
+        ON DELETE RESTRICT); 
     
 CREATE TABLE BookAuthor(
 	accessionNum 	VARCHAR(25) 	NOT NULL,
     authorName		VARCHAR(50) 	NOT NULL,
-    PRIMARY KEY 	(authorName),
-    FOREIGN key 	(accessionNum) REFERENCES Book(accessionNum));
+    FOREIGN key 	(accessionNum) 
+		REFERENCES Book(accessionNum)
+        ON DELETE CASCADE);
     
 CREATE TABLE Payment( 
 	membershipId	VARCHAR(25)		NOT NULL,
 	paidDate 		DATE 			NOT NULL,
-    paidAmt			DECIMAL(2) 		NOT NULL,
+    paidAmt			INT 			NOT NULL,
     PRIMARY KEY 	(membershipId, paidDate, paidAmt),
     FOREIGN KEY 	(membershipId) REFERENCES Member(membershipId)); 
     
 CREATE TABLE Reservation(
 	accessionNum 	VARCHAR(25) 	NOT NULL,
     membershipId	VARCHAR(50) 	NOT NULL,
-    reservationDate DATETIME			NOT NULL,
+    date	 		DATE			NOT NULL,
     PRIMARY KEY 	(accessionNum, membershipId),
-    FOREIGN key 	(accessionNum) REFERENCES Book(accessionNum),
-    FOREIGN key 	(membershipId) REFERENCES Member(membershipId));
+    FOREIGN key 	(accessionNum) 
+		REFERENCES 	Book(accessionNum)
+        ON DELETE RESTRICT,
+    FOREIGN key 	(membershipId) 
+		REFERENCES 	Member(membershipId)
+        ON DELETE CASCADE);
