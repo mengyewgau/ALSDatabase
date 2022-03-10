@@ -255,7 +255,7 @@ def createBook(accessionNum, title, ISBN, publisher, pubYear):
         createQuery = createBk + bookValues
         engine.execute(createQuery)
     except:
-        print("Creation Error")
+        raise Exception("Creation Error")
 def createBkAuthor(accessionNum, author):
     createAuthor = 'INSERT INTO BookAuthor VALUES("{0}", "{1}")'.format(accessionNum,
                                                                         author)
@@ -353,7 +353,6 @@ def outsFineReport():
 def booksLoanedToMemReport(membershipId):
     queryBookInfo = "SELECT accessionNum, title, ISBN, publisher, pubYear FROM Book WHERE membershipId = '{0}'".format(membershipId)
     bookInfoList = engine.execute(queryBookInfo).fetchall()
-    print(bookInfoList)
     for index in range(len(bookInfoList)):
         acNum = bookInfoList[index][0];
         queryAuthors = "SELECT GROUP_CONCAT(authorName, ' ') FROM BookAuthor WHERE accessionNum='{0}'".format(acNum);
