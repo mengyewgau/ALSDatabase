@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from PIL import ImageTk, Image
+import backendSQL as sqlFuncs
+from datetime import datetime
 
 window = Tk()
 
@@ -99,50 +101,46 @@ def loansBorrowMenuFunc():
     loansBorrowMenu.title("Borrow a Book")
     loansBorrowMenu.geometry("1280x720")
 
-    def closeBorrowDialog():
+    def closeConfirmBorrowDialog():
         loansBorrowMenu.lift()
         borrowConfirmDialog.destroy()
 
+    def borrowBook():
+        print('in Borrow Book')
+        result = sqlFuncs.confirmLoan(loansBorrowMemberIdEntry.get(),
+                                      loansBorrowAccNumEntry.get(),
+                                      datetime.today().strftime('%Y/%m/%d'))
+        openConfirmBookDialog(result)
+        
     ############################################
     ## Loans 2.1 - Borrow Confirmation 
     ############################################
-    def borrowBook():
+    def openConfirmBookDialog(sqlResult):
         global borrowConfirmDialog
         borrowConfirmDialog = Toplevel()
         borrowConfirmDialog.geometry("750x800")
         borrowConfirmDialog.configure(bg = "limegreen")
 
-        def isBookBorrowed():
-            return True
-
-        def isLoanQuotaExceeded():
-            return False
-
-        def doesMemberHaveFine():
-            return False
-
-
         def confirmBorrowBook():
-            if isBookBorrowed():
-                messagebox.showerror(
-                    "Book Borrow Error",
-                    "Error: Book currently on Loan until: {0}".format("DD/MM/YYYY"))
-                closeBorrowDialog()
-            else:
-                if isLoanQuotaExceeded():
-                    if doesMemberHaveFine():
-                        messagebox.showerror(
-                            "Book Borrow Error",
-                            "Error: Member has outstanding fines")
-                        closeBorrowDialog()
-                    else:
-                        ## Borrowing SQL call goes here
-                        closeBorrowDialog()
+            try:
+                sqlFuncs.loanBook(sqlResult[2][0],
+                                   sqlResult[0][0],
+                                   sqlResult[1])
+                closeConfirmBorrowDialog()
+            except Exception as excp:
+                if excp.args[0] == "Loan Quota Exceeded":
+                    messagebox.showerror(
+                        "Book Borrow Error",
+                        "Error: Member loan quota exceeded")
+                
+                elif excp.args[0] == "Outstanding Fines":
+                    messagebox.showerror(
+                        "Book Borrow Error",
+                        "Error: Member has outstanding fines")
                 else:
                     messagebox.showerror(
-                            "Book Borrow Error",
-                            "Error: Member loan quota exceeded")
-                    closeBorrowDialog()
+                        "Book Borrow Error",
+                        "Error: {0}".format(excp.args[0]))
  
 
         ## Information Header
@@ -155,7 +153,7 @@ def loansBorrowMenuFunc():
         ## Accession Number Field
         borrowConfirmAccInputLabel = Label(borrowConfirmDialog,
                                   text = "Accession Number: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[0][0]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
         borrowConfirmAccInputLabel.place(x=100, y=100, width=550, height=80)   
@@ -163,44 +161,61 @@ def loansBorrowMenuFunc():
         ## Book Title Field
         borrowConfirmBookTitleLabel = Label(borrowConfirmDialog,
                                   text = "Book Title: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[0][1]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
         borrowConfirmBookTitleLabel.place(x=100, y=200, width=550, height=80)
+
+        ## Borrow Date Field
+        borrowDateLabel = Label(borrowConfirmDialog,
+                                  text = "Return Date: {0}"
+                                           .format(sqlResult[1]),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        borrowDateLabel.place(x=100, y=300, width=550, height=80)
                              
         ## MembershipId Field
         borrowMembershipIdLabel = Label(borrowConfirmDialog,
                                   text = "Membership ID: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[2][0]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
-        borrowMembershipIdLabel.place(x=100, y=300, width=550, height=80)
+        borrowMembershipIdLabel.place(x=100, y=400, width=550, height=80)
 
         ## Member Name Field
         borrowMemberNameLabel = Label(borrowConfirmDialog,
                                   text = "Membership ID: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[2][1]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
-        borrowMemberNameLabel.place(x=100, y=400, width=550, height=80)
+        borrowMemberNameLabel.place(x=100, y=500, width=550, height=80)
 
         ## Borrow Due Date Field
         borrowDueDateLabel = Label(borrowConfirmDialog,
                                   text = "Return Date: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[3]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
-        borrowDueDateLabel.place(x=100, y=500, width=550, height=80)
+        borrowDueDateLabel.place(x=100, y=600, width=550, height=80)
 
 
-        ## Confirm Return Button
-        borrowBookCloseButton = Button(borrowConfirmDialog,
-            text = "Confirm\nReturn",
+        ## Confirm Borrow Button
+        borrowBookConfirmButton = Button(borrowConfirmDialog,
+            text = "Confirm\nBorrow",
             font = ("Arial", 20, "bold"),
             fg = "ghost white",
             bg = "magenta2",
             command = confirmBorrowBook)
-        borrowBookCloseButton.place(x=300, y=700, width=150, height=80)
+        borrowBookConfirmButton.place(x=200, y=700, width=150, height=80)
+        
+        ## Close Return Button
+        borrowBookCloseButton = Button(borrowConfirmDialog,
+            text = "Exit",
+            font = ("Arial", 20, "bold"),
+            fg = "ghost white",
+            bg = "magenta2",
+            command = closeConfirmBorrowDialog)
+        borrowBookCloseButton.place(x=400, y=700, width=150, height=80)
 
     ## Information Header
     loansBorrowLabel = Label(loansBorrowMenu,

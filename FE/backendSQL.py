@@ -52,12 +52,12 @@ def loanBook(membershipId, accessionNum, currDate):
 def confirmLoan(membershipId, accessionNum, currDate):
     ## Loan Confirmation Page
     bookLoanQuery = 'SELECT accessionNum, title FROM Book WHERE accessionNum="{0}"'.format(accessionNum);
-    bookInfo = engine.execute(bookLoanQuery).fetchone()[0]
+    bookInfo = engine.execute(bookLoanQuery).fetchone()
 
     derivedDueDate = datetime.strptime(currDate, "%Y/%m/%d") + timedelta(days=14)
     
     memberLoanQuery = "SELECT membershipId, memberName FROM Member WHERE membershipId='{0}'".format(membershipId);
-    memInfo = engine.execute(memberLoanQuery).fetchone()[0]
+    memInfo = engine.execute(memberLoanQuery).fetchone()
     
     return (bookInfo, currDate, memInfo, derivedDueDate.strftime("%Y/%m/%d"))
 
@@ -375,76 +375,76 @@ def dateDiff(endDate, startDate):
 
 ### TEST INPUT
 
-##print(booksLoanedToMemReport("A103A"))
-####print(confirmCancel("A103A", "A02", "2022/10/03"))
-##
-##id1 = "A101A"
-##n1 = "Hermione Granger"
-##f1 = "Science"
-##p1 = "33336663"
-##e1 = "flying@als.edu"
-##
-##id2 = "A102A"
-##n2 = "Ronald Ranger"
-##f2 = "BZA"
-##p2 = "12336663"
-##e2 = "bobo@als.edu"
-##
-##id3 = "A103A"
-##n3 = "Hairy Granger"
-##f3 = "Com"
-##p3 = "35234895"
-##e3 = "wand@als.edu"
-##
-##an1 = "A01"
-##t1 = "Animal Farm"
-##au1a = "George Orwell"
-##au1b = "Sim Lim Square"
-##i1 = "9790000000001"
-##pub1 = "Intra S.r.l.s."
-##py1 = "2021"
-##
-##an2 = "A02"
-##t2 = "Human Farm"
-##au2a = "George Bush"
-##au2b = "Jim Simp Square"
-##i2 = "9790000000002"
-##pub2 = "EPH"
-##py2 = "2015"
-##
-##an3 = "A03"
-##t3 = "Human Zoo"
-##au3a = "Big Bush"
-##au3b = "Kim Pimp Square"
-##i3 = "9790000000003"
-##pub3 = "Pearson"
-##py3 = "2008"
-####createMember(id1, n1, f1, p1, e1)
-####createMember(id2, n2, f2, p2, e2)
-####createMember(id3, n3, f3, p3, e3)
-####
-####deleteMember(id3)
-####
-####
-####createBook(an1, t1, i1, pub1,py1)
-####createBkAuthor(an1, au1a)
-####createBkAuthor(an1, au1b)
-####createBook(an2, t2, i2, pub2, py2)
-####createBkAuthor(an2, au2a)
-####createBkAuthor(an2, au2b)
-####createBook(an3, t3, i3, pub3, py3)
-####createBkAuthor(an3, au3a)
-####createBkAuthor(an3, au3b)
-##
-##
-####updateMember(id1, n1, f1, p1, e3)
-####
-##
-####reserveBook(id3, an3, "2022/03/03")
-####reserveBook(id3, an2, "2022/03/03")
-##
-####print(loanBook(id2, an2, "2022/03/09"))
-######
-##
-####withdrawBook(an1)
-##
+# print(booksLoanedToMemReport("A103A"))
+# print(confirmCancel("A103A", "A02", "2022/10/03"))
+
+# id1 = "A101A"
+# n1 = "Hermione Granger"
+# f1 = "Science"
+# p1 = "33336663"
+# e1 = "flying@als.edu"
+
+# id2 = "A102A"
+# n2 = "Ronald Ranger"
+# f2 = "BZA"
+# p2 = "12336663"
+# e2 = "bobo@als.edu"
+
+# id3 = "A103A"
+# n3 = "Hairy Granger"
+# f3 = "Com"
+# p3 = "35234895"
+# e3 = "wand@als.edu"
+
+# an1 = "A01"
+# t1 = "Animal Farm"
+# au1a = "George Orwell"
+# au1b = "Sim Lim Square"
+# i1 = "9790000000001"
+# pub1 = "Intra S.r.l.s."
+# py1 = "2021"
+
+# an2 = "A02"
+# t2 = "Human Farm"
+# au2a = "George Bush"
+# au2b = "Jim Simp Square"
+# i2 = "9790000000002"
+# pub2 = "EPH"
+# py2 = "2015"
+
+# an3 = "A03"
+# t3 = "Human Zoo"
+# au3a = "Big Bush"
+# au3b = "Kim Pimp Square"
+# i3 = "9790000000003"
+# pub3 = "Pearson"
+# py3 = "2008"
+# createMember(id1, n1, f1, p1, e1)
+# createMember(id2, n2, f2, p2, e2)
+# createMember(id3, n3, f3, p3, e3)
+
+# deleteMember(id3)
+
+
+# createBook(an1, t1, i1, pub1,py1)
+# createBkAuthor(an1, au1a)
+# createBkAuthor(an1, au1b)
+# createBook(an2, t2, i2, pub2, py2)
+# createBkAuthor(an2, au2a)
+# createBkAuthor(an2, au2b)
+# createBook(an3, t3, i3, pub3, py3)
+# createBkAuthor(an3, au3a)
+# createBkAuthor(an3, au3b)
+
+
+# updateMember(id1, n1, f1, p1, e3)
+
+
+# reserveBook(id3, an3, "2022/03/03")
+# reserveBook(id3, an2, "2022/03/03")
+
+# print(loanBook(id2, an2, "2022/03/09"))
+# ##
+
+# withdrawBook(an1)
+
