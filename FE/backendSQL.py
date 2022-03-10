@@ -160,7 +160,7 @@ def confirmReservation(membershipId, accessionNum, reserveDate):
 def deleteMember(membershipId):
     currFine = checkFineValue(membershipId);
     if currFine > 0:
-        raise Exception('Member has loans, reservations or outstanding fines')
+        raise Exception('Member has loans and/or outstanding fines')
     try:
         deleteMember = 'DELETE FROM Member WHERE membershipId = "{0}"'.format(membershipId)
         engine.execute(deleteMember)
@@ -170,7 +170,10 @@ def deleteMember(membershipId):
 def confirmDeletion(membershipId):
     ## Return Deletion Confirmation Page
     queryMember = 'SELECT * FROM Member WHERE membershipId = "{0}"'.format(membershipId)
-    return engine.execute(queryMember).fetchone()[0:5]
+    if queryMember:
+        return engine.execute(queryMember).fetchone()[0:5]
+    else:
+        raise Exception("Member does not exist");
 
 ## Withdraw Book
 
@@ -179,8 +182,8 @@ def withdrawBook(accessionNum):
     if checkIfBookOnLoan(accessionNum):
         raise Exception("Books is on Loan");
     try:
-        deleteMember = 'DELETE FROM Book WHERE accessionNum = "{0}"'.format(accessionNum)
-        engine.execute(deleteMember)
+        withdrawBook = 'DELETE FROM Book WHERE accessionNum = "{0}"'.format(accessionNum)
+        engine.execute(withdrawBook)
     except:
         raise Exception("Book has reservations")
 
