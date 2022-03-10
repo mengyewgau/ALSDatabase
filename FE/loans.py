@@ -39,7 +39,7 @@ def loansMenuFunc():
                        bg = "Slategray1")
     reportsLabel.place(x=0, y=0, width=1280, height=80);
 
-    ##Reports Image Leftmost Label
+    ##Loans Image Leftmost Label
     global loansIm
     loansIm = ImageTk.PhotoImage(Image.open("loansIm.jpg").resize((250,200)))
     displayLoansIm = Label(loansMenu,
@@ -114,38 +114,7 @@ def loansBorrowMenuFunc():
        		"Filler Error",
         	"Error: Function not complete yet!")
     	
-    ## Information Header
-    loansBorrowLabel = Label(loansBorrowMenu,
-                       text = "To Borrow a Book, Please Enter Information Below",
-                       font =("calibre", 20, "bold"),
-                       bg = "LightSteelBlue2")
-    loansBorrowLabel.place(x=0, y=0, width=1280, height=80);
-
-    ## Book Accession Num Input Field
-    loansBorrowAccNumLabel = Label(loansBorrowMenu,
-                              text = "Book Accession Number",
-                              font = ("calibre", 15),
-                              bg = "powder blue")
-    loansBorrowAccNumLabel.place(x=50, y=250, width=220, height=80)
-
-    global loansBorrowAccNumEntry
-    loansBorrowAccNumEntry = Entry(loansBorrowMenu,
-                        font = ("calibre", 10, "italic"),
-                        fg = "blue2")
-    loansBorrowAccNumEntry.place(x=320, y=270, width=700, height=30)
-
-    ## MembershipId Input Field
-    loansBorrowMemberIdLabel = Label(loansBorrowMenu,
-                              text = "MembershipId",
-                              font = ("calibre", 15),
-                              bg = "LightSkyBlue2")
-    loansBorrowMemberIdLabel.place(x=50, y=400, width=220, height=80)
-
-    global loansBorrowMemberIdEntry
-    loansBorrowMemberIdEntry = Entry(loansBorrowMenu,
-                        font = ("calibre", 10, "italic"),
-                        fg = "blue2")
-    loansBorrowMemberIdEntry.place(x=320, y=420, width=700, height=30)
+    
 
     ## Book Borrow Button
     loansBorrowBookButton = Button(loansBorrowMenu,
@@ -186,20 +155,101 @@ def loansReturnMenuFunc():
     loansReturnMenu.title("Return a Book")
     loansReturnMenu.geometry("1280x720")
 
+    def closeReturnDialog():
+        loansReturnMenu.lift()
+        returnConfirmDialog.destroy()
+
     def returnBook():
-        messagebox.showerror(
-            "Filler Error",
-            "Error: Function not complete yet!")
+        global returnConfirmDialog
+        returnConfirmDialog = Toplevel()
+        returnConfirmDialog.geometry("750x800")
+        returnConfirmDialog.configure(bg = "limegreen")
 
-    def isBookBorrowed():
-        messagebox.showerror(
-            "Filler Error",
-            "Error: Function not complete yet!")
+        def isBookBorrowed():
+            return True
 
-    def isBookReturnedOnTime():
-        messagebox.showerror(
-            "Filler Error",
-            "Error: Function not complete yet!")
+        def isBookReturnedOnTime():
+            return False
+
+        def confirmReturnBook():
+            if isBookBorrowed():
+                if isBookReturnedOnTime():
+                    closeReturnDialog()
+                else:
+                    messagebox.showwarning(
+                        "Book Returned Late",
+                        "Warning: Book returned late, fine credited to member!")
+                    closeReturnDialog()
+            else:
+                messagebox.showerror(
+                "Book Return Error",
+                "Error: Book has not been borrowed")
+
+        ## Information Header
+        returnConfirmTitleLabel = Label(returnConfirmDialog,
+                           text = "Confirm Return Details",
+                           font =("calibre", 32, "bold"),
+                           bg = "LightSteelBlue2")
+        returnConfirmTitleLabel.place(x=0, y=0, width=750, height=100);
+
+        ## Accession Number Field
+        returnConfirmAccInputLabel = Label(returnConfirmDialog,
+                                  text = "Accession Number: {0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        returnConfirmAccInputLabel.place(x=100, y=100, width=550, height=80)   
+
+        ## Book Title Field
+        returnConfirmBookTitleLabel = Label(returnConfirmDialog,
+                                  text = "Book Title: {0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        returnConfirmBookTitleLabel.place(x=100, y=200, width=550, height=80)
+                             
+        ## MembershipId Field
+        returnMembershipIdLabel = Label(returnConfirmDialog,
+                                  text = "Membership ID: {0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        returnMembershipIdLabel.place(x=100, y=300, width=550, height=80)
+
+        ## Member Name Field
+        returnMemberNameLabel = Label(returnConfirmDialog,
+                                  text = "Membership ID: {0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        returnMemberNameLabel.place(x=100, y=400, width=550, height=80)
+
+        ## Return Date Field
+        returnDateLabel = Label(returnConfirmDialog,
+                                  text = "Return Date: {0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        returnDateLabel.place(x=50, y=500, width=550, height=80)
+
+
+
+        ## Fine Field
+        returnFineLabel = Label(returnConfirmDialog,
+                                  text = "Fine Amt: ${0}"
+                                           .format("Sample"),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        returnFineLabel.place(x=100, y=600, width=550, height=80)
+
+        ## Confirm Return Button
+        returnBookCloseButton = Button(returnConfirmDialog,
+            text = "Confirm\nReturn",
+            font = ("Arial", 20, "bold"),
+            fg = "ghost white",
+            bg = "magenta2",
+            command = confirmReturnBook)
+        returnBookCloseButton.place(x=300, y=700, width=150, height=80)
 
     ## Information Header
     loansReturnLabel = Label(loansReturnMenu,
