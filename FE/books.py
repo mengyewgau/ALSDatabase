@@ -339,6 +339,7 @@ def destroyBookWithdrawal():
 
 def confirmWith():
     createSuccessWith()
+    destroySubmitWith()
     #TO BE EDITED
 
 def destroySubmitWith():
@@ -376,11 +377,13 @@ def submitWith():
 
     buttonWithBack.place(x=280, y=350, width=150, height=40)
 
-def navFromBookAcqToBook():
+def navFromBookWithToBook():
     createBookMenu()
     destroyBookWithdrawal()
     bookMenu.lift()
     bookMenu.lift()
+
+
 
 def createBookWithdrawal():
     global bookWith
@@ -424,7 +427,7 @@ def createBookWithdrawal():
         font = ("calibre", 15, "bold"),
         fg = "grey39",
         bg = "snow3",
-        command = navFromBookAcqToBook)
+        command = navFromBookWithToBook)
 
     buttonWithBack.place(x=1100, y=600, width=140, height=40)
 ################################################################################
