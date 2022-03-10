@@ -190,7 +190,7 @@ def loansBorrowMenuFunc():
                                            .format("Sample"),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
-        borrowDueDateLabel.place(x=50, y=500, width=550, height=80)
+        borrowDueDateLabel.place(x=100, y=500, width=550, height=80)
 
 
         ## Confirm Return Button
@@ -201,8 +201,37 @@ def loansBorrowMenuFunc():
             bg = "magenta2",
             command = confirmBorrowBook)
         borrowBookCloseButton.place(x=300, y=700, width=150, height=80)
-    	
+
+    ## Information Header
+    loansBorrowLabel = Label(loansBorrowMenu,
+                       text = "To Borrow a Book, Please Enter Information Below",
+                       font =("calibre", 20, "bold"),
+                       bg = "LightSteelBlue2")
+    loansBorrowLabel.place(x=0, y=0, width=1280, height=80);
+
     
+    ## Book Accession Num Input Field
+    loansBorrowAccNumLabel = Label(loansBorrowMenu,
+                              text = "Book Accession Number",
+                              font = ("calibre", 15),
+                              bg = "powder blue")
+    loansBorrowAccNumLabel.place(x=50, y=250, width=220, height=80)
+    global loansBorrowAccNumEntry
+    loansBorrowAccNumEntry = Entry(loansBorrowMenu,
+                        font = ("calibre", 10, "italic"),
+                        fg = "blue2")
+    loansBorrowAccNumEntry.place(x=320, y=270, width=700, height=30)
+    ## MembershipId Input Field
+    loansBorrowMemberIdLabel = Label(loansBorrowMenu,
+                              text = "MembershipId",
+                              font = ("calibre", 15),
+                              bg = "LightSkyBlue2")
+    loansBorrowMemberIdLabel.place(x=50, y=400, width=220, height=80)
+    global loansBorrowMemberIdEntry
+    loansBorrowMemberIdEntry = Entry(loansBorrowMenu,
+                        font = ("calibre", 10, "italic"),
+                        fg = "blue2")
+    loansBorrowMemberIdEntry.place(x=320, y=420, width=700, height=30)
 
     ## Book Borrow Button
     loansBorrowBookButton = Button(loansBorrowMenu,
@@ -321,7 +350,7 @@ def loansReturnMenuFunc():
                                            .format("Sample"),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
-        returnDateLabel.place(x=50, y=500, width=550, height=80)
+        returnDateLabel.place(x=100, y=500, width=550, height=80)
 
 
         ## Confirm Return Button
