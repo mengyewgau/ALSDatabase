@@ -155,10 +155,13 @@ def openBookReservation():
                 if excp.args[0] == "Member has outstanding Fine":
                     fineAmount = sqlFunc.checkFineValue(sqlResult[2])
                     messagebox.showerror("Reservation Error", "Member has Outstanding Fine of: ${0}".format(fineAmount))
+                    destroyReservationConfirmDetailsPopUp()
                 elif excp.args[0] == "Member has exceed reservation quota":
                     messagebox.showerror("Reservation Error", "Member currently has 2 Books on Reservation")
+                    destroyReservationConfirmDetailsPopUp()
                 else:
-                    messagebox.showerror("Reservation Error", "Error: {0}".format(excp.args[0]))
+                    messagebox.showerror("Reservation Error", "Member has already reserved the book")
+                    destroyReservationConfirmDetailsPopUp()
 
         ## Title Label
         titleLabel = Label(confirmReservationDetails,
@@ -347,10 +350,11 @@ def openReservationCancellation():
         def confirmCancelReservation():
             try:
                 sqlFunc.cancelReservation(sqlResult[2], sqlResult[0])
-                destroyReservationConfirmDetailsPopUp()
+                destroyCancelConfirmDetailsPopUp()
                 cancelSuccessWindow()
                 cancelSuccess.lift()
             except Exception as excp:
+                destroyCancelConfirmDetailsPopUp()
                 messagebox.showerror("Cancellation Error", "Reservation does not exist")
 
         ## Title Label
@@ -363,35 +367,35 @@ def openReservationCancellation():
 
         ## Accession Number Field
         cancelAccessionLabel = Label(confirmCancellationDetails,
-                            text = "Accession Number: {0}",
+                            text = "Accession Number: {0}".format(sqlResult[0]),
                             font=("Arial, 14"),
                             bg="chartreuse2",
                             anchor="w")
         cancelAccessionLabel.place(x=50, y=100, width=380, height=40)
         ## Book Title Field
         cancelBookTitleLabel = Label(confirmCancellationDetails,
-                        text = "Book Title: (placeholder)",
+                        text = "Book Title: {0}".format(sqlResult[1]),
                         font=("Arial, 14"),
                         bg="chartreuse2",
                         anchor="w")
         cancelBookTitleLabel.place(x=50, y=140, width=380, height=40)
         ## Membership ID Field
         cancelMemIDLabel = Label(confirmCancellationDetails,
-                        text = "Membership ID: {0}",
+                        text = "Membership ID: {0}".format(sqlResult[2]),
                         font=("Arial, 14"),
                         bg="chartreuse2",
                         anchor="w")
         cancelMemIDLabel.place(x=50, y=180, width=380, height=40)
         ## Member Name Field
         cancelNameLabel = Label(confirmCancellationDetails,
-                        text = "Member Name: {0}",
+                        text = "Member Name: {0}".format(sqlResult[3]),
                         font=("Arial, 14"),
                         bg="chartreuse2",
                         anchor="w")
         cancelNameLabel.place(x=50, y=220, width=380, height=40)
         ## Cancellation Date Field
         cancelDateLabel = Label(confirmCancellationDetails,
-                        text = "Cancellation Date: {0}",
+                        text = "Cancellation Date: {0}".format(sqlResult[4]),
                         font=("Arial, 14"),
                         bg="chartreuse2",
                         anchor="w")
