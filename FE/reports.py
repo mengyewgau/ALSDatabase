@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from PIL import ImageTk, Image
+import backendSQL as sqlFuncs
 
 window = Tk()
 
@@ -11,10 +12,8 @@ def destroyReportsMenu():
     reportsMenu.destroy()
 
 def openBookSearch():
-    bookSearchMenuFunc()
-    destroyReportsMenu()
-    bookSearchMenu.lift()
-    bookSearchMenu.lift()
+    openChooseSearchField()
+    chooseSearchFieldMenu.lift()
 
 def openBooksOnLoan():
     booksOnLoanFunc()
@@ -224,93 +223,458 @@ def outstandingFinesFunc():
 def destroyBookSearchMenu():
     bookSearchMenu.destroy()
 
+def destroyBookSearchFieldMenu():
+    chooseSearchFieldMenu.destroy()
+
 def navFromBookSearchToReports():
     reportsMenuFunc()
     destroyBookSearchMenu()
     reportsMenu.lift()
     reportsMenu.lift()
 
-def bookSearchMenuFunc():
+
+############################################
+## Reports 1.1 - Book Search Field Selection 
+############################################
+def openChooseSearchField():
+    global chooseSearchFieldMenu
+    chooseSearchFieldMenu = Toplevel()
+    chooseSearchFieldMenu.title("Choose A Search Field")
+    chooseSearchFieldMenu.geometry("500x500")
+
+    def chooseTitleField():
+        bookSearchMenuFunc("Title")
+        destroyBookSearchFieldMenu()
+        destroyReportsMenu()
+        bookSearchMenu.lift()
+
+    def chooseAuthorField():
+        bookSearchMenuFunc("Author")
+        destroyBookSearchFieldMenu()
+        destroyReportsMenu()
+        bookSearchMenu.lift()
+
+    def chooseISBNField():
+        bookSearchMenuFunc("ISBN")
+        destroyBookSearchFieldMenu()
+        destroyReportsMenu()
+        bookSearchMenu.lift()
+
+    def choosePublisherField():
+        bookSearchMenuFunc("Publisher")
+        destroyBookSearchFieldMenu()
+        destroyReportsMenu()
+        bookSearchMenu.lift()
+
+    def choosePublishingYearField():
+        bookSearchMenuFunc("Publishing Year")
+        destroyBookSearchFieldMenu()
+        destroyReportsMenu()
+        bookSearchMenu.lift()
+
+    ## Information Header
+    bookSearchMenuLabel = Label(chooseSearchFieldMenu,
+                       text = "Please Choose a Search Field",
+                       font =("calibre", 20, "bold"),
+                       bg = "LightSteelBlue2")
+    bookSearchMenuLabel.place(x=0, y=0, width=500, height=80);
+
+    ## Book Search Title Button
+    bookSearchTitleButton = Button(chooseSearchFieldMenu,
+        text = "Title",
+        font = ("calibre", 10, "bold"),
+        fg = "black",
+        bg = "plum2",
+        command = chooseTitleField)
+    bookSearchTitleButton.place(x=90, y=150, width=150, height=50)
+
+    ## Book Search Author Button
+    bookSearchAuthorButton = Button(chooseSearchFieldMenu,
+        text = "Author",
+        font = ("calibre", 10, "bold"),
+        fg = "black",
+        bg = "plum2",
+        command = chooseAuthorField)
+    bookSearchAuthorButton.place(x=260, y=150, width=150, height=50)
+
+    ## Book Search ISBN Button
+    bookSearchISBNButton = Button(chooseSearchFieldMenu,
+        text = "ISBN",
+        font = ("calibre", 10, "bold"),
+        fg = "black",
+        bg = "plum2",
+        command = chooseISBNField)
+    bookSearchISBNButton.place(x=90, y=220, width=150, height=50)
+
+    ## Book Search Publisher Button
+    bookSearchPublisherButton = Button(chooseSearchFieldMenu,
+        text = "Publisher",
+        font = ("calibre", 10, "bold"),
+        fg = "black",
+        bg = "plum2",
+        command = choosePublisherField)
+    bookSearchPublisherButton.place(x=260, y=220, width=150, height=50)
+
+    ## Book Search Publication Year Button
+    bookSearchPublicationYearButton = Button(chooseSearchFieldMenu,
+        text = "Publication\nYear",
+        font = ("calibre", 10, "bold"),
+        fg = "black",
+        bg = "plum2",
+        command = choosePublishingYearField)
+    bookSearchPublicationYearButton.place(x=175, y=290, width=150, height=50)
+
+    ## Back Button
+    bookSearchFieldBackButton = Button(chooseSearchFieldMenu,
+        text = "Back",
+        font = ("calibre", 15, "bold"),
+        fg = "grey39",
+        bg = "snow3",
+        command = destroyBookSearchFieldMenu)
+    bookSearchFieldBackButton.place(x=200, y=400, width=100, height=50)
+
+def bookSearchMenuFunc(searchField):
     global bookSearchMenu
     bookSearchMenu = Toplevel()
     bookSearchMenu.title("Search a Book")
     bookSearchMenu.geometry("1280x720")
 
+    def closeSearchResultTable():
+        searchResultTable.destroy()
+        bookSearchMenu.lift()
+
+    def openSearchResultTable(result, currentPage):
+        global searchResultTable
+        searchResultTable = Toplevel()
+        searchResultTable.title("Search Results")
+        searchResultTable.geometry("1100x600")
+
+        numResultRows = len(result)
+        numPages = numResultRows/3
+
+        ## Information Header
+        searchResultInfoLabel = Label(searchResultTable,
+                                    text = "Search Results",
+                                    font =("calibre", 20, "bold"),
+                                    bg = "LightSteelBlue2")
+        searchResultInfoLabel.place(x=0, y=0, width=1100, height=80);
+
+        ########################
+        ## Table Headers
+        ########################
+        ## Acc Num
+        searchResultAccNumLabel = Label(searchResultTable,
+                                    text = "Accession Number",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=100,
+                                    justify="center")
+        searchResultAccNumLabel.place(x=20, y=100, width=150, height=80);
+
+        ## Title 
+        searchResultTitleLabel = Label(searchResultTable,
+                                    text = "Title",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=180,
+                                    justify="center")
+        searchResultTitleLabel.place(x=170, y=100, width=250, height=80);
+
+        ## Author
+        searchResultAuthorsLabel = Label(searchResultTable,
+                                    text = "Authors",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=180,
+                                    justify="center")
+        searchResultAuthorsLabel.place(x=420, y=100, width=250, height=80);
+
+        ## ISBN
+        searchResultISBNLabel = Label(searchResultTable,
+                                    text = "ISBN",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=100,
+                                    justify="center")
+        searchResultISBNLabel.place(x=670, y=100, width=150, height=80);
+
+        ## Publisher
+        searchResultPublisherLabel = Label(searchResultTable,
+                                    text = "Publisher",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=100,
+                                    justify="center")
+        searchResultPublisherLabel.place(x=820, y=100, width=150, height=80);
+
+        ## Publishing Year
+        searchResultPublisherLabel = Label(searchResultTable,
+                                    text = "Year",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=100,
+                                    justify="center")
+        searchResultPublisherLabel.place(x=970, y=100, width=110, height=80);
+
+        ## Table rows here - 3 rows per page
+        numResultsOnCurrPageOnwards = len(result)-(currentPage)*3
+        print(numResultsOnCurrPageOnwards)
+        tempTuple = ((result[0+currentPage*3]), ())
+        resultsOnCurrPageList = list(tempTuple)
+
+        if numResultsOnCurrPageOnwards >= 2:
+            resultsOnCurrPageList.pop()
+            resultsOnCurrPageList.append(result[1+currentPage*3])
+
+        if numResultsOnCurrPageOnwards >= 3:
+            resultsOnCurrPageList.append(result[2+currentPage*3])
+
+        resultsOnCurrPage = tuple(resultsOnCurrPageList)
+        #####################################
+        ## Row 1
+        #####################################
+        if numResultsOnCurrPageOnwards >= 1:
+            ## Acc Num
+            searchResultRow1AccNumLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[0][0],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow1AccNumLabel.place(x=20, y=180, width=150, height=80);
+
+            ## Title 
+            searchResultRow1TitleLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[0][1],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow1TitleLabel.place(x=170, y=180, width=250, height=80);
+
+            ## Author
+            searchResultRow1AuthorsLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[0][2],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow1AuthorsLabel.place(x=420, y=180, width=250, height=80);
+
+            ## ISBN
+            searchResultRow1ISBNLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[0][3],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow1ISBNLabel.place(x=670, y=180, width=150, height=80);
+
+            ## Publisher
+            searchResultRow1PublisherLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[0][4],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow1PublisherLabel.place(x=820, y=180, width=150, height=80);
+
+            ## Publishing Year
+            searchResultRow1PublisherLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[0][5],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow1PublisherLabel.place(x=970, y=180, width=110, height=80);
+
+        #####################################
+        ## Row 2
+        #####################################
+        ## Acc Num
+        if numResultsOnCurrPageOnwards >= 2:
+            searchResultRow2AccNumLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[1][0],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow2AccNumLabel.place(x=20, y=260, width=150, height=80);
+
+            ## Title 
+            searchResultRow2TitleLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[1][1],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow2TitleLabel.place(x=170, y=260, width=250, height=80);
+
+            ## Author
+            searchResultRow2AuthorsLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[1][2],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow2AuthorsLabel.place(x=420, y=260, width=250, height=80);
+
+            ## ISBN
+            searchResultRow2ISBNLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[1][3],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow2ISBNLabel.place(x=670, y=260, width=150, height=80);
+
+            ## Publisher
+            searchResultRow2PublisherLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[1][4],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow2PublisherLabel.place(x=820, y=260, width=150, height=80);
+
+            ## Publishing Year
+            searchResultRow2PublisherLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[1][5],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow2PublisherLabel.place(x=970, y=260, width=110, height=80);
+
+        #####################################
+        ## Row 3
+        #####################################
+        if numResultsOnCurrPageOnwards >= 3:
+            ## Acc Num
+            searchResultRow3AccNumLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[2][0],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow3AccNumLabel.place(x=20, y=340, width=150, height=80);
+
+            ## Title 
+            searchResultRow3TitleLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[2][1],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow3TitleLabel.place(x=170, y=340, width=250, height=80);
+
+            ## Author
+            searchResultRow3AuthorsLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[2][2],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow3AuthorsLabel.place(x=420, y=340, width=250, height=80);
+
+            ## ISBN
+            searchResultRow3ISBNLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[2][3],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow3ISBNLabel.place(x=670, y=340, width=150, height=80);
+
+            ## Publisher
+            searchResultRow3PublisherLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[2][4],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow3PublisherLabel.place(x=820, y=340, width=150, height=80);
+
+            ## Publishing Year
+            searchResultRow3PublisherLabel = Label(searchResultTable,
+                                        text = resultsOnCurrPage[2][5],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow3PublisherLabel.place(x=970, y=340, width=110, height=80);
+
+        ## Table nav buttons
+        def openNextTable():
+            if currentPage != numPages-1:
+                searchResultTable.destroy()
+                openSearchResultTable(result, currentPage+1)
+
+
+        def openPrevTable():
+            if currentPage != 0:
+                searchResultTable.destroy()
+                openSearchResultTable(result, currentPage-1)
+
+        searchResultPrevTableButton = Button(searchResultTable,
+                                        text = "<<",
+                                        font = ("calibre", 15, "bold"),
+                                        fg = "grey39",
+                                        bg = "snow3",
+                                        command = openPrevTable)
+        searchResultPrevTableButton.place(x=200, y=450, width=20, height=20)
+
+        searchResultCurrPageLabel = Label(searchResultTable,
+                                    text = "Current Page: {}".format(currentPage+1),
+                                    font =("calibre", 15, "bold"))
+        searchResultCurrPageLabel.place(x=470, y=430, width=180, height=60);
+
+        searchResultNextTableButton = Button(searchResultTable,
+                                        text = ">>",
+                                        font = ("calibre", 15, "bold"),
+                                        fg = "grey39",
+                                        bg = "snow3",
+                                        command = openNextTable)
+        searchResultNextTableButton.place(x=900, y=450, width=20, height=20)
+
+        ## Back Button
+        searchResultBackButton = Button(searchResultTable,
+                                        text = "Back",
+                                        font = ("calibre", 15, "bold"),
+                                        fg = "grey39",
+                                        bg = "snow3",
+                                        command = closeSearchResultTable)
+        searchResultBackButton.place(x=475, y=500, width=150, height=40)
+
     def searchForBook():
-        return
+        categoryToSearch = searchField
+        if searchField == "Publishing Year":
+            categoryToSearch = "PubYear"
+        
+        print("Searching for book")
+        result = sqlFuncs.bookSearchReport(bookSearchFieldEntry.get(), categoryToSearch)
+
+        openSearchResultTable(result, 0)
     
     ## Information Header
     bookSearchMenuLabel = Label(bookSearchMenu,
                        text = "Please Enter Requested Information Below",
                        font =("calibre", 20, "bold"),
                        bg = "LightSteelBlue2")
-    bookSearchMenuLabel.place(x=0, y=0, width=1280, height=80);
-                         
+    bookSearchMenuLabel.place(x=0, y=0, width=1280, height=80);               
 
-    ## Book Title Input Field
-    bookSearchTitleLabel = Label(bookSearchMenu,
-                              text = "Title",
-                              font = ("calibre", 15),
-                              bg = "LightSkyBlue2")
-    bookSearchTitleLabel.place(x=50, y=150, width=200, height=80)
-
-    global bookSearchTitleEntry
-    bookSearchTitleEntry = Entry(bookSearchMenu,
-                        font = ("calibre", 10, "italic"),
-                        fg = "blue2")
-    bookSearchTitleEntry.place(x=300, y=170, width=700, height=30)
-                         
-    ## Authors Input Field
-    bookSearchAuthorInputLabel = Label(bookSearchMenu,
-                              text = "Authors",
-                              font = ("calibre", 15),
-                              bg = "powder blue")
-    bookSearchAuthorInputLabel.place(x=50, y=250, width=200, height=80)
-
-    global bookSearchAuthorEntry
-    bookSearchAuthorEntry = Entry(bookSearchMenu,
-                        font = ("calibre", 10, "italic"),
-                        fg = "blue2")
-    bookSearchAuthorEntry.place(x=300, y=270, width=700, height=30)
-
-    ## ISBN Input Field
-    bookSearchISBNInputLabel = Label(bookSearchMenu,
-                              text = "ISBN",
+    ## Input Field
+    bookSearchFieldInputLabel = Label(bookSearchMenu,
+                              text = searchField,
                               font = ("calibre", 15),
                               bg = "LightBlue1")
-    bookSearchISBNInputLabel.place(x=50, y=350, width=200, height=80)
+    bookSearchFieldInputLabel.place(x=50, y=350, width=200, height=80)
 
-    global bookSearchISBNEntry
-    bookSearchISBNEntry = Entry(bookSearchMenu,
+    global bookSearchFieldEntry
+    bookSearchFieldEntry = Entry(bookSearchMenu,
                         font = ("calibre", 10, "italic"),
                         fg = "blue2")
-    bookSearchISBNEntry.place(x=300, y=370, width=700, height=30)
-
-    ## Publisher Input Field
-    bookSearchPublisherInputLabel = Label(bookSearchMenu,
-                              text = "Publisher",
-                              font = ("calibre", 15),
-                              bg = "LightCyan2")
-    bookSearchPublisherInputLabel.place(x=50, y=450, width=200, height=80)
-
-    global bookSearchPublisherEntry
-    bookSearchPublisherEntry = Entry(bookSearchMenu,
-                        font = ("calibre", 10, "italic"),
-                        fg = "blue2")
-    bookSearchPublisherEntry.place(x=300, y=470, width=700, height=30)
-
-    ## Publication Year Input Field
-    bookSearchPublicationYearInputLabel = Label(bookSearchMenu,
-                              text = "Publication Year",
-                              font = ("calibre", 15),
-                              bg = "CadetBlue1")
-    bookSearchPublicationYearInputLabel.place(x=50, y=550, width=200, height=80)
-
-    global bookSearchPublicationYearEntry
-    bookSearchPublicationYearEntry = Entry(bookSearchMenu,
-                        font = ("calibre", 10, "italic"),
-                        fg = "blue2")
-    bookSearchPublicationYearEntry.place(x=300, y=570, width=700, height=30)
+    bookSearchFieldEntry.place(x=300, y=370, width=700, height=30)
 
     ## Book Search Button
     bookSearchButton = Button(bookSearchMenu,
