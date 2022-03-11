@@ -58,7 +58,8 @@ def confirmLoan(membershipId, accessionNum, currDate):
     
     memberLoanQuery = "SELECT membershipId, memberName FROM Member WHERE membershipId='{0}'".format(membershipId);
     memInfo = engine.execute(memberLoanQuery).fetchone()
-    
+    if not bool(memInfo) or not bool(bookInfo):
+        raise Exception("No empty fields allowed");
     return (bookInfo, currDate, memInfo, derivedDueDate.strftime("%Y/%m/%d"))
 
 ## Returning Books
@@ -70,6 +71,9 @@ def returnBook(accessionNum, returnDate):
     bookLoanQuery = 'SELECT accessionNum, title, membershipId FROM Book WHERE accessionNum="{0}"'.format(accessionNum);
     bookInfo = engine.execute(bookLoanQuery).fetchone()
 
+    ## Make sure return date is after due date
+    if fineAmt < 0:
+        raise Exception("Return date cannot be before due date")
     membershipId = bookInfo[-1]
     addFineQ = 'UPDATE Member SET currFine=currFine+{0} where membershipId="{1}"'.format(fineAmt,
                                                                                          membershipId)
@@ -367,9 +371,9 @@ def booksLoanedToMemReport(membershipId):
 def dateDiff(endDate, startDate):
     queryDate = 'SELECT DATEDIFF("{0}", "{1}")'.format(endDate, startDate)
     daysDiff = engine.execute(queryDate).fetchone()[0]
-    if daysDiff > 0:
+    if daysDiff > 0 or daysDiff <= -14:
         return daysDiff
-    return 0;
+    return 0
 
 #############################################################################################################################################################################
 

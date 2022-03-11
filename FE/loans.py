@@ -106,10 +106,13 @@ def loansBorrowMenuFunc():
         borrowConfirmDialog.destroy()
 
     def borrowBook():
-        result = sqlFuncs.confirmLoan(loansBorrowMemberIdEntry.get(),
-                                      loansBorrowAccNumEntry.get(),
-                                      datetime.today().strftime('%Y/%m/%d'))
-        openConfirmBookDialog(result)
+        try:
+            result = sqlFuncs.confirmLoan(loansBorrowMemberIdEntry.get(),
+                                          loansBorrowAccNumEntry.get(),
+                                          datetime.today().strftime('%Y/%m/%d'))
+            openConfirmBookDialog(result)
+        except:
+            messagebox.showerror("Book Borrow Error", "Accession Number/Membership ID does not exist")
         
     ############################################
     ## Loans 2.1 - Borrow Confirmation 
@@ -117,6 +120,7 @@ def loansBorrowMenuFunc():
     def openConfirmBookDialog(sqlResult):
         global borrowConfirmDialog
         borrowConfirmDialog = Toplevel()
+        borrowConfirmDialog.grab_set()
         borrowConfirmDialog.geometry("750x800")
         borrowConfirmDialog.configure(bg = "limegreen")
 
@@ -283,6 +287,7 @@ def navFromLoansReturnToLoans():
 def loansReturnMenuFunc():
     global loansReturnMenu
     loansReturnMenu = Toplevel()
+    loansReturnMenu.grab_set()
     loansReturnMenu.title("Return a Book")
     loansReturnMenu.geometry("1280x720")
 
@@ -291,10 +296,14 @@ def loansReturnMenuFunc():
         returnConfirmDialog.destroy()
 
     def returnBook():
-        result = sqlFuncs.confirmReturn(loansReturnAccNumEntry.get(),
-                                        loansReturnDateEntry.get())
-        openReturnConfirmDialog(result)
-
+        try:
+            result = sqlFuncs.confirmReturn(loansReturnAccNumEntry.get(),
+                                            loansReturnDateEntry.get())
+            openReturnConfirmDialog(result)
+        except:
+            messagebox.showerror(
+                    "Book Return Error",
+                    "Accession Number/Return Date incorrect")
 
     ############################################
     ## Loans 3.1 - Return Confirmation 
@@ -302,18 +311,23 @@ def loansReturnMenuFunc():
     def openReturnConfirmDialog(sqlResult):
         global returnConfirmDialog
         returnConfirmDialog = Toplevel()
+        returnConfirmDialog.grab_set()
         returnConfirmDialog.geometry("750x800")
         returnConfirmDialog.configure(bg = "limegreen")
 
         def confirmReturnBook():
-            response = sqlFuncs.returnBook(sqlResult[0],
-                                           sqlResult[4])
-            if response == "Warning! Member has outstanding fines to pay":
+            try:
+                response = sqlFuncs.returnBook(sqlResult[0],
+                                               sqlResult[4])
+                if response == "Warning! Member has outstanding fines to pay":
+                    messagebox.showerror(
+                            "Book Return Warning",
+                            "Reminder: Member has outstanding fines")
+                closeReturnDialog()
+            except:
                 messagebox.showerror(
-                        "Book Return Warning",
-                        "Reminder: Member has outstanding fines")
-                
-            closeReturnDialog()
+                        "Book Return Error",
+                        "Return Date cannot be before Loan Date")
 
         ## Information Header
         returnConfirmTitleLabel = Label(returnConfirmDialog,
