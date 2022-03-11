@@ -273,16 +273,16 @@ def memberCreation():
         createMemMenu.lift()
         createMemSuccessDialog.destroy()
     def createMemberFunc():
-##        try:
-        sqlFuncs.createMember(entryMemberId.get(),
-                                entryName.get(),
-                                entryFac.get(),
-                                entryPhone.get(),
-                                entryEmail.get());
-        openCreateMemberSuccessDialog();
-##        except Exception as excp:
-##            messagebox.showerror("Member Creation Error",
-##                                 "Member already exist; Missing or\n Incomplete fields.")
+        try:
+            sqlFuncs.createMember(entryMemberId.get(),
+                                    entryName.get(),
+                                    entryFac.get(),
+                                    entryPhone.get(),
+                                    entryEmail.get());
+            openCreateMemberSuccessDialog();
+        except Exception as excp:
+            messagebox.showerror("Member Creation Error",
+                                 "Member already exist; Missing or\n Incomplete fields.")
     ###################################################################################################################
     ## Membership 1.2 - Creation Windows and Popups
     def openCreateMemberSuccessDialog():
@@ -1132,7 +1132,7 @@ def createBookAcquisition():
                          
     ## Authors Input Field
     authorInputLabel = Label(bookAcq,
-                              text = "Authors",
+                              text = "Authors\n(Comma Delimited)",
                               font = ("calibre", 15),
                               bg = "powder blue")
     authorInputLabel.place(x=50, y=300, width=200, height=80)
@@ -1419,7 +1419,7 @@ def openReturn():
     loansReturnMenu.lift()
     loansReturnMenu.lift()
 
-def goHome():
+def goHomeFromLoans():
     landingPageFunc()
     destroyLoansMenu()
     landingPage.lift()
@@ -1476,7 +1476,7 @@ def loansMenuFunc():
         font = ("calibre", 15, "bold"),
         fg = "grey39",
         bg = "snow3",
-        command = goHome)
+        command = goHomeFromLoans)
     backButton.place(x=220, y=650, width=140, height=40)
 
 ############################################
@@ -1881,7 +1881,7 @@ def goReservationsMenuFromCancelReservation():
     destroyCancelBookReservation()
     reservationMenu.lift()
 
-def goHome():
+def goHomeFromReservation():
     landingPageFunc()
     destroyReservationMenu()
     landingPage.lift()
@@ -1954,7 +1954,7 @@ def reservationMenuWindow():
                                   bg="aquamarine",
                                   borderwidth = 4,
                                   relief = "solid",
-                                  command=goHome)
+                                  command=goHomeFromReservation)
     goMainFromReservationMenu.place(x=140,y=700, width=1000, height=80);
 
 ##########################################################################################
@@ -2136,7 +2136,7 @@ def openBookReservation():
 
     ## Reserve Date input field   
     createDateLabel = Label(createBookReservation,
-                                text="Reserve date",
+                                text="Reserve Date\n(YYYY/MM/DD)",
                                 font =("calibre", 14, "bold"),
                                 bg="DodgerBlue2",
                                 fg="white")
@@ -2325,7 +2325,7 @@ def openReservationCancellation():
 
     ## Reserve Date input field   
     cancelDateLabel = Label(cancelBookReservation,
-                                text="Cancel date",
+                                text="Cancel Date\n(YYYY/MM/DD)",
                                 font=("calibre", 14, "bold"),
                                 bg="DodgerBlue1",
                                 fg="white")
@@ -2368,7 +2368,7 @@ def openReservationCancellation():
 def destroyfineMainMenu():
     fineMainMenu.destroy()
 
-def goHome():
+def goHomeFromFines():
     landingPageFunc()
     destroyfineMainMenu()
     landingPage.lift()
@@ -2421,7 +2421,7 @@ def fineMainMenuFunction():
                                   bg="aquamarine",
                                   borderwidth = 4,
                                   relief = "solid",
-                                  command=goHome)
+                                  command=goHomeFromFines)
     goMainFromMemMenu.place(x=140,y=700, width=1000, height=80);
     
 ########################################################################################################################################################################################################################
@@ -2644,7 +2644,7 @@ def openBooksOnLoanToMember():
     booksOnLoanToMemberMenu.lift()
     booksOnLoanToMemberMenu.lift()
 
-def goHome():
+def goHomeFromReports():
     landingPageFunc()
     destroyReportsMenu()
     landingPage.lift()
@@ -2731,7 +2731,7 @@ def reportsMenuFunc():
         font = ("calibre", 15, "bold"),
         fg = "grey39",
         bg = "snow3",
-        command = goHome)
+        command = goHomeFromReports)
     buttonBack.place(x=220, y=650, width=140, height=40)
 
 ##HERE1
