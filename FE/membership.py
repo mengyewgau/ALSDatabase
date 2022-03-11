@@ -19,7 +19,7 @@ def navFromMemToDelMem(): # Go to deleteMem
     destroyMemMenu();
     deleteMemMenu.lift()
 def navFromMemToUpdateMem(): # Go to updateMem
-    memberUpdateLandingMenu();
+    updateMemMenu();
     destroyMemMenu();
     updateInputId.lift()
 def navReturnToMain(): # Return to Main Menu
@@ -43,21 +43,11 @@ def navFromDeleteToMemMenu(): # Return to Membership Menu
     memMenu.lift()
     
 # Navigation in Update Menus
-def navFromUpdateToUpdateDetails(): # Go to Update Details Menu
-    destroyUpdateLandingMenu();
-    updateMenu();
-    updateMemMenu.lift();
 def destroyUpdateLandingMenu():
     updateInputId.destroy();
 def navReturnToMemMenuFromUpdateLanding(): # Return to Membership Menu
     membershipMenu();
     destroyUpdateLandingMenu();
-    memMenu.lift()
-def destroyUpdateMenu():
-    updateMemMenu.destroy();
-def navReturnToMemMenuFromUpdateDetails(): # Return to Membership Menu
-    membershipMenu();
-    destroyUpdateMenu();
     memMenu.lift()
 #####################################################################################################################################################################################################################################
 ### Main Membership Menu ############################################################################################################################################################################################################
@@ -129,9 +119,7 @@ def membershipMenu():
                                   relief = "solid",
                                   command=navReturnToMain)
     goMainFromMemMenu.place(x=140,y=700, width=1000, height=80);
-#####################################################################################################################################################################################################################################
 ### Membership 1 - Creation ############################################################################################################################################################################################################
-
 def memberCreation(): 
     global createMemMenu
     createMemMenu = Toplevel()
@@ -139,7 +127,7 @@ def memberCreation():
     createMemMenu.geometry("1280x720")
 
     ###################################################################################################################
-    ## Create Member Confirmation and Error Handling
+    ## Membership 1.1 - Create Confirmation and Error Handling
     def closeCreateMemSuccessDialog():
         createMemMenu.lift()
         createMemSuccessDialog.destroy()
@@ -155,7 +143,7 @@ def memberCreation():
             messagebox.showerror("Member Creation Error",
                                  "Member already exist; Missing or\n Incomplete fields.")
     ###################################################################################################################
-    ## Member Creation Windows and Popups
+    ## Membership 1.2 - Creation Windows and Popups
     def openCreateMemberSuccessDialog():
         global createMemSuccessDialog
         createMemSuccessDialog = Toplevel();
@@ -178,7 +166,7 @@ def memberCreation():
                              command=closeCreateMemSuccessDialog);
         returnButton.place(x=125, y=300, width=200, height=80)
     ###################################################################################################################  
-    ## Window Design and Placement
+    ## Membership 1.3 - Design and Placement
     # Title Label
     createTitleLabel = Label(createMemMenu,
                              text = "To Create Member, Please Enter Requested Information Below:",
@@ -195,7 +183,7 @@ def memberCreation():
                                fg="ghost white")
     createMemberIdLabel.place(x=280, y=150, width=300, height=90);
     entryMemberId = Entry(createMemMenu,font=('Arial',10,'italic'))
-    entryMemberId.place(x=620, y=160, width=450, height=30);
+    entryMemberId.place(x=620, y=180, width=450, height=30);
     # Membership Name Input Field
     createNameLabel = Label(createMemMenu,
                            text = "Name",
@@ -204,7 +192,7 @@ def memberCreation():
                            fg="white")
     createNameLabel.place(x=280, y=240, width=300, height=90);
     entryName = Entry(createMemMenu, font=('Arial',10,'italic'))
-    entryName.place(x=620, y=260, width=450, height=30);
+    entryName.place(x=620, y=270, width=450, height=30);
     # Membership Faculty Input Field
     createFacLabel = Label(createMemMenu,
                            text = "Faculty",
@@ -222,7 +210,7 @@ def memberCreation():
                              fg="white")
     createPhoneLabel.place(x=280, y=420, width=300, height=90);
     entryPhone = Entry(createMemMenu, font=('Arial',10,'italic'))
-    entryPhone.place(x=620, y=460, width=450, height=30);
+    entryPhone.place(x=620, y=450, width=450, height=30);
     # Membership Email Input Field
     createEmailLabel = Label(createMemMenu,
                              text = "Email Address",
@@ -231,7 +219,7 @@ def memberCreation():
                              fg="white")
     createEmailLabel.place(x=280, y=510, width=300, height=90);
     entryEmail = Entry(createMemMenu, font=('Arial',10,'italic'))
-    entryEmail.place(x=620, y=560, width=450, height=30);
+    entryEmail.place(x=620, y=540, width=450, height=30);
     # Membership Creation Button
     createRecordButton = Button(createMemMenu,
                                 text = "Create Member",
@@ -246,7 +234,7 @@ def memberCreation():
                         bg="aquamarine",
                         command=navFromCreateToMemMenu)
     backButton.place(x=675, y=610, width=250, height=80);
-### Member Deletion Menu ############################################################################################################################################################################################################
+### Membership 2 - Deletion Menu ############################################################################################################################################################################################################
 def memberDeletion():    
     global deleteMemMenu
     deleteMemMenu = Toplevel()
@@ -255,6 +243,7 @@ def memberDeletion():
     deleteMemMenu.geometry("1280x720")
 
     ###################################################################################################################
+    ### Membership 2.1 - Link Deletion to backend
     def closeConfirmDeletionMemDialog():
         deleteMemMenu.lift();
         deleteConfirmDialog.destroy();
@@ -267,7 +256,7 @@ def memberDeletion():
             result = sqlFuncs.confirmDeletion(entryMemberId.get())
             openDeleteMemDialog(result)
     ###################################################################################################################
-    ### Membership 2.2 - Deletion Confirmation
+    ### Membership 2.2 - Deletion Confirmation Dialog
     def openDeleteMemDialog(sqlResult):
         global deleteConfirmDialog
         deleteConfirmDialog = Toplevel();
@@ -336,7 +325,7 @@ def memberDeletion():
                                     command = closeConfirmDeletionMemDialog)
         deleteMemCloseButton.place(x=400, y=700, width=150, height=80)
     ################################################################################################################### 
-    ## Member Deletion Windows and Popups
+    ## Membership 2.3 - Deletion Success Popup
     def closeDeletionMemSuccessDialog():
         deleteMemMenu.lift();
         deleteMemSuccessDialog.destroy();
@@ -356,188 +345,308 @@ def memberDeletion():
         errorTitle.place(x=0, y=100, width=450, height=100);
         ## return Button
         returnButton = Button(deleteMemSuccessDialog,
-                             text="Back to \n Delete \n Function",
-                             font=("Arial", 12,"bold"),
-                             borderwidth=8,
-                             bg="aquamarine",
-                             command=closeDeletionMemSuccessDialog);
+                            text="Back to \n Delete \n Function",
+                            font=("Arial", 12,"bold"),
+                            borderwidth=8,
+                            bg="aquamarine",
+                            command=closeDeletionMemSuccessDialog);
         returnButton.place(x=125, y=300, width=200, height=80)
     ###################################################################################################################  
-    ## Window Design and Placement
+    ### Membership 2.4 - Design and Placement
     # Title
     deleteTitleLabel = Label(deleteMemMenu,
-                             text = "To Delete Member, Please Enter Membership ID:",
-                             font=("Arial",24,"bold"),
-                             bg="aquamarine");
+                            text = "To Delete Member, Please Enter Membership ID:",
+                            font=("Arial",24,"bold"),
+                            bg="aquamarine");
     deleteTitleLabel.place(x=0, y=0, width=1280, height=180);
 
     # Membership Id Input Field
     deleteMemberIdLabel = Label(deleteMemMenu,
-                        text = "Membership ID",
-                        font=("calibre", 14, "bold"),
-                        bg="DodgerBlue4",
-                        fg="white")
-    deleteMemberIdLabel.place(x=280, y=300, width=300, height=100);
+                            text = "Membership ID",
+                            font=("calibre", 14, "bold"),
+                            bg="DodgerBlue4",
+                            fg="white")
+    deleteMemberIdLabel.place(x=280, y=330, width=300, height=90);
     entryMemberId = Entry(deleteMemMenu, font=('Arial',10,'italic'))
     entryMemberId.place(x=620, y=360, width=450, height=30);
 
     # Membership Deletion Button
     deleteRecordButton = Button(deleteMemMenu,
-                        text = "Delete Member",
-                        font=("Arial, 18"),
-                        bg="aquamarine",
-                        command=deleteMem)
+                            text = "Delete Member",
+                            font=("Arial, 18"),
+                            bg="aquamarine",
+                            command=deleteMem)
     deleteRecordButton.place(x=355, y=610, width=250, height=80);
 
     # Return to Main Menu Button
     backButton = Button(deleteMemMenu,
-                        text = "Back to Main Menu",
-                        font=("Arial, 18"),
-                        bg="aquamarine",
-                        command=navFromDeleteToMemMenu)
+                            text = "Back to Main Menu",
+                            font=("Arial, 18"),
+                            bg="aquamarine",
+                            command=navFromDeleteToMemMenu)
     backButton.place(x=675, y=610, width=250, height=80);
 
-### Update Landing Window ########################################################################################################################################################################################################################################
-def memberUpdateLandingMenu():
+### Membership 3 - Update Landing Window ########################################################################################################################################################################################################################################
+def updateMemMenu():
     global updateInputId
     updateInputId = Toplevel()
-    updateInputId.geometry("750x420")
+    updateInputId.geometry("1280x720")
+    ###################################################################################################################  
+    ### Membership 3.1 - Close update landing menu
+    def destroyUpdateMenu():
+        updateDetailMenu.destroy();
+    def navReturnToMemMenuFromUpdateDetails(): # Return to Membership Menu
+        membershipMenu();
+        destroyUpdateMenu();
+    def navFromUpdateToUpdateDetails(): # Go to Update Details Menu
+        try:
+            entryUpdateMemberId = entryMemberId.get();
+            sqlFuncs.checkMemForUpdate(entryUpdateMemberId);
+            ## Code runs only if there is no error
+            destroyUpdateLandingMenu();
+            updateDetails(entryUpdateMemberId);
+            updateDetailMenu.lift();
+        except:
+            messagebox.showerror("Member Update Error", "Member does not exist");
 
-    ## Title Label
-    updateTitleLabel = Label(updateInputId,
-                                text = "To Update a Member, Please Enter Membership ID:",
-                                font=("Arial, 18"),
-                                bg="aquamarine");
-    updateTitleLabel.place(x=0, y=0, width=750, height=180);
-    ## Membership Id Input Field
-    updateMemberIdLabel = Label(updateInputId,
-                                   text = "Membership ID",
-                                   font=("Arial, 10"),
-                                   bg="DodgerBlue3",
-                                   fg="white")
-    updateMemberIdLabel.place(x=0, y=200, width=300, height=100);
-    entryMemberId = Entry(updateInputId, font=('Arial',10,'normal'))
-    entryMemberId.place(x=300, y=260, width=450, height=40);
-    ## Membership Update Button
-    updateRecordButton = Button(updateInputId,
-                                   text = "Update Member",
-                                   font=("Arial, 18"),
-                                   bg="aquamarine",
-                                   command=navFromUpdateToUpdateDetails)
-    updateRecordButton.place(x=80, y=320, width=250, height=80);
-    ## Return to Main Menu Button
-    backButton = Button(updateInputId,
-                           text = "Back to Main Menu",
-                           font=("Arial, 18"),
-                           bg="aquamarine",
-                           command=navReturnToMemMenuFromUpdateLanding)
-    backButton.place(x=420, y=320, width=250, height=80);
+    ###################################################################################################################
+    ### Membership 3.2 - Go to update member details page
+    def updateDetails(entryUpdateMemberId):
+        global updateDetailMenu
+        updateDetailMenu = Toplevel();
+        updateDetailMenu.grab_set();
+        updateDetailMenu.geometry("1280x720")
+        ###################################################################################################################
+        ### Membership 3.2.1 - Close confirm update details dialog
+        def closeConfirmUpdateMemDialog():
+            updateDetailMenu.lift();
+            updateConfirmDialog.destroy();
+        def updateMem():
+            try:
+                result = sqlFuncs.confirmUpdate(entryUpdateMemberId,
+                                        entryName.get(),
+                                        entryFac.get(),
+                                        entryPhone.get(),
+                                        entryEmail.get())
+                #Code runs when there is no error
+                openUpdateMemDialog(result)
+            except:
+                messagebox.showerror("Member Update Error", "Missing or \nIncomplete Fields.")
+        ###################################################################################################################
+        ### Membership 3.2.2 - Update member dialog
+        def openUpdateMemDialog(sqlResult):
+            global updateConfirmDialog
+            updateConfirmDialog = Toplevel();
+            updateConfirmDialog.grab_set();
+            updateConfirmDialog.title("Confirm Deletion of Member");
+            updateConfirmDialog.geometry("750x800")
+            updateConfirmDialog.configure(bg = "limegreen")
 
-### Update Member Details Window ########################################################################################################################################################################################################################################
-def updateMenu():
-    # To add:
-    # If-Else for Success/Error messages
-    # SQLAlchemy retrieval
-    
-    updateInputId.destroy();
-    
-    global updateMemMenu
-    updateMemMenu = Toplevel()
-    updateMemMenu.geometry("750x820")
+            def confirmUpdateMemFunction():
+                try:
+                    sqlFuncs.updateMember(sqlResult[0],
+                                        sqlResult[1],
+                                        sqlResult[2],
+                                        sqlResult[3],
+                                        sqlResult[4]);
+                    openUpdateMemberSuccessDialog(); ##MEMBERSHIP 3.2.3 NEED TO ADD
+                except Exception as excp:
+                    messagebox.showerror("Member Update Failed", "Missing or \n Incomplete fields.")
+            
+            ## Deletion confirmation dialog Design
+            deleteConfirmTitleLabel = Label(updateConfirmDialog,
+                                        text="Please Confirm Updated Details to \nBe Correct",
+                                        font=("Arial",24,"bold"),
+                                        bg="LightSteelBlue2")
+            deleteConfirmTitleLabel.place(x=0, y=0, width=750, height=100);
+            # Membership Id Field
+            deleteConfirmMemIdLabel = Label(updateConfirmDialog,
+                                        text = "Membership ID: {0}".format(sqlResult[0]),
+                                        font = ("calibre", 15),
+                                        bg = "SkyBlue2")
+            deleteConfirmMemIdLabel.place(x=100, y=100, width=550, height=80)
+            # Member Name Field
+            deleteConfirmMemNameLabel = Label(updateConfirmDialog,
+                                        text = "Name: {0}".format(sqlResult[1]),
+                                        font = ("calibre", 15),
+                                        bg = "SkyBlue2")
+            deleteConfirmMemNameLabel.place(x=100, y=200, width=550, height=80)
+            # Member Faculty Field
+            deleteConfirmMemFacLabel = Label(updateConfirmDialog,
+                                        text = "Faculty: {0}".format(sqlResult[2]),
+                                        font = ("calibre", 15),
+                                        bg = "SkyBlue2")
+            deleteConfirmMemFacLabel.place(x=100, y=300, width=550, height=80)
+            # Member Phone Field
+            deleteConfirmMemPhoneLabel = Label(updateConfirmDialog,
+                                        text = "Phone: {0}".format(sqlResult[3]),
+                                        font = ("calibre", 15),
+                                        bg = "SkyBlue2")
+            deleteConfirmMemPhoneLabel.place(x=100, y=400, width=550, height=80)
+            # Member Faculty Field
+            deleteConfirmMemEmailLabel = Label(updateConfirmDialog,
+                                        text = "Email: {0}".format(sqlResult[4]),
+                                        font = ("calibre", 15),
+                                        bg = "SkyBlue2")
+            deleteConfirmMemEmailLabel.place(x=100, y=500, width=550, height=80)
+            ## Confirm Deletion Button
+            deleteMemConfirmButton = Button(updateConfirmDialog,
+                                        text = "Confirm\nUpdate",
+                                        font = ("Arial", 20, "bold"),
+                                        fg = "ghost white",
+                                        bg = "magenta2",
+                                        command = confirmUpdateMemFunction)
+            deleteMemConfirmButton.place(x=200, y=700, width=150, height=80)
+            
+            ## Close Return Button
+            deleteMemCloseButton = Button(updateConfirmDialog,
+                                        text = "Exit",
+                                        font = ("Arial", 20, "bold"),
+                                        fg = "ghost white",
+                                        bg = "magenta2",
+                                        command = closeConfirmUpdateMemDialog)
+            deleteMemCloseButton.place(x=400, y=700, width=150, height=80)
+        ###################################################################################################################
+        ## Membership 3.2.3 - Update Success Dialog
+        def closeUpdateMemberSuccessDialog():
+            updateDetailMenu.lift();
+            updateMemSuccessDialog.destroy();
+        def openUpdateMemberSuccessDialog():
+            updateConfirmDialog.destroy();
+            global updateMemSuccessDialog
+            updateMemSuccessDialog = Toplevel();
+            updateMemSuccessDialog.grab_set() ## Make sure only top level window is editable
+            updateMemSuccessDialog.configure(bg="limegreen")
+            updateMemSuccessDialog.geometry("450x400")
+            ## Error Title Label
+            errorTitle = Label(updateMemSuccessDialog,
+                                text = "Success! \n\n ALS Membership updated.",
+                                font=("Arial", 18,"bold"),
+                                bg="limegreen",
+                                fg="Black");
+            errorTitle.place(x=0, y=100, width=450, height=100);
+            ## return Button
+            returnButton = Button(updateMemSuccessDialog,
+                                text="Back to \n Update \n Function",
+                                font=("Arial", 12,"bold"),
+                                borderwidth=8,
+                                bg="aquamarine",
+                                command=closeUpdateMemberSuccessDialog);
+            returnButton.place(x=125, y=300, width=200, height=80)
+        ###################################################################################################################
+        ### Membership 3.2.4 - Update Details Menu Design
+        ## Title Label
+        updateTitleLabel = Label(updateDetailMenu,
+                            text = "Please Enter Requested Information Below:",
+                            font=("Arial, 18"),
+                            bg="aquamarine");
+        updateTitleLabel.place(x=0, y=0, width=1280, height=150);
 
-    ## Title Label
-    updateTitleLabel = Label(updateMemMenu,
-                             text = "Please Enter Requested Information Below:",
-                             font=("Arial, 18"),
-                             bg="aquamarine");
-    updateTitleLabel.place(x=0, y=0, width=750, height=200);
-
-    # Membership Id Input Field
-    updateMemberIdLabel = Label(updateMemMenu,
-                                text = "Membership ID",
-                                borderwidth=2,
-                                relief="solid",
-                                font=("Arial, 10"),
-                                bg="SlateBlue")
-    updateMemberIdLabel.place(x=0, y=200, width=300, height=100);
-    
-    enteredMemberId = Label(updateMemMenu,
-                            text = "A01234567B",
+        # Membership Id Input Field
+        updateMemberIdLabel = Label(updateDetailMenu,
+                            text = "Membership ID",
+                            borderwidth=2,
+                            relief="solid",
+                            font=("calibre", 14, "bold"),
+                            bg="DodgerBlue4")
+        updateMemberIdLabel.place(x=280, y=150, width=300, height=90);
+        
+        enteredMemberId = Label(updateDetailMenu,
+                            text = entryUpdateMemberId,
                             borderwidth=2,
                             relief="solid",
                             font=("Arial, 12"))
-    enteredMemberId.place(x=300, y=260, width=450, height=40);
+        enteredMemberId.place(x=620, y=180, width=450, height=30);
 
-    ## Membership Name Input Field
-    updateNameLabel = Label(updateMemMenu,
+        ## Membership Name Input Field
+        updateNameLabel = Label(updateDetailMenu,
                             text = "Name",
-                            font=("Arial, 10"),
+                            font=("calibre", 14, "bold"),
                             borderwidth=2,
                             relief="solid",
-                            bg="SlateBlue",
+                            bg="royalblue4",
                             fg="white")
-    updateNameLabel.place(x=0, y=300, width=300, height=100);
-
-    entryName = Entry(updateMemMenu,
-                         font=('Arial',10,'normal'))
-    entryName.place(x=300, y=360, width=450, height=40);
-
-    ## Membership Faculty Input Field
-    updateFacLabel = Label(updateMemMenu,
-                           text = "Faculty",
-                           font=("Arial, 10"),
-                           borderwidth=2,
-                           relief="solid",
-                           bg="SlateBlue",
-                           fg="white")
-    updateFacLabel.place(x=0, y=400, width=300, height=100);
-    entryFac = Entry(updateMemMenu, font=('Arial',10,'normal'))
-    entryFac.place(x=300, y=460, width=450, height=40);
-
-
-    ## Membership Phone Input Field
-    updatePhoneLabel = Label(updateMemMenu,
-                                text = "Phone Number",
-                                font=("Arial, 10"),
-                                borderwidth=2,
-                                relief="solid",
-                                bg="SlateBlue",
-                                fg="white")
-    updatePhoneLabel.place(x=0, y=500, width=300, height=100);
-    
-    entryPhone = Entry(updateMemMenu,
-                          font=('Arial',10,'normal'))
-    entryPhone.place(x=300, y=560, width=450, height=40);
-
-    ## Membership Email Input Field
-    updateEmailLabel = Label(updateMemMenu,
-                                text = "Email Address",
-                                font=("Arial, 10"),
-                                borderwidth=2,
-                                relief="solid",
-                                bg="SlateBlue",
-                                fg="white")
-    updateEmailLabel.place(x=0, y=600, width=300, height=100);
-
-    entryEmail = Entry(updateMemMenu,
-                          font=('Arial',10,'normal'))
-    entryEmail.place(x=300, y=660, width=450, height=40);
-
-    ## Membership Creation Button
-    updateRecordButton = Button(updateMemMenu,
-                                   text = "Update Member",
-                                   font=("Arial, 18"),
-                                   bg="aquamarine")
-    updateRecordButton.place(x=80, y=710, width=250, height=80);
-
+        updateNameLabel.place(x=280, y=240, width=300, height=90);
+        entryName = Entry(updateDetailMenu, font=('Arial',10,'italic'))
+        entryName.place(x=620, y=270, width=450, height=30);
+        ## Membership Faculty Input Field
+        updateFacLabel = Label(updateDetailMenu,
+                            text = "Faculty",
+                            font=("calibre", 14, "bold"),
+                            borderwidth=2,
+                            relief="solid",
+                            bg="royalblue3",
+                            fg="white")
+        updateFacLabel.place(x=280, y=330, width=300, height=90);
+        entryFac = Entry(updateDetailMenu, font=('Arial',10,'italic'))
+        entryFac.place(x=620, y=360, width=450, height=30);
+        ## Membership Phone Input Field
+        updatePhoneLabel = Label(updateDetailMenu,
+                            text = "Phone Number",
+                            font=("calibre", 14, "bold"),
+                            borderwidth=2,
+                            relief="solid",
+                            bg="royalblue2",
+                            fg="white")
+        updatePhoneLabel.place(x=280, y=420, width=300, height=90);
+        entryPhone = Entry(updateDetailMenu, font=('Arial',10,'italic'))
+        entryPhone.place(x=620, y=450, width=450, height=30);
+        ## Membership Email Input Field
+        updateEmailLabel = Label(updateDetailMenu,
+                            text = "Email Address",
+                            font=("calibre", 14, "bold"),
+                            borderwidth=2,
+                            relief="solid",
+                            bg="royalblue1",
+                            fg="white")
+        updateEmailLabel.place(x=280, y=510, width=300, height=90);
+        entryEmail = Entry(updateDetailMenu, font=('Arial',10,'italic'))
+        entryEmail.place(x=620, y=540, width=450, height=30);
+        ## Membership Creation Button
+        updateRecordButton = Button(updateDetailMenu,
+                            text = "Update Member",
+                            font=("Arial, 18"),
+                            bg="aquamarine",
+                            command=updateMem)
+        updateRecordButton.place(x=355, y=610, width=250, height=80);
+        ## Return to Main Menu Button
+        backButton = Button(updateDetailMenu,
+                            text = "Back to Main Menu",
+                            font=("Arial, 18"),
+                            bg="aquamarine",
+                            command=navReturnToMemMenuFromUpdateDetails)
+        backButton.place(x=675, y=610, width=250, height=80);
+    ###################################################################################################################  
+    ### Membership 3.3 - Update Input membershipId Design
+    ## Title Label
+    updateTitleLabel = Label(updateInputId,
+                            text = "To Update a Member, Please Enter Membership ID:",
+                            font=("Arial",24, "bold"),
+                            bg="aquamarine");
+    updateTitleLabel.place(x=0, y=0, width=1280, height=180);
+    ## Membership Id Input Field
+    updateMemberIdLabel = Label(updateInputId,
+                            text = "Membership ID",
+                            font=("calibre", 14, "bold"),
+                            bg="DodgerBlue4",
+                            fg="white")
+    updateMemberIdLabel.place(x=280, y=300, width=300, height=100);
+    entryMemberId = Entry(updateInputId, font=('Arial',10,'italic'))
+    entryMemberId.place(x=620, y=360, width=450, height=30);
+    ## Membership Update Button
+    updateRecordButton = Button(updateInputId,
+                            text = "Update Member",
+                            font=("Arial, 18"),
+                            bg="aquamarine",
+                            command=navFromUpdateToUpdateDetails)
+    updateRecordButton.place(x=355, y=610, width=250, height=80);
     ## Return to Main Menu Button
-    backButton = Button(updateMemMenu,
-                           text = "Back to Main Menu",
-                           font=("Arial, 18"),
-                           bg="aquamarine",
-                           command=navReturnToMemMenuFromUpdateDetails)
-    backButton.place(x=420, y=710, width=250, height=80);
-
+    backButton = Button(updateInputId,
+                            text = "Back to Main Menu",
+                            font=("Arial, 18"),
+                            bg="aquamarine",
+                            command=navReturnToMemMenuFromUpdateLanding)
+    backButton.place(x=675, y=610, width=250, height=80);
 #####################################################################################################################################################################################################################################
 ## Dont delete - used to start the app
 startButton = Button(window, text = "Start", command = membershipMenu, fg = "lightblue",

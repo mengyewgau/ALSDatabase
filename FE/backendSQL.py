@@ -170,8 +170,9 @@ def deleteMember(membershipId):
 def confirmDeletion(membershipId):
     ## Return Deletion Confirmation Page
     queryMember = 'SELECT * FROM Member WHERE membershipId = "{0}"'.format(membershipId)
-    if queryMember:
-        return engine.execute(queryMember).fetchone()[0:5]
+    result = engine.execute(queryMember).fetchone()
+    if bool(result):
+        return result[0:5]
     else:
         raise Exception("Member does not exist");
 
@@ -223,6 +224,13 @@ def confirmCancel(membershipId, accessionNum, cancelDate):
 #############################################################################################################################################################################
 
 ### Update Functions
+def checkMemForUpdate(membershipId):
+    ## Checks if a member exists before we update them
+    
+    checkMem = 'SELECT memberName FROM Member WHERE membershipId="{0}"'.format(membershipId)
+    result = engine.execute(checkMem).fetchone()
+    if not bool(result):
+        raise Exception("Member does not exist");
 
 def updateMember(membershipId, memName, memFac, memPhone, memEmail):
     updateMem = 'UPDATE Member SET memberName="{1}", memberFac="{2}", memberPhone="{3}", memberEmail="{4}" WHERE membershipId="{0}"'.format(membershipId,
@@ -233,6 +241,8 @@ def updateMember(membershipId, memName, memFac, memPhone, memEmail):
     engine.execute(updateMem)
 
 def confirmUpdate(membershipId, memName, memFac, memPhone, memEmail):
+    if memName == "" or memFac == "" or memPhone == "" or memEmail == "":
+        raise Exception("Missing or incomplete fields");
     ## Return Update Confirmation Page
     return (membershipId, memName, memFac, memPhone, memEmail);
 #############################################################################################################################################################################
@@ -281,7 +291,6 @@ def checkMemQuota(memId, relation): #FE Facing
     retrieveLoan = 'SELECT membershipId FROM {0} WHERE membershipId = "{1}"'.format(relation, memId)
     result = engine.execute(retrieveLoan).fetchall()
     return len(result)
-
 
 def checkReservationToBeDeleted(membershipId, accessionNum):
     queryReservation = 'SELECT EXISTS(SELECT * FROM Reservation where accessionNum="{0}" and membershipId="{1}");'.format(accessionNum,
