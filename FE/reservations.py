@@ -76,9 +76,9 @@ def reservationMenuWindow():
 
     ## Reserve A Book button
     reserveBookButton = Button(reservationMenu,
-                                text="8. Reserve a Book",
+                                text="8. Reserve a\nBook",
                                 font=("Arial, 14"),
-                                bg="LightBlue",
+                                bg="royalblue",
                                 fg="white",
                                 command=openBookReservationMenuFunction)
     reserveBookButton.place(x=480, y=280, width=180, height=160)

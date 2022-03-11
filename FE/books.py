@@ -1,6 +1,10 @@
 from tkinter import *
+from tkinter import messagebox
 from PIL import ImageTk, Image
+import backendSQL as sqlFuncs
+from datetime import datetime
 
+###################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 ##Book Landing Window###########################################################
 
 def destroyBookMenu():
@@ -23,6 +27,11 @@ def navFromBookToLP():
     destroyBookMenu()
     landingPage.lift()
     landingPage.lift()
+
+def navFromConfirmAcqToBookAcq():
+    acquisitionConfirmationDialog.destroy()
+    bookAcq.lift()
+    bookAcq.lift()
     
 def createBookMenu():
     ##Book Page Background
@@ -79,52 +88,22 @@ def createBookMenu():
 
     buttonBack.place(x=1090, y=650, width=140, height=40)
 
+
 ################################################################################
 
-## BOOK ERRORS/SUCCESS (BOTH ACQUISITION AND WITHDRAWAL) ###############################
-
-#### To be added: Error for books that have already been added (Need to connect to mySQL)
-
-def destroyAcqError():
-    acqError.destroy()
-
-def createAcqError():
-    global acqError
-    acqError = Toplevel()
-    acqError.geometry("500x500")
-    acqError.configure(bg = "firebrick1")
-
-    ## Error Message
-    createAcqErrorLabel1 = Label(acqError,           
-                       text = "ERROR!",
-                       font =("calibre", 40, "bold"),
-                       bg = "firebrick4",
-                       fg = "gold")
-    createAcqErrorLabel1.place(x=25, y=20, width=450, height=80);
-
-    createAcqErrorLabel2 = Label(acqError,           
-                       text = "Book Already Added;\nDuplicate, Missing or\nIncomplete fields.",
-                       font =("calibre", 20, "bold"),
-                       bg = "firebrick1",
-                       fg = "yellow")
-    createAcqErrorLabel2.place(x=25, y=120, width=450, height=200);
-
-    ## Error Back Button
-    buttonAcqBack = Button(acqError,
-        text = "Back",
-        font = ("calibre", 15, "bold"),
-        fg = "grey39",
-        bg = "snow3",
-        command = destroyAcqError)
-
-    buttonAcqBack.place(x=300, y=450, width=140, height=40)
+## BOOK SUCCESS PAGES (BOTH ACQUISITION AND WITHDRAWAL) ###############################
 
 def destroySuccessAcq():
+    bookAcq.destroy()
     successAcq.destroy()
+    createBookAcquisition()
+    bookAcq.lift()
+    bookAcq.lift()
     
 def createSuccessAcq():
     global successAcq
     successAcq = Toplevel()
+    successAcq.grab_set()
     successAcq.geometry("500x500")
     successAcq.configure(bg = "limegreen")
 
@@ -138,7 +117,7 @@ def createSuccessAcq():
 
     createAcqSucessLabel2 = Label(successAcq,           
                        text = "New Book added in Library",
-                       font =("calibre", 20, "bold"),
+                       font =("calibre", 25),
                        bg = "limegreen",
                        fg = "black")
     createAcqSucessLabel2.place(x=25, y=120, width=450, height=200);
@@ -154,11 +133,16 @@ def createSuccessAcq():
     buttonAcqBack.place(x=300, y=450, width=140, height=40)
 
 def destroySuccessWith():
+    bookWith.destroy()
     successWith.destroy()
+    createBookWithdrawal()
+    bookWith.lift()
+    bookWith.lift()
 
 def createSuccessWith():
     global successWith
     successWith = Toplevel()
+    successWith.grab_set()
     successWith.geometry("500x500")
     successWith.configure(bg = "limegreen")
 
@@ -191,9 +175,6 @@ def createSuccessWith():
     
 ## BOOK ACQUISITION PAGE #######################################################
 
-#### To be added: For submitAcq, need to insert data into mySQL
-####              Errors for BookWithdrawal need to be done
-
 def destroyBookAcquisition():
     bookAcq.destroy()
 
@@ -203,18 +184,122 @@ def navFromBookAcqToBook():
     bookMenu.lift()
     bookMenu.lift()
 
-def submitAcq():
+def navFromAcqConfirmationToSuccessPage():
+    createSuccessAcq()
+    acquisitionConfirmationDialog.destroy()
+    successAcq.lift()
+    successAcq.lift()
+
+    ##Confirmation Page
+def confirmAcqDialog():
+    global acquisitionConfirmationDialog
+    acquisitionConfirmationDialog = Toplevel()
+    acquisitionConfirmationDialog.grab_set()
+    acquisitionConfirmationDialog.geometry("720x800")
+    acquisitionConfirmationDialog.configure(bg = "limegreen")
+
     accessionNum = str(accAcqEntry.get())
     title = str(bookTitleEntry.get())
+    authorsStr = str(authorEntry.get())
     authors = tuple(str(authorEntry.get()).split(", "))
     isbn = str(ISBNEntry.get())
     publisher = str(publisherEntry.get())
     publicationYear = str(publicationYearEntry.get())
 
-    if len(accessionNum) == 0 or len(title) == 0 or len(authors) == 0 or len(isbn) == 0 or len(publisher) == 0 or len(publicationYear) == 0:
-        createAcqError()
-    else:
-        createSuccessAcq()
+    def confirmBookAcq ():
+        try:
+            sqlFuncs.createBook(accessionNum, title, isbn, publisher, publicationYear)
+            for a in authors:
+                sqlFuncs.createBkAuthor(accessionNum,a)
+            
+            navFromAcqConfirmationToSuccessPage()   
+                
+            
+        except:
+            messagebox.showerror(
+                "Book Acquisition Error",
+                "Book already added;\nDuplicate, Missing or\nIncomplete fields.")
+            
+            
+    ## Information Header
+    confirmAcqHeader = Label(acquisitionConfirmationDialog,
+                       text = "Please confirm the following details:",
+                       font =("calibre", 20, "bold"),
+                       bg = "pale green")
+    confirmAcqHeader.place(x=0, y=0, width=800, height=90);
+
+    ## Accession Number Confirmation
+    confirmAccNum = Label(acquisitionConfirmationDialog,
+                              text = "Accession Number: {0}"
+                                  .format(accessionNum),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmAccNum.place(x=0, y=100, width=750, height=80)                         
+
+    ## Book Title Confirmation
+    confirmBookTitle = Label(acquisitionConfirmationDialog,
+                              text = "Title: {0}"
+                               .format(title),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmBookTitle.place(x=0, y=200, width=750, height=80)
+
+                         
+    ## Authors Input Confirmation
+    confirmAuthor = Label(acquisitionConfirmationDialog,
+                              text = "Authors: {0}"
+                                 .format(authorsStr),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmAuthor.place(x=0, y=300, width=750, height=80)
+
+    ## ISBN Input Confirmation
+    confirmISBN = Label(acquisitionConfirmationDialog,
+                              text = "ISBN: {0}"
+                                .format(isbn),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmISBN.place(x=0, y=400, width=750, height=80)
+
+    ## Publisher Input Field
+    confirmPublisher = Label(acquisitionConfirmationDialog,
+                              text = "Publisher: {0}"
+                                 .format(publisher),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmPublisher.place(x=0, y=500, width=750, height=80)
+
+    ## Publication Year Input Field
+    confirmPubYear = Label(acquisitionConfirmationDialog,
+                              text = "Publication Year: {0}"
+                               .format(publicationYear),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmPubYear.place(x=0, y=600, width=750, height=80)
+
+
+    ## Confirm Acquisition Button
+    buttonConfirmAcq = Button(acquisitionConfirmationDialog,
+        text = "Confirm New Book",
+        font = ("Arial", 20, "bold"),
+        borderwidth = 4,
+        relief = "solid",           
+        fg = "ghost white",
+        bg = "DodgerBlue4",
+        command = confirmBookAcq)
+    buttonConfirmAcq.place(x=50, y=680, width=300, height=80)
+    
+
+    ## Back Button
+    buttonAcqBack = Button(acquisitionConfirmationDialog,
+        text = "Back",
+        font = ("calibre", 15, "bold"),
+        fg = "grey39",
+        bg = "snow3",
+        command = navFromConfirmAcqToBookAcq)
+
+    buttonAcqBack.place(x=550, y=700, width=100, height=50)
+            
     
 def createBookAcquisition():
     global bookAcq
@@ -313,9 +398,11 @@ def createBookAcquisition():
     buttonSubmitAcq = Button(bookAcq,
         text = "Submit\nNew\nBook",
         font = ("Arial", 20, "bold"),
+        borderwidth = 4,
+        relief = "solid",
         fg = "ghost white",
-        bg = "magenta2",
-        command = submitAcq)
+        bg = "DeepSkyBlue4",
+        command = confirmAcqDialog)
     buttonSubmitAcq.place(x=1040, y=150, width=210, height=400)
     
 
@@ -332,58 +419,141 @@ def createBookAcquisition():
 ################################################################################    
 
 ## WITHDRAWAL PAGE #############################################################
-#### TO BE ADDED: CONFIRMATION OF DETAILS (confirmWith(), submitWith())
 
 def destroyBookWithdrawal():
     bookWith.destroy()
 
-def confirmWith():
+def navFromWithConfirmationToSuccessPage():
     createSuccessWith()
-    destroySubmitWith()
-    #TO BE EDITED
+    confirmWithDialog.destroy()
+    successWith.lift()
+    successWith.lift()
 
-def destroySubmitWith():
-    submitWith.destroy()
+def navFromConfirmWithToBookWith():
+    confirmWithDialog.destroy()
     
-def submitWith():
-    global submitWith
-    submitWith = Toplevel()
-    submitWith.geometry("500x400")
-    submitWith.configure(bg = "honeydew3")
+def confirmWithDialogFunc():
 
+    try:
+        withBookDetails = sqlFuncs.confirmWithdrawal(str(accWithEntry.get()))
+        accessionNum = withBookDetails[0]
+        title = withBookDetails[1]
+        authorsStr = withBookDetails[2]
+        isbn = withBookDetails[3]
+        publisher = withBookDetails[4]
+        publicationYear = withBookDetails[5]
+        
+        global confirmWithDialog
+        confirmWithDialog = Toplevel()
+        confirmWithDialog.grab_set()
+        confirmWithDialog.geometry("750x800")
+        confirmWithDialog.configure(bg = "limegreen")
+    except:
+        messagebox.showerror(
+                    "Book Withdrawal Error",
+                    "This Book Accession Number Does Not Exist.")
+
+    def confirmBookWith():
+        try:
+            sqlFuncs.withdrawBook(accessionNum)            
+            navFromWithConfirmationToSuccessPage()   
+                 
+        except Exception as excp:
+            if excp.args[0] == "Books is on Loan":
+                messagebox.showerror(
+                    "Book Withdrawal Error",
+                    "Book is currently on Loan.")
+            elif excp.args[0] == "Book has reservations":
+                messagebox.showerror(
+                    "Book Withdrawal Error",
+                    "Book is currently Reserved.")
+            confirmWithDialog.destroy()
+            
+            
     ## Information Header
-    submitWithHeader = Label(submitWith,
-                       text = "Please Confirm Details\nto Be Correct:",
+    confirmWithHeader = Label(confirmWithDialog,
+                       text = "Please confirm the following details:",
                        font =("calibre", 20, "bold"),
-                       bg = "honeydew3")
-    submitWithHeader.place(x=0, y=0, width=500, height=80);
+                       bg = "pale green")
+    confirmWithHeader.place(x=0, y=0, width=800, height=90);
 
-    ## Withdraw Submit Button
-    buttonConfirmWith = Button(submitWith,
-        text = "Withdraw Book",
-        font = ("Arial", 10, "bold"),
-        fg = "black",
-        bg = "plum2",
-        command = confirmWith)
-    buttonConfirmWith.place(x=80, y=350, width=150, height=40)
+    ## Accession Number Confirmation
+    confirmWithNum = Label(confirmWithDialog,
+                              text = "Accession Number: {0}"
+                                  .format(accessionNum),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmWithNum.place(x=0, y=100, width=750, height=80)                         
+
+    ## Book Title Confirmation
+    confirmBookTitle = Label(confirmWithDialog,
+                              text = "Title: {0}"
+                               .format(title),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmBookTitle.place(x=0, y=200, width=750, height=80)
+
+                         
+    ## Authors Input Confirmation
+    confirmAuthor = Label(confirmWithDialog,
+                              text = "Authors: {0}"
+                                 .format(authorsStr),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmAuthor.place(x=0, y=300, width=750, height=80)
+
+    ## ISBN Input Confirmation
+    confirmISBN = Label(confirmWithDialog,
+                              text = "ISBN: {0}"
+                                .format(isbn),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmISBN.place(x=0, y=400, width=750, height=80)
+
+    ## Publisher Input Field
+    confirmPublisher = Label(confirmWithDialog,
+                              text = "Publisher: {0}"
+                                 .format(publisher),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmPublisher.place(x=0, y=500, width=750, height=80)
+
+    ## Publication Year Input Field
+    confirmPubYear = Label(confirmWithDialog,
+                              text = "Publication Year: {0}"
+                               .format(publicationYear),
+                              font = ("calibre", 15),
+                              bg = "limegreen")
+    confirmPubYear.place(x=0, y=600, width=750, height=80)
+
+
+    ## Confirm Withdrawal Button
+    buttonConfirmWith = Button(confirmWithDialog,
+        text = "Confirm Withdrawal",
+        font = ("Arial", 20, "bold"),
+        borderwidth = 4,
+        relief = "solid",           
+        fg = "ghost white",
+        bg = "DodgerBlue4",
+        command = confirmBookWith)
+    buttonConfirmWith.place(x=50, y=680, width=300, height=80)
+    
 
     ## Back Button
-    buttonWithBack = Button(submitWith,
+    buttonWithBack = Button(confirmWithDialog,
         text = "Back",
         font = ("calibre", 15, "bold"),
         fg = "grey39",
         bg = "snow3",
-        command = destroySubmitWith)
+        command = navFromConfirmWithToBookWith)
 
-    buttonWithBack.place(x=280, y=350, width=150, height=40)
+    buttonWithBack.place(x=550, y=700, width=100, height=50)
 
 def navFromBookWithToBook():
     createBookMenu()
     destroyBookWithdrawal()
     bookMenu.lift()
     bookMenu.lift()
-
-
 
 def createBookWithdrawal():
     global bookWith
@@ -403,23 +573,25 @@ def createBookWithdrawal():
                               text = "Accession Number",
                               font = ("calibre", 15),
                               bg = "SkyBlue2")
-    accInputLabel.place(x=200, y=100, width=200, height=80)
+    accInputLabel.place(x=100, y=150, width=300, height=100)
 
     global accWithEntry
     accWithEntry = Entry(bookWith,
                         font = ("calibre", 10, "italic"),
                         fg = "blue2")
 
-    accWithEntry.place(x=500, y=120, width=700, height=30)
+    accWithEntry.place(x=490, y=180, width=700, height=30)
 
     ## Withdraw Submit Button
     buttonSubmitWith = Button(bookWith,
         text = "Withdraw Book",
         font = ("Arial", 30, "bold"),
+        borderwidth = 4,
+        relief = "solid",                      
         fg = "ghost white",
-        bg = "magenta2",
-        command = submitWith)
-    buttonSubmitWith.place(x=500, y=300, width=300, height=100)
+        bg = "DeepSkyBlue4",
+        command = confirmWithDialogFunc)
+    buttonSubmitWith.place(x=460, y=450, width=400, height=100)
 
     ## Back Button
     buttonWithBack = Button(bookWith,

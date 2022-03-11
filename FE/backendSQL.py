@@ -35,7 +35,7 @@ def loanBook(membershipId, accessionNum, currDate):
     fineAmt = checkFineValue(membershipId);
     derivedDueDate = datetime.strptime(currDate, "%Y/%m/%d") + timedelta(days=14)
 
-    if loanQuota >= 2:        
+    if loanQuota >= 2:
         raise Exception("Loan Quota Exceeded");
     elif fineAmt != 0:
         raise Exception("Outstanding Fines")
@@ -167,7 +167,7 @@ def confirmReservation(membershipId, accessionNum, reserveDate):
 def deleteMember(membershipId):
     currFine = checkFineValue(membershipId);
     if currFine > 0:
-        raise Exception('Member has loans, reservations or outstanding fines')
+        raise Exception('Member has loans and/or outstanding fines')
     try:
         deleteMember = 'DELETE FROM Member WHERE membershipId = "{0}"'.format(membershipId)
         engine.execute(deleteMember)
@@ -177,7 +177,11 @@ def deleteMember(membershipId):
 def confirmDeletion(membershipId):
     ## Return Deletion Confirmation Page
     queryMember = 'SELECT * FROM Member WHERE membershipId = "{0}"'.format(membershipId)
-    return engine.execute(queryMember).fetchone()[0:5]
+    result = engine.execute(queryMember).fetchone()
+    if bool(result):
+        return result[0:5]
+    else:
+        raise Exception("Member does not exist");
 
 ## Withdraw Book
 
@@ -186,8 +190,8 @@ def withdrawBook(accessionNum):
     if checkIfBookOnLoan(accessionNum):
         raise Exception("Books is on Loan");
     try:
-        deleteMember = 'DELETE FROM Book WHERE accessionNum = "{0}"'.format(accessionNum)
-        engine.execute(deleteMember)
+        withdrawBook = 'DELETE FROM Book WHERE accessionNum = "{0}"'.format(accessionNum)
+        engine.execute(withdrawBook)
     except:
         raise Exception("Book has reservations")
 
@@ -230,6 +234,21 @@ def confirmCancel(membershipId, accessionNum, cancelDate):
 #############################################################################################################################################################################
 
 ### Update Functions
+def checkMemForUpdate(membershipId):
+    ## Checks if a member exists before we update them
+    
+    checkMem = 'SELECT memberName FROM Member WHERE membershipId="{0}"'.format(membershipId)
+    result = engine.execute(checkMem).fetchone()
+    if not bool(result):
+        raise Exception("Member does not exist");
+
+def checkMemForUpdate(membershipId):
+    ## Checks if a member exists before we update them
+    
+    checkMem = 'SELECT memberName FROM Member WHERE membershipId="{0}"'.format(membershipId)
+    result = engine.execute(checkMem).fetchone()
+    if not bool(result):
+        raise Exception("Member does not exist");
 
 def updateMember(membershipId, memName, memFac, memPhone, memEmail):
     updateMem = 'UPDATE Member SET memberName="{1}", memberFac="{2}", memberPhone="{3}", memberEmail="{4}" WHERE membershipId="{0}"'.format(membershipId,
@@ -240,17 +259,21 @@ def updateMember(membershipId, memName, memFac, memPhone, memEmail):
     engine.execute(updateMem)
 
 def confirmUpdate(membershipId, memName, memFac, memPhone, memEmail):
+    if memName == "" or memFac == "" or memPhone == "" or memEmail == "":
+        raise Exception("Missing or incomplete fields");
     ## Return Update Confirmation Page
     return (membershipId, memName, memFac, memPhone, memEmail);
 #############################################################################################################################################################################
 ### Creation Functions
-def createMember(membershipId, memName, memFace, memPhone, memEmail):
+def createMember(membershipId, memName, memFac, memPhone, memEmail):
+    if memName == "" or memFac == "" or memPhone == "" or memEmail == "":
+        raise Exception("Missing or incomplete fields");
     try:
         createMem = 'INSERT INTO member VALUES ("{0}","{1}", "{2}", "{3}", "{4}", 0)'.format(membershipId,
-                                                                                                memName,
-                                                                                                memFace,
-                                                                                                memPhone,
-                                                                                                memEmail)
+                                                                                            memName,
+                                                                                            memFac,
+                                                                                            memPhone,
+                                                                                            memEmail)
         engine.execute(createMem)
     except:
         raise Exception("Creation Error")
@@ -289,7 +312,6 @@ def checkMemQuota(memId, relation): #FE Facing
     result = engine.execute(retrieveLoan).fetchall()
     return len(result)
 
-
 def checkReservationToBeDeleted(membershipId, accessionNum):
     queryReservation = 'SELECT EXISTS(SELECT * FROM Reservation where accessionNum="{0}" and membershipId="{1}");'.format(accessionNum,
                                                                                                                           membershipId)
@@ -321,19 +343,34 @@ def checkIfBookOnLoan(accessionNum):
 #############################################################################################################################################################################
 
 ### Report Functions
-def bookSearchReport(word, category): 
-    queryBookInfo = 'SELECT accessionNum, title, ISBN, publisher, pubYear FROM Book where {0} LIKE "%%{1}%%";'.format(category,
-                                                                                                                      word)
-    bookInfoList = engine.execute(queryBookInfo).fetchall()
+def bookSearchReport(word, category):
+    if category == 'Author':
+        queryBookInfo = 'SELECT b.accessionNum, title, ISBN, publisher, pubYear FROM Book b INNER JOIN BookAuthor bA ON b.accessionNum = bA.accessionNum WHERE bA.authorName LIKE "%%{0}%%";'.format(word)
 
-    for index in range(len(bookInfoList)):
-        acNum = bookInfoList[index][0];
-        queryAuthors = "SELECT GROUP_CONCAT(authorName, ' ') FROM BookAuthor WHERE accessionNum='{0}'".format(acNum);
-        authors = engine.execute(queryAuthors).fetchone()[0]
-        
-        bookInfoList[index] = bookInfoList[index][0:2] + (authors,) + bookInfoList[index][2:]
+        bookInfoList = engine.execute(queryBookInfo).fetchall()
 
-    return bookInfoList;
+        for index in range(len(bookInfoList)):
+            acNum = bookInfoList[index][0];
+            queryAuthors = "SELECT GROUP_CONCAT(authorName, ' ') FROM BookAuthor WHERE accessionNum='{0}'".format(acNum);
+            authors = engine.execute(queryAuthors).fetchone()[0]
+            
+            bookInfoList[index] = bookInfoList[index][0:2] + (authors,) + bookInfoList[index][2:]
+
+        return bookInfoList;
+
+    else:
+        queryBookInfo = 'SELECT accessionNum, title, ISBN, publisher, pubYear FROM Book where {0} LIKE "%%{1}%%";'.format(category,
+                                                                                                                          word)
+        bookInfoList = engine.execute(queryBookInfo).fetchall()
+
+        for index in range(len(bookInfoList)):
+            acNum = bookInfoList[index][0];
+            queryAuthors = "SELECT GROUP_CONCAT(authorName, ' ') FROM BookAuthor WHERE accessionNum='{0}'".format(acNum);
+            authors = engine.execute(queryAuthors).fetchone()[0]
+            
+            bookInfoList[index] = bookInfoList[index][0:2] + (authors,) + bookInfoList[index][2:]
+
+        return bookInfoList;
 
 def loanReport():
     ## Returns loan report
