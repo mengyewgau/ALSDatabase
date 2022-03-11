@@ -1,61 +1,36 @@
-
 from tkinter import *
 from PIL import ImageTk, Image
-
-
+import backendSQL as sqlFuncs
+from tkinter import messagebox
 window = Tk()
-
+########################################################################################################################################################################################################################
 ## Navigation stuff
-def destroyFinesMenu():
-    finesMenu.destroy()
-
-def destroyFinePaymentMenu():
-    finePaymentMenu.destroy()
-
-def destroyConfirmPaymentDetails():
-    confirmPaymentDetails.destroy()
-
-def destroyPaymentSuccessPopup():
-    paymentSuccess.destroy()
-
-def destroyPaymentFailPopup():
-    paymentFail.destroy()
-
-def openFinePaymentWindow():
-    finePaymentMenuWindow()
-    destroyFinesMenu()
-    finePaymentMenu.lift()
-
-def openPaymentSuccessPopup():
-    paymentSuccessPopup()
-    destroyConfirmPaymentDetails()
-    paymentSuccess.lift()
-
-def openPaymentFailPopup():
-    paymentFailPopup()
-    destroyConfirmPaymentDetails()
-    paymentFail.lift()
-
+def destroyfineMainMenu():
+    fineMainMenu.destroy()
 
 def goHome():
     window.destroy()
     import landingPage
 
-def goToFinesMenuFromFinePayment():
-    finesMenuWindow()
+def goTofineMainMenuFromFinePayment():
+    fineMainMenuFunction()
     destroyFinePaymentMenu()
-    finesMenu.lift()
-
-
+    fineMainMenu.lift()
+def destroyFinePaymentMenu():
+    finePaymentMenu.destroy();
+def openFinePaymentWindow():
+    fineMainMenu.destroy()
+    finePaymentMenuFunction();
+########################################################################################################################################################################################################################
 ## Fine menu
-def finesMenuWindow():
-    global finesMenu
-    finesMenu = Toplevel()
-    finesMenu.geometry("1280x820")
-    finesMenu.title("Fines")
+def fineMainMenuFunction():
+    global fineMainMenu
+    fineMainMenu = Toplevel()
+    fineMainMenu.geometry("1280x820")
+    fineMainMenu.title("Fines")
 
     ## Title
-    finesTitleLabel = Label(finesMenu,
+    finesTitleLabel = Label(fineMainMenu,
                              text = "Select one of the Options below:",
                              font=("Arial, 20"),
                              borderwidth = 4,
@@ -66,11 +41,11 @@ def finesMenuWindow():
     ## Picture Left Side
     global finesIm
     finesIm = ImageTk.PhotoImage(Image.open("fineIm.jpg").resize((400,360)))
-    displayImg = Label(finesMenu, image=finesIm);
+    displayImg = Label(fineMainMenu, image=finesIm);
     displayImg.place(x=40, y=260, width=400, height=360);
 
     ## Fine Payment Button
-    finePaymentButton = Button(finesMenu,
+    finePaymentButton = Button(fineMainMenu,
                                 text="10. Payment",
                                 font=("Arial, 14"),
                                 bg="LightBlue",
@@ -79,7 +54,7 @@ def finesMenuWindow():
     finePaymentButton.place(x=600, y=350, width=600, height=180)
 
     ## main menu button
-    goMainFromMemMenu = Button(finesMenu,
+    goMainFromMemMenu = Button(fineMainMenu,
                                   font=("Arial, 24"),
                                   text = "Back to Main Menu",
                                   bg="aquamarine",
@@ -87,197 +62,187 @@ def finesMenuWindow():
                                   relief = "solid",
                                   command=goHome)
     goMainFromMemMenu.place(x=140,y=700, width=1000, height=80);
-
-## Fine Payment Menu
-
-def finePaymentMenuWindow():
+    
+########################################################################################################################################################################################################################
+### Fines 1 - Payment Menu ############################################################################################################################################################################################################
+def finePaymentMenuFunction():    
     global finePaymentMenu
     finePaymentMenu = Toplevel()
-    finePaymentMenu.geometry("750x820")
-    finePaymentMenu.title("Fine Payment")
+    finePaymentMenu.grab_set()
+    finePaymentMenu.title("Member Fine Payment Menu")
+    finePaymentMenu.geometry("1280x720")
 
+###################################################################################################################################################################################################################  
+    ### Fines 1.1 - Link Fine Payment to backend
+    def closeConfirmFinePaymentDialog():
+        finePaymentMenu.lift();
+        paymentConfirmDialog.destroy();
+    def confirmFinePmt():
+        try:
+            result = sqlFuncs.confirmFinePayment(entryMemberID.get(), entryDate.get())
+            openPayFineDialog(result)
+        except:
+            messagebox.showerror("Fine Payment Error",
+                                 "Fields are empty/incorrect")
+###################################################################################################################################################################################################################  
+    ### Fines 1.2 - Fines Confirmation Dialog
+    def openPayFineDialog(sqlResult):
+        global paymentConfirmDialog
+        paymentConfirmDialog = Toplevel();
+        paymentConfirmDialog.grab_set();
+        paymentConfirmDialog.title("Confirm Fine Payment");
+        paymentConfirmDialog.geometry("750x800")
+        paymentConfirmDialog.configure(bg = "limegreen")
+
+        def payFineFunction():
+            try:
+                sqlFuncs.payFine(sqlResult[1], sqlResult[3], int(paidAmtEntry.get()));
+                openPaymentSuccessDialog();
+            except Exception as excp:
+                if excp.args[0]=="Member has no fine":
+                    messagebox.showerror("Fine Payment Error",
+                                         "Member has no fine")
+                elif excp.args[0] == "Incorrect fine payment amount.":
+                    messagebox.showerror("Fine Payment Error!",
+                                        "Incorrect fine payment amount.")
+                else:
+                    messagebox.showerror("Debug")
+###################################################################################################################################################################################################################  
+        ## Payment confirmation dialog Design
+        paymentConfirmTitleLabel = Label(paymentConfirmDialog,
+                                    text="Please Confirm Details to \nBe Correct",
+                                    font=("Arial",24,"bold"),
+                                    bg="LightSteelBlue2")
+        paymentConfirmTitleLabel.place(x=0, y=0, width=750, height=100);
+
+        # Payment Due Field
+        paymentDueLabel = Label(paymentConfirmDialog,
+                                    text = "Payment Due: \n{0}".format(sqlResult[0]),
+                                    font = ("calibre", 15),
+                                    anchor="nw",
+                                    bg = "SkyBlue2")
+        paymentDueLabel.place(x=125, y=100, width=350, height=180)
+        # Membership Id Field
+        paymentConfirmMemIdLabel = Label(paymentConfirmDialog,
+                                    text = "Member \nID: \n{0}".format(sqlResult[1]),
+                                    font = ("calibre", 15),
+                                    anchor="nw",
+                                    bg = "SkyBlue2")
+        paymentConfirmMemIdLabel.place(x=475, y=100, width=150, height=180)
+        # Exact Fee Only Field
+        exactFeeLabel = Label(paymentConfirmDialog,
+                                    text = "{0}".format(sqlResult[2]),
+                                    font = ("calibre", 15),
+                                    anchor="nw",                                  
+                                    bg = "SkyBlue2")
+        exactFeeLabel.place(x=125, y=300, width=350, height=180)
+        # Payment Date Field
+        paymentConfirmLabel = Label(paymentConfirmDialog,
+                                    text = "Payment \nDate: \n {0}".format(sqlResult[3]),
+                                    font = ("calibre", 15),
+                                    anchor="nw",
+                                    bg = "SkyBlue2")
+        paymentConfirmLabel.place(x=475, y=300, width=150, height=180)
+        ## Confirm Payment Button
+        paymentConfirmButton = Button(paymentConfirmDialog,
+                                    text = "Confirm\nPayment",
+                                    font = ("Arial", 20, "bold"),
+                                    fg = "ghost white",
+                                    bg = "magenta2",
+                                    command = payFineFunction)
+        paymentConfirmButton.place(x=200, y=700, width=150, height=80)
+        
+        ## Close Return Button
+        paymentCloseButton = Button(paymentConfirmDialog,
+                                    text = "Back to\nPayment\nFunction",
+                                    font = ("Arial", 15, "bold"),
+                                    fg = "ghost white",
+                                    bg = "magenta2",
+                                    command = closeConfirmFinePaymentDialog)
+        paymentCloseButton.place(x=400, y=700, width=150, height=80)
+###################################################################################################################################################################################################################  
+    ## Fine 1.3 - Payment Success Popup
+    def closePaymentSuccessDialog():
+        finePaymentMenu.lift();
+        paymentSuccessDialog.destroy();
+    def openPaymentSuccessDialog():
+        paymentConfirmDialog.destroy();
+        global paymentSuccessDialog
+        paymentSuccessDialog = Toplevel();
+        paymentSuccessDialog.grab_set() ## Make sure only top level window is editable
+        paymentSuccessDialog.configure(bg="limegreen")
+        paymentSuccessDialog.geometry("450x400")
+        ## Error Title Label
+        errorTitle = Label(paymentSuccessDialog,
+                            text = "Success! \n\n Fine Paid!",
+                            font=("Arial", 18,"bold"),
+                            bg="limegreen",
+                            fg="Black");
+        errorTitle.place(x=0, y=100, width=450, height=100);
+        ## return Button
+        returnButton = Button(paymentSuccessDialog,
+                            text="Back to \n Fine \n Payment",
+                            font=("Arial", 12,"bold"),
+                            borderwidth=8,
+                            bg="aquamarine",
+                            command=closePaymentSuccessDialog);
+        returnButton.place(x=125, y=300, width=200, height=80)
+###################################################################################################################################################################################################################  
+    ### Fines 1.4 - Design and Placement
     ## Title Label
-    paymentTitleLabel = Label(finePaymentMenu,
-                                text = "To Pay a Fine, Please Enter Information Below:",
-                                font=("Arial, 18"),
-                                bg="aquamarine");
-    paymentTitleLabel.place(x=0, y=0, width=750, height=200);
+    finePaymentTitle = Label(finePaymentMenu,
+                                        text="To Pay a Fine, Please Enter Information Below:",
+                                        font=("Arial, 18"),
+                                        bg="aquamarine")
+    finePaymentTitle.place(x=0, y=0, width=1280, height=150)
+    ## Membership ID input field
+    finePaymentMemberIDLabel = Label(finePaymentMenu,
+                                text="Membership ID",
+                                font=("calibre", 14, "bold"),
+                                bg="DodgerBlue3",
+                                fg="white")
+    finePaymentMemberIDLabel.place(x=280, y=230, width=300, height=90);
+    entryMemberID = Entry(finePaymentMenu, font=("Arial", 10, "italic"))
+    entryMemberID.place(x=620, y=260, width=450, height=30)
+    ## Paid Date input field
+    finePaymentDateLabel = Label(finePaymentMenu,
+                                text="Payment Date \n(YYYY/MM/DD)",
+                                font=("calibre", 14, "bold"),
+                                bg="DodgerBlue2",
+                                fg="white")
+    finePaymentDateLabel.place(x=280, y=330, width=300, height=90);
+    entryDate = Entry(finePaymentMenu, font=("Arial", 10, "italic"))
+    entryDate.place(x=620, y=360, width=450, height=30)
 
-    ## Membership Id Input Field
-    paymentMemberIdLabel = Label(finePaymentMenu,
-                                   text = "Membership ID",
-                                   font=("Arial, 10"),
-                                   bg="DodgerBlue3",
-                                   fg="white")
-    paymentMemberIdLabel.place(x=0, y=200, width=300, height=100);
-    entryMemberId = Entry(finePaymentMenu,font=('Arial',10,'normal'))
-    entryMemberId.place(x=300, y=260, width=450, height=40);
+    ## Payment Amount input field   
+    finePaidAmtLabel = Label(finePaymentMenu,
+                                text="Payment Amount",
+                                font=("calibre", 14, "bold"),
+                                bg="DodgerBlue1",
+                                fg="white")
+    finePaidAmtLabel.place(x=280, y=430, width=300, height=90);
+    paidAmtEntry = Entry(finePaymentMenu, font=("Arial", 10, "italic"))
+    paidAmtEntry.place(x=620, y=460, width=450, height=30)    
 
-    ## Payment Date Input Field
-    paymentDateLabel = Label(finePaymentMenu,
-                               text = "Payment Date",
-                               font=("Arial, 10"),
-                               bg="DodgerBlue2",
-                               fg="white")
-    paymentDateLabel.place(x=0, y=300, width=300, height=100);
-    entryDate = Entry(finePaymentMenu, font=('Arial',10,'normal'))
-    entryDate.place(x=300, y=360, width=450, height=40);
-
-
-    ## Payment Amount Input Field
-    paymentAmountLabel = Label(finePaymentMenu,
-                              text = "Payment Amount",
-                              font=("Arial, 10"),
-                              bg="SkyBlue2",
-                              fg="white")
-    paymentAmountLabel.place(x=0, y=400, width=300, height=100);
-    entryPayment = Entry(finePaymentMenu, font=('Arial',10,'normal'))
-    entryPayment.place(x=300, y=460, width=450, height=40);
-
-    ## Membership Creation Button
+    ## Pay Fine Button
     payFineButton = Button(finePaymentMenu,
-                                   text = "Pay Fine",
-                                   font=("Arial, 18"),
-                                   bg="aquamarine",
-                                   command=confirmPaymentDetailsPopup)
-    payFineButton.place(x=80, y=710, width=250, height=80);
-    ## Return to Main Menu Button
-    backButton = Button(finePaymentMenu,
-                           text = "Back to Fines Menu",
-                           font=("Arial, 18"),
-                           bg="aquamarine",
-                           command=goToFinesMenuFromFinePayment)
-    backButton.place(x=420, y=710, width=250, height=80);
+                                text="Pay Fine",
+                                font=("Arial, 18"),
+                                bg="aquamarine",
+                                command=confirmFinePmt)
+    payFineButton.place(x=355, y=610, width=250, height=80);
 
-
-## Confirm Fine Payment Details Popup
-def confirmPaymentDetailsPopup():
-    global confirmPaymentDetails
-    confirmPaymentDetails = Toplevel()
-    confirmPaymentDetails.configure(bg="chartreuse2")
-    confirmPaymentDetails.geometry("450x400")
-
-    ## Title Label
-    titleLabel = Label(confirmPaymentDetails,
-                       text = "Please Confirm Details to \n Be Correct",
-                       font=("Arial", 20, "bold"),
-                       bg="chartreuse2")
-    titleLabel.place(x=0, y=0, width=450, height=140);
-
-    ## Payment Due Field
-    memberIdLabel = Label(confirmPaymentDetails,
-                          text = "Payment Due: (placeholder)",
-                          font=("Arial, 14"),
-                          bg="chartreuse2",
-                          anchor="w")
-    memberIdLabel.place(x=50, y=100, width=380, height=40)
-    ## Member ID Field
-    nameLabel = Label(confirmPaymentDetails,
-                      text = "Member ID (placeholder)",
-                      font=("Arial, 14"),
-                      bg="chartreuse2",
-                      anchor="w")
-    nameLabel.place(x=50, y=140, width=380, height=40)
-    ## Payment Date Field
-    facLabel = Label(confirmPaymentDetails,
-                     text = "Payment Date (placeholder)",
-                     font=("Arial, 14"),
-                     bg="chartreuse2",
-                     anchor="w")
-    facLabel.place(x=50, y=180, width=380, height=40)
-    ## Exact Fee Only Field
-    phoneLabel = Label(confirmPaymentDetails,
-                       text = "Exact Fee Only",
-                       font=("Arial, 14"),
-                       bg="chartreuse2",
-                       anchor="w")
-    phoneLabel.place(x=50, y=220, width=380, height=40)
-
-    ## Confirm Payment Button
-    confirmFinePaymentButton = Button(confirmPaymentDetails,
-                                        text="Confirm \n Payment",
-                                        font=("Arial", 12,"bold"),
-                                        borderwidth=6,
-                                        bg="aquamarine",
-                                        command=openPaymentSuccessPopup)
-    confirmFinePaymentButton.place(x=20, y=300, width=180, height=80)
-    ## Back to Payment Function
-    returnToPaymentFunction = Button(confirmPaymentDetails,
-                                    text="Back to \n Payment \n Function",
-                                    font=("Arial", 12,"bold"),
-                                    borderwidth=6,
-                                    bg="aquamarine",
-                                    command=destroyConfirmPaymentDetails)
-    returnToPaymentFunction.place(x=250, y=300, width=180, height=80)
-
-
-## Fine Payment Error Page
-def paymentFailPopup():
-    global paymentFail
-    paymentFail = Toplevel()
-    paymentFail.configure(bg="red")
-    paymentFail.geometry("450x400")
-
-    ## Successs Title Label
-    successTitle = Label(paymentFail,
-                        text = "Error!",
-                        font=("Arial", 40,"bold"),
-                        bg="red",
-                        fg="yellow")
-    successTitle.place(x=0, y=100, width=450, height=100)
-
-    ## Success Message Label
-    successMsg = Label(paymentFail,
-                        text = "Member has no fine. \n Incorrect fine payment amount.",
-                        font=("Arial", 16,"bold"),
-                        bg="red",
-                        fg="yellow")
-    successMsg.place(x=0, y=200, width=450, height=100)
-
-    ## Return to Payment Function
-    returnToPaymentFunction = Button(paymentFail,
-                                    text="Back to \n Payment \n Function",
-                                    font=("Arial", 12,"bold"),
-                                    borderwidth=6,
-                                    bg="aquamarine",
-                                    command=destroyPaymentFailPopup)
-    returnToPaymentFunction.place(x=125, y=300, width=200, height=80)
-
-## Fine Payment Success Page
-def paymentSuccessPopup():
-    global paymentSuccess
-    paymentSuccess = Toplevel()
-    paymentSuccess.configure(bg="chartreuse2")
-    paymentSuccess.geometry("450x400")
-
-    ## Successs Title Label
-    successTitle = Label(paymentSuccess,
-                        text = "Success!",
-                        font=("Arial", 40,"bold"),
-                        bg="chartreuse2",
-                        fg="Black")
-    successTitle.place(x=0, y=100, width=450, height=100)
-
-    ## Success Message Label
-    successMsg = Label(paymentSuccess,
-                        text = "Fine has been fully paid.",
-                        font=("Arial", 16,"bold"),
-                        bg="chartreuse2",
-                        fg="black")
-    successMsg.place(x=0, y=200, width=450, height=100)
-
-    ## Return to Payment Function
-    returnToPaymentFunction = Button(paymentSuccess,
-                                    text="Back to \n Payment \n Function",
-                                    font=("Arial", 12,"bold"),
-                                    borderwidth=6,
-                                    bg="aquamarine",
-                                    command=destroyPaymentSuccessPopup)
-    returnToPaymentFunction.place(x=125, y=300, width=200, height=80)
-
-
+    ## Back to Fine Main Menu Button
+    backToFineMainMenuButton = Button(finePaymentMenu,
+                                text="Back to Fines Menu",
+                                font=("Arial, 18"),
+                                bg="aquamarine",
+                                wraplength=230,
+                        command=goTofineMainMenuFromFinePayment)
+    backToFineMainMenuButton.place(x=675, y=610, width=250, height=80);
+###################################################################################################################################################################################################################  
 ## Dont delete - used to start the app
-startButton = Button(window, text = "Start", command = finesMenuWindow, fg = "lightblue",
+startButton = Button(window, text = "Start", command = fineMainMenuFunction, fg = "lightblue",
                      bg = "black", font = ("Mincho", 20))
 startButton.pack()
 window.mainloop()
