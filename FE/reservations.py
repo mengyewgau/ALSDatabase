@@ -7,7 +7,7 @@ import backendSQL as sqlFunc
 
 window = Tk()
 
-
+####################################################################################################################################################################################
 ## Navigation stuff
 def destroyReservationMenu():
     reservationMenu.destroy()
@@ -18,9 +18,6 @@ def destroyBookReservation():
 def destroyReservationConfirmDetailsPopUp():
     confirmReservationDetails.destroy()
 
-# def destroyReserveFail():
-#     reserveFail.destroy()
-
 def destroySuccessReservation():
     reserveSuccess.destroy()
 
@@ -29,9 +26,6 @@ def destroyCancelBookReservation():
 
 def destroyCancelConfirmDetailsPopUp():
     confirmCancellationDetails.destroy()
-
-# def destroyCancelFail():
-#     cancelFail.destroy()
 
 def destroySuccessCancel():
     cancelSuccess.destroy()    
@@ -45,13 +39,19 @@ def goReservationsMenuFromCancelReservation():
     reservationMenuWindow()
     destroyCancelBookReservation()
     reservationMenu.lift()
-    
 
 def goHome():
     window.destroy()
     import landingPage
 
-##########################################################################################
+def openBookReservationMenuFunction():
+    reservationMenu.destroy()
+    openBookReservation()
+
+def openReservationCancelMenuFunction():
+    reservationMenu.destroy()
+    openReservationCancellation()
+####################################################################################################################################################################################
 ## Main Reservation Menu #################################################################
 def reservationMenuWindow():
     global reservationMenu
@@ -80,7 +80,7 @@ def reservationMenuWindow():
                                 font=("Arial, 14"),
                                 bg="LightBlue",
                                 fg="white",
-                                command=openBookReservation)
+                                command=openBookReservationMenuFunction)
     reserveBookButton.place(x=480, y=280, width=180, height=160)
 
     reserveBookLabel = Label(reservationMenu,
@@ -92,11 +92,11 @@ def reservationMenuWindow():
 
     ## Cancel Reservation button
     reservationCancelButton = Button(reservationMenu,
-                                    text="9.Cancel Reservation",
+                                    text="9.Cancel \nReservation",
                                     font=("Arial, 14"),
                                     bg="royalblue",
                                     fg="white",
-                                    command=openReservationCancellation)
+                                    command=openReservationCancelMenuFunction)
     reservationCancelButton.place(x=480, y=440, width=180, height=160)
 
     reservationCancelLabel = Label(reservationMenu, 
@@ -120,7 +120,7 @@ def reservationMenuWindow():
 def openBookReservation():
     global createBookReservation
     createBookReservation = Toplevel()
-    createBookReservation.geometry("750x820")
+    createBookReservation.geometry("1280x720")
     destroyReservationMenu()
     createBookReservation.lift()
 
@@ -130,11 +130,16 @@ def openBookReservation():
     def reserveBook():
         try:
             result = sqlFunc.confirmReservation(entryMemberID.get(),
-                                entryAccensionNumber.get(),
+                                entryAccessionNumber.get(),
                                 entryDate.get())
             confirmReservationDetailsPopUpWindow(result)
         except Exception as excp :
-            messagebox.showerror("Reservation Error", "Member has outstanding Fine/Member has exceed reservation quota")
+            if excp.args[0] == "MemberId/Accesion Number fields are wrong!":
+                messagebox.showerror("Reservation Error",
+                                 "MembershipID/Accesion Number fields is/are wrong")
+            else:
+                messagebox.showerror("Reservation Error",
+                                 "Member has outstanding Fine/Member has exceed reservation quota")
             
 
     ###################################################################################################################
@@ -142,6 +147,7 @@ def openBookReservation():
     def confirmReservationDetailsPopUpWindow(sqlResult):
         global confirmReservationDetails
         confirmReservationDetails = Toplevel()
+        confirmReservationDetails.grab_set();
         confirmReservationDetails.geometry("450x400")
         confirmReservationDetails.configure(bg="chartreuse2")
 
@@ -157,7 +163,9 @@ def openBookReservation():
                     messagebox.showerror("Reservation Error", "Member has Outstanding Fine of: ${0}".format(fineAmount))
                     destroyReservationConfirmDetailsPopUp()
                 elif excp.args[0] == "Member has exceed reservation quota":
-                    messagebox.showerror("Reservation Error", "Member currently has 2 Books on Reservation")
+                    messagebox.showerror(
+                        "Reservation Error",
+                        "Member currently has 2 Books on Reservation")
                     destroyReservationConfirmDetailsPopUp()
                 else:
                     messagebox.showerror("Reservation Error", "Member has already reserved the book")
@@ -257,51 +265,49 @@ def openBookReservation():
         
     ##########################################################################################
     ## Window design and placements ##########################################################
-
     ## Title Label 
     createBookReservationTitle = Label(createBookReservation,
                                         text="To Reserve a Book, Please Enter Information Below:",
-                                        font=("Arial, 18"),
+                                        font=("Arial", 20, "bold"),
                                         bg="aquamarine")
-    createBookReservationTitle.place(x=0, y=0, width=750, height=200)
+    createBookReservationTitle.place(x=0, y=0, width=1280, height=150);
 
-    ## Accension Number input field
-    createReservationAccensionLabel = Label(createBookReservation,
-                                            text="Accension Number",
-                                            font=("Arial, 10"),
-                                            bg="DodgerBlue3",
-                                            fg="white")
-    createReservationAccensionLabel.place(x=0, y=200, width=300, height=100)
-    entryAccensionNumber = Entry(createBookReservation, font=("Arial, 10"))
-    entryAccensionNumber.place(x=300, y=260, width=450, height=40)
+    ## Accession Number input field
+    createReservationAccessionLabel = Label(createBookReservation,
+                                text="Accession Number",
+                                font =("calibre", 14, "bold"),
+                                bg="DodgerBlue4",
+                                fg="white")
+    createReservationAccessionLabel.place(x=280, y=230, width=300, height=90);
+    entryAccessionNumber = Entry(createBookReservation, font=('Arial',10,'italic'))
+    entryAccessionNumber.place(x=620, y=260, width=450, height=30);
 
     ## Membership ID input field
     createMemberIDLabel = Label(createBookReservation,
                                 text="Membership ID",
-                                font=("Arial, 10"),
-                                bg="DodgerBlue2",
+                                font =("calibre", 14, "bold"),
+                                bg="DodgerBlue3",
                                 fg="white")
-    createMemberIDLabel.place(x=0, y=300, width=300, height=100)
-    entryMemberID = Entry(createBookReservation, font=("Arial, 10"))
-    entryMemberID.place(x=300, y=360, width=450, height=40)
+    createMemberIDLabel.place(x=280, y=330, width=300, height=90);
+    entryMemberID = Entry(createBookReservation, font=("Arial", 10, "italic"))
+    entryMemberID.place(x=620, y=360, width=450, height=30)
 
     ## Reserve Date input field   
     createDateLabel = Label(createBookReservation,
                                 text="Reserve date",
-                                font=("Arial, 10"),
-                                bg="DodgerBlue1",
+                                font =("calibre", 14, "bold"),
+                                bg="DodgerBlue2",
                                 fg="white")
-    createDateLabel.place(x=0, y=400, width=300, height=100)
-    entryDate = Entry(createBookReservation, font=("Arial, 10"))
-    entryDate.place(x=300, y=460, width=450, height=40)    
-
+    createDateLabel.place(x=280, y=430, width=300, height=90);
+    entryDate = Entry(createBookReservation, font=("Arial", 10, "italic"))
+    entryDate.place(x=620, y=460, width=450, height=30);
     ## Make Book Reservation Button
     makeBookReservation = Button(createBookReservation,
                         text="Reserve Book",
                         font=("Arial, 18"),
                         bg="aquamarine",
                         command=reserveBook)
-    makeBookReservation.place(x=80, y=710, width=250, height=80)
+    makeBookReservation.place(x=355, y=610, width=250, height=80);
 
     ## Back to Reservations Menu Button
     backToReservation = Button(createBookReservation,
@@ -310,8 +316,7 @@ def openBookReservation():
                         bg="aquamarine",
                         wraplength=230,
                         command=goReservationsMenuFromMakeReservation)
-    backToReservation.place(x=420, y=710, width=250, height=80)
-
+    backToReservation.place(x=675, y=610, width=250, height=80);
 
 
 
@@ -322,7 +327,7 @@ def openBookReservation():
 def openReservationCancellation():
     global cancelBookReservation
     cancelBookReservation = Toplevel()
-    cancelBookReservation.geometry("750x820")
+    cancelBookReservation.geometry("1280x720")
     destroyReservationMenu()
     cancelBookReservation.lift()
 
@@ -332,11 +337,12 @@ def openReservationCancellation():
     def cancelReservation():
         try:
             result = sqlFunc.confirmCancel(entryMemberID.get(),
-                                entryAccensionNumber.get(),
+                                entryAccessionNumber.get(),
                                 entryDate.get())
             confirmCancellationDetailsPopUpWindow(result)
         except Exception as excp :
-            messagebox.showerror("Cancellation Error", "Member has outstanding Fine/Member has exceed reservation quota")
+            print(excp.args[0])
+            messagebox.showerror("Cancellation Error", "Reservation does not exist")
             
 
     ##########################################################################################
@@ -453,54 +459,54 @@ def openReservationCancellation():
                                         text="To Cancel a Reservation, Please Enter Information Below:",
                                         font=("Arial, 18"),
                                         bg="aquamarine")
-    cancelBookReservationTitle.place(x=0, y=0, width=750, height=200)
+    cancelBookReservationTitle.place(x=0, y=0, width=1280, height=150)
 
-    ## Accension Number input field
-    cancelReservationAccensionLabel = Label(cancelBookReservation,
-                                            text="Accension Number",
-                                            font=("Arial, 10"),
-                                            bg="DodgerBlue3",
-                                            fg="white")
-    cancelReservationAccensionLabel.place(x=0, y=200, width=300, height=100)
-    entryAccensionNumber = Entry(cancelBookReservation, font=("Arial, 10"))
-    entryAccensionNumber.place(x=300, y=260, width=450, height=40)
+    ## Accession Number input field
+    cancelReservationAccessionLabel = Label(cancelBookReservation,
+                                text="Accession Number",
+                                font=("calibre", 14, "bold"),
+                                bg="DodgerBlue3",
+                                fg="white")
+    cancelReservationAccessionLabel.place(x=280, y=230, width=300, height=90);
+    entryAccessionNumber = Entry(cancelBookReservation, font=("Arial", 10, "italic"))
+    entryAccessionNumber.place(x=620, y=260, width=450, height=30)
 
     ## Membership ID input field
     cancelMemberIDLabel = Label(cancelBookReservation,
                                 text="Membership ID",
-                                font=("Arial, 10"),
+                                font=("calibre", 14, "bold"),
                                 bg="DodgerBlue2",
                                 fg="white")
-    cancelMemberIDLabel.place(x=0, y=300, width=300, height=100)
-    entryMemberID = Entry(cancelBookReservation, font=("Arial, 10"))
-    entryMemberID.place(x=300, y=360, width=450, height=40)
+    cancelMemberIDLabel.place(x=280, y=330, width=300, height=90);
+    entryMemberID = Entry(cancelBookReservation, font=("Arial", 10, "italic"))
+    entryMemberID.place(x=620, y=360, width=450, height=30)
 
     ## Reserve Date input field   
     cancelDateLabel = Label(cancelBookReservation,
                                 text="Cancel date",
-                                font=("Arial, 10"),
+                                font=("calibre", 14, "bold"),
                                 bg="DodgerBlue1",
                                 fg="white")
-    cancelDateLabel.place(x=0, y=400, width=300, height=100)
-    entryDate = Entry(cancelBookReservation, font=("Arial, 10"))
-    entryDate.place(x=300, y=460, width=450, height=40)    
-
-    ## Back to Reservations Menu Button
-    backToReservationButton = Button(cancelBookReservation,
-                        text="Back to Reservations Menu",
-                        font=("Arial, 18"),
-                        bg="aquamarine",
-                        wraplength=230,
-                        command=goReservationsMenuFromCancelReservation)
-    backToReservationButton.place(x=420, y=710, width=250, height=80)
+    cancelDateLabel.place(x=280, y=430, width=300, height=90);
+    entryDate = Entry(cancelBookReservation, font=("Arial", 10, "italic"))
+    entryDate.place(x=620, y=460, width=450, height=30)    
 
     ## Cancel Book Reservation Button
     cancelBookReservationButton = Button(cancelBookReservation,
-                        text="Cancel Reservation",
-                        font=("Arial, 18"),
-                        bg="aquamarine",
-                        command=cancelReservation)
-    cancelBookReservationButton.place(x=80, y=710, width=250, height=80)
+                                text="Cancel Reservation",
+                                font=("Arial, 18"),
+                                bg="aquamarine",
+                                command=cancelReservation)
+    cancelBookReservationButton.place(x=355, y=610, width=250, height=80);
+
+    ## Back to Reservations Menu Button
+    backToReservationButton = Button(cancelBookReservation,
+                                text="Back to Reservations Menu",
+                                font=("Arial, 18"),
+                                bg="aquamarine",
+                                wraplength=230,
+                        command=goReservationsMenuFromCancelReservation)
+    backToReservationButton.place(x=675, y=610, width=250, height=80);
 
 ## Dont delete - used to start the app
 startButton = Button(window, text = "Start", command = reservationMenuWindow, fg = "lightblue",
@@ -508,64 +514,3 @@ startButton = Button(window, text = "Start", command = reservationMenuWindow, fg
 startButton.pack()
 
 window.mainloop()
-
-# ## Reserve Book Fail Popup
-# def reserveFailWindow():
-#     global reserveFail
-#     reserveFail = Toplevel()
-#     reserveFail.configure(bg="red")
-#     reserveFail.geometry("450x400")
-
-#     ## Error Title
-#     errorTitle = Label(reserveFail,
-#                         text = "Error!",
-#                         font=("Arial", 40,"bold"),
-#                         bg="red",
-#                         fg="yellow");
-#     errorTitle.place(x=0, y=100, width=450, height=100);
-
-# ## error message needs fine amount if member has outstanding fine
-#     errorMsg = Label(reserveFail,
-#                         text = "Member currently has \n 2 books on Reservation; Member has Outstanding Fine of $X.", 
-#                         font=("Arial", 16,"bold"),
-#                         bg="red",
-#                         fg="yellow");
-#     errorMsg.place(x=0, y=200, width=450, height=100);    
-
-#     returnButton = Button(reserveFail,
-#                          text="Back to \n Reserve \n Function",
-#                          font=("Arial", 12,"bold"),
-#                          borderwidth=6,
-#                          bg="aquamarine",
-#                          command=destroyReserveFail);
-#     returnButton.place(x=125, y=300, width=200, height=80)
-
-# ## Cancel Reservation Fail Popup
-# def cancelFailWindow():
-#     global cancelFail
-#     cancelFail = Toplevel()
-#     cancelFail.configure(bg="red")
-#     cancelFail.geometry("450x400")
-
-#     ## Error Title
-#     errorTitle = Label(cancelFail,
-#                         text = "Error!",
-#                         font=("Arial", 40,"bold"),
-#                         bg="red",
-#                         fg="yellow");
-#     errorTitle.place(x=0, y=100, width=450, height=100);
-
-#     errorMsg = Label(cancelFail,
-#                         text = "Member has no such reservation.", 
-#                         font=("Arial", 16,"bold"),
-#                         bg="red",
-#                         fg="yellow");
-#     errorMsg.place(x=0, y=200, width=450, height=100);    
-
-#     returnButton = Button(cancelFail,
-#                          text="Back to \n Cancellation \n Function",
-#                          font=("Arial", 12,"bold"),
-#                          borderwidth=6,
-#                          bg="aquamarine",
-#                          command=destroyCancelFail);
-#     returnButton.place(x=125, y=300, width=200, height=80)
