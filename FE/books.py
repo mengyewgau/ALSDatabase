@@ -229,7 +229,7 @@ def confirmAcqDialog():
     confirmAcqHeader.place(x=0, y=0, width=800, height=90);
 
     ## Accession Number Confirmation
-    confirmAccNum = Label(acquisitionationDialog,
+    confirmAccNum = Label(acquisitionConfirmationDialog,
                               text = "Accession Number: {0}"
                                   .format(accessionNum),
                               font = ("calibre", 15),
