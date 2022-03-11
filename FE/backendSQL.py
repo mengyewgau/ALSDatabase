@@ -187,8 +187,8 @@ def withdrawBook(accessionNum):
     if checkIfBookOnLoan(accessionNum):
         raise Exception("Books is on Loan");
     try:
-        deleteMember = 'DELETE FROM Book WHERE accessionNum = "{0}"'.format(accessionNum)
-        engine.execute(deleteMember)
+        withdrawBook = 'DELETE FROM Book WHERE accessionNum = "{0}"'.format(accessionNum)
+        engine.execute(withdrawBook)
     except:
         raise Exception("Book has reservations")
 
@@ -228,6 +228,13 @@ def confirmCancel(membershipId, accessionNum, cancelDate):
 #############################################################################################################################################################################
 
 ### Update Functions
+def checkMemForUpdate(membershipId):
+    ## Checks if a member exists before we update them
+    
+    checkMem = 'SELECT memberName FROM Member WHERE membershipId="{0}"'.format(membershipId)
+    result = engine.execute(checkMem).fetchone()
+    if not bool(result):
+        raise Exception("Member does not exist");
 
 def checkMemForUpdate(membershipId):
     ## Checks if a member exists before we update them
@@ -252,13 +259,15 @@ def confirmUpdate(membershipId, memName, memFac, memPhone, memEmail):
     return (membershipId, memName, memFac, memPhone, memEmail);
 #############################################################################################################################################################################
 ### Creation Functions
-def createMember(membershipId, memName, memFace, memPhone, memEmail):
+def createMember(membershipId, memName, memFac, memPhone, memEmail):
+    if memName == "" or memFac == "" or memPhone == "" or memEmail == "":
+        raise Exception("Missing or incomplete fields");
     try:
         createMem = 'INSERT INTO member VALUES ("{0}","{1}", "{2}", "{3}", "{4}", 0)'.format(membershipId,
-                                                                                                memName,
-                                                                                                memFace,
-                                                                                                memPhone,
-                                                                                                memEmail)
+                                                                                            memName,
+                                                                                            memFac,
+                                                                                            memPhone,
+                                                                                            memEmail)
         engine.execute(createMem)
     except:
         raise Exception("Creation Error")
@@ -296,7 +305,6 @@ def checkMemQuota(memId, relation): #FE Facing
     retrieveLoan = 'SELECT membershipId FROM {0} WHERE membershipId = "{1}"'.format(relation, memId)
     result = engine.execute(retrieveLoan).fetchall()
     return len(result)
-
 
 def checkReservationToBeDeleted(membershipId, accessionNum):
     queryReservation = 'SELECT EXISTS(SELECT * FROM Reservation where accessionNum="{0}" and membershipId="{1}");'.format(accessionNum,
