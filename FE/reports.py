@@ -16,12 +16,14 @@ def openBookSearch():
     chooseSearchFieldMenu.lift()
 
 def openBooksOnLoan():
-    booksOnLoanFunc()
+    result = sqlFuncs.loanReport()
+    booksOnLoanFunc(result,0)
     booksOnLoanMenu.lift()
     booksOnLoanMenu.lift()
 
 def openBooksOnReserv():
-    booksOnReservFunc()
+    result = sqlFuncs.reservationReport()
+    booksOnReservFunc(result,0)
     booksOnReservMenu.lift()
     booksOnReservMenu.lift()
 
@@ -125,15 +127,20 @@ def reportsMenuFunc():
         command = goHome)
     buttonBack.place(x=220, y=650, width=140, height=40)
 
+##HERE1
+
 ############################################
 ## Reports 2 - Books on Loan 
 ############################################
 
-def booksOnLoanFunc():
+def booksOnLoanFunc(sqlResult,currentPage):
     global booksOnLoanMenu
     booksOnLoanMenu = Toplevel()
     booksOnLoanMenu.title("Books on Loan")
     booksOnLoanMenu.geometry("1100x600")
+
+    numResultRows = len(sqlResult)
+    numPages = numResultRows/3
 
     def closeBooksOnLoanMenu():
         reportsMenu.lift()
@@ -146,6 +153,7 @@ def booksOnLoanFunc():
                        bg = "Slategray1")
     booksOnLoanLabel.place(x=0, y=0, width=1100, height=80);
 
+
     ##Back Button
     buttonBack = Button(booksOnLoanMenu,
         text = "Back to Reports",
@@ -155,15 +163,297 @@ def booksOnLoanFunc():
         command = closeBooksOnLoanMenu)
     buttonBack.place(x=480, y=500, width=180, height=40)
 
+    ########################
+    ## Table Headers
+    ########################
+    ## Acc Num
+    booksOnLoanResultAccNumLabel = Label(booksOnLoanMenu,
+                                text = "Accession Number",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=100,
+                                justify="center")
+    booksOnLoanResultAccNumLabel.place(x=20, y=100, width=150, height=80);
+
+    ## Title 
+    booksOnLoanResultTitleLabel = Label(booksOnLoanMenu,
+                                text = "Title",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=180,
+                                justify="center")
+    booksOnLoanResultTitleLabel.place(x=170, y=100, width=250, height=80);
+
+    ## Author
+    booksOnLoanResultAuthorsLabel = Label(booksOnLoanMenu,
+                                text = "Authors",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=180,
+                                justify="center")
+    booksOnLoanResultAuthorsLabel.place(x=420, y=100, width=250, height=80);
+
+    ## ISBN
+    booksOnLoanResultISBNLabel = Label(booksOnLoanMenu,
+                                text = "ISBN",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=100,
+                                justify="center")
+    booksOnLoanResultISBNLabel.place(x=670, y=100, width=150, height=80);
+
+    ## Publisher
+    booksOnLoanResultPublisherLabel = Label(booksOnLoanMenu,
+                                text = "Publisher",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=100,
+                                justify="center")
+    booksOnLoanResultPublisherLabel.place(x=820, y=100, width=150, height=80);
+
+    ## Publishing Year
+    booksOnLoanResultPubYearLabel = Label(booksOnLoanMenu,
+                                text = "Year",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=100,
+                                justify="center")
+    booksOnLoanResultPubYearLabel.place(x=970, y=100, width=110, height=80);
+
+    ## Table rows here - 3 rows per page
+    result = sqlResult
+    numResultsOnCurrPageOnwards = len(result)-(currentPage)*3
+    tempTuple = ((result[0+currentPage*3]), ())
+    resultsOnCurrPageList = list(tempTuple)
+
+    if numResultsOnCurrPageOnwards >= 2:
+        resultsOnCurrPageList.pop()
+        resultsOnCurrPageList.append(result[1+currentPage*3])
+
+    if numResultsOnCurrPageOnwards >= 3:
+        resultsOnCurrPageList.append(result[2+currentPage*3])
+
+    resultsOnCurrPage = tuple(resultsOnCurrPageList)
+    #####################################
+    ## Row 1
+    #####################################
+    if numResultsOnCurrPageOnwards >= 1:
+        ## Acc Num
+        booksOnLoanResultRow1AccNumLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[0][0],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow1AccNumLabel.place(x=20, y=180, width=150, height=80);
+
+        ## Title 
+        booksOnLoanResultRow1TitleLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[0][1],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        booksOnLoanResultRow1TitleLabel.place(x=170, y=180, width=250, height=80);
+
+        ## Author
+        booksOnLoanResultRow1AuthorsLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[0][2],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        booksOnLoanResultRow1AuthorsLabel.place(x=420, y=180, width=250, height=80);
+
+        ## ISBN
+        booksOnLoanResultRow1ISBNLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[0][3],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow1ISBNLabel.place(x=670, y=180, width=150, height=80);
+
+        ## Publisher
+        booksOnLoanResultRow1PublisherLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[0][4],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow1PublisherLabel.place(x=820, y=180, width=150, height=80);
+
+        ## Publishing Year
+        booksOnLoanResultRow1PubYearLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[0][5],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow1PubYearLabel.place(x=970, y=180, width=110, height=80);
+
+    #####################################
+    ## Row 2
+    #####################################
+    ## Acc Num
+    if numResultsOnCurrPageOnwards >= 2:
+        booksOnLoanResultRow2AccNumLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[1][0],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow2AccNumLabel.place(x=20, y=260, width=150, height=80);
+
+        ## Title 
+        booksOnLoanResultRow2TitleLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[1][1],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        booksOnLoanResultRow2TitleLabel.place(x=170, y=260, width=250, height=80);
+
+        ## Author
+        booksOnLoanResultRow2AuthorsLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[1][2],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        booksOnLoanResultRow2AuthorsLabel.place(x=420, y=260, width=250, height=80);
+
+        ## ISBN
+        booksOnLoanResultRow2ISBNLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[1][3],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow2ISBNLabel.place(x=670, y=260, width=150, height=80);
+
+        ## Publisher
+        booksOnLoanResultRow2PublisherLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[1][4],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow2PublisherLabel.place(x=820, y=260, width=150, height=80);
+
+        ## Publishing Year
+        booksOnLoanResultRow2PublisherLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[1][5],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow2PublisherLabel.place(x=970, y=260, width=110, height=80);
+
+    #####################################
+    ## Row 3
+    #####################################
+    if numResultsOnCurrPageOnwards >= 3:
+        ## Acc Num
+        booksOnLoanResultRow3AccNumLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[2][0],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow3AccNumLabel.place(x=20, y=340, width=150, height=80);
+
+        ## Title 
+        booksOnLoanResultRow3TitleLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[2][1],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        booksOnLoanResultRow3TitleLabel.place(x=170, y=340, width=250, height=80);
+
+        ## Author
+        booksOnLoanResultRow3AuthorsLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[2][2],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        booksOnLoanResultRow3AuthorsLabel.place(x=420, y=340, width=250, height=80);
+
+        ## ISBN
+        booksOnLoanResultRow3ISBNLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[2][3],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow3ISBNLabel.place(x=670, y=340, width=150, height=80);
+
+        ## Publisher
+        booksOnLoanResultRow3PublisherLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[2][4],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow3PublisherLabel.place(x=820, y=340, width=150, height=80);
+
+        ## Publishing Year
+        booksOnLoanResultRow3PublisherLabel = Label(booksOnLoanMenu,
+                                    text = resultsOnCurrPage[2][5],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        booksOnLoanResultRow3PublisherLabel.place(x=970, y=340, width=110, height=80);
+
+    ## Table nav buttons
+    def openNextTable():
+        if currentPage != numPages-1:
+            booksOnLoanMenu.destroy()
+            booksOnLoanFunc(result, currentPage+1)
+
+
+    def openPrevTable():
+        if currentPage != 0:
+            booksOnLoanMenu.destroy()
+            booksOnLoanFunc(result, currentPage-1)
+
+    booksOnLoanResultPrevTableButton = Button(booksOnLoanMenu,
+                                    text = "<<",
+                                    font = ("calibre", 15, "bold"),
+                                    fg = "grey39",
+                                    bg = "snow3",
+                                    command = openPrevTable)
+    booksOnLoanResultPrevTableButton.place(x=200, y=450, width=20, height=20)
+
+    booksOnLoanResultCurrPageLabel = Label(booksOnLoanMenu,
+                                text = "Current Page: {}".format(currentPage+1),
+                                font =("calibre", 15, "bold"))
+    booksOnLoanResultCurrPageLabel.place(x=470, y=430, width=180, height=60);
+
+    booksOnLoanResultNextTableButton = Button(booksOnLoanMenu,
+                                    text = ">>",
+                                    font = ("calibre", 15, "bold"),
+                                    fg = "grey39",
+                                    bg = "snow3",
+                                    command = openNextTable)
+    booksOnLoanResultNextTableButton.place(x=900, y=450, width=20, height=20)
+
+
 ############################################
 ## Reports 3 - Books on Reserv 
 ############################################
 
-def booksOnReservFunc():
+def booksOnReservFunc(sqlResult,currentPage):
     global booksOnReservMenu
     booksOnReservMenu = Toplevel()
     booksOnReservMenu.title("Books on Reservation")
     booksOnReservMenu.geometry("1100x600")
+
+    numResultRows = len(sqlResult)
+    numPages = numResultRows/3
 
     def closeBooksOnReservMenu():
         reportsMenu.lift()
@@ -184,6 +474,216 @@ def booksOnReservFunc():
         bg = "snow3",
         command = closeBooksOnReservMenu)
     buttonBack.place(x=480, y=500, width=180, height=40)
+
+
+    ########################
+    ## Table Headers
+    ########################
+    ## Acc Num
+    reservationResultAccNumLabel = Label(booksOnReservMenu,
+                                text = "Accession Number",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=100,
+                                justify="center")
+    reservationResultAccNumLabel.place(x=120, y=100, width=150, height=80);
+
+    ## Title 
+    reservationResultTitleLabel = Label(booksOnReservMenu,
+                                text = "Title",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=180,
+                                justify="center")
+    reservationResultTitleLabel.place(x=270, y=100, width=250, height=80);
+
+    ## Membership Id
+    reservationResultMembershipIDLabel = Label(booksOnReservMenu,
+                                text = "Membership ID",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=180,
+                                justify="center")
+    reservationResultMembershipIDLabel.place(x=520, y=100, width=250, height=80);
+
+    ## Name
+    reservationResultNameLabel = Label(booksOnReservMenu,
+                                text = "Name",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=100,
+                                justify="center")
+    reservationResultNameLabel.place(x=770, y=100, width=150, height=80);
+
+    ## Table rows here - 3 rows per page
+    result = sqlResult
+    numResultsOnCurrPageOnwards = len(result)-(currentPage)*3
+    tempTuple = ((result[0+currentPage*3]), ())
+    resultsOnCurrPageList = list(tempTuple)
+
+    if numResultsOnCurrPageOnwards >= 2:
+        resultsOnCurrPageList.pop()
+        resultsOnCurrPageList.append(result[1+currentPage*3])
+
+    if numResultsOnCurrPageOnwards >= 3:
+        resultsOnCurrPageList.append(result[2+currentPage*3])
+
+
+    resultsOnCurrPage = tuple(resultsOnCurrPageList)
+    #####################################
+    ## Row 1
+    #####################################
+    if numResultsOnCurrPageOnwards >= 1:
+        ## Acc Num
+        reservationResultRow1AccNumLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[0][0],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        reservationResultRow1AccNumLabel.place(x=120, y=180, width=150, height=80);
+
+        ## Title 
+        reservationResultRow1TitleLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[0][1],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        reservationResultRow1TitleLabel.place(x=270, y=180, width=250, height=80);
+
+        ## Membership ID
+        reservationResultRow1MembershipIDLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[0][2],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        reservationResultRow1MembershipIDLabel.place(x=520, y=180, width=250, height=80);
+
+        ## Name
+        reservationResultRow1NameLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[0][3],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        reservationResultRow1NameLabel.place(x=770, y=180, width=150, height=80);
+
+        
+    #####################################
+    ## Row 2
+    #####################################
+    if numResultsOnCurrPageOnwards >= 2:
+        ## Acc Num
+        reservationResultRow2AccNumLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[1][0],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        reservationResultRow2AccNumLabel.place(x=120, y=260, width=150, height=80);
+
+        ## Title 
+        reservationResultRow2TitleLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[1][1],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        reservationResultRow2TitleLabel.place(x=270, y=260, width=250, height=80);
+
+        ## Membership ID
+        reservationResultRow2MembershipIDLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[1][2],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        reservationResultRow2MembershipIDLabel.place(x=520, y=260, width=250, height=80);
+
+        ## Name
+        reservationResultRow2NameLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[1][3],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        reservationResultRow2NameLabel.place(x=770, y=260, width=150, height=80)
+
+    #####################################
+    ## Row 3
+    #####################################
+    if numResultsOnCurrPageOnwards >= 3:
+        ## Acc Num
+        reservationResultRow3AccNumLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[2][0],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        reservationResultRow3AccNumLabel.place(x=120, y=340, width=150, height=80);
+
+        ## Title 
+        reservationResultRow3TitleLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[2][1],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        reservationResultRow3TitleLabel.place(x=270, y=340, width=250, height=80);
+
+        ## Membership ID
+        reservationResultRow3MembershipIDLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[2][2],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        reservationResultRow3MembershipIDLabel.place(x=520, y=340, width=250, height=80);
+
+        ## Name
+        reservationResultRow3NameLabel = Label(booksOnReservMenu,
+                                    text = resultsOnCurrPage[2][3],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        reservationResultRow3NameLabel.place(x=770, y=340, width=150, height=80)
+
+    ## Table nav buttons
+    def openNextTable():
+        if currentPage != numPages-1:
+            booksOnReservMenu.destroy()
+            booksOnReservFunc(result, currentPage+1)
+
+    def openPrevTable():
+        if currentPage != 0:
+            booksOnReservMenu.destroy()
+            booksOnReservFunc(result, currentPage-1)
+
+    reservationResultPrevTableButton = Button(booksOnReservMenu,
+                                    text = "<<",
+                                    font = ("calibre", 15, "bold"),
+                                    fg = "grey39",
+                                    bg = "snow3",
+                                    command = openPrevTable)
+    reservationResultPrevTableButton.place(x=200, y=450, width=20, height=20)
+
+    reservationResultCurrPageLabel = Label(booksOnReservMenu,
+                                text = "Current Page: {}".format(currentPage+1),
+                                font =("calibre", 15, "bold"))
+    reservationResultCurrPageLabel.place(x=470, y=430, width=180, height=60);
+
+    reservationResultNextTableButton = Button(booksOnReservMenu,
+                                    text = ">>",
+                                    font = ("calibre", 15, "bold"),
+                                    fg = "grey39",
+                                    bg = "snow3",
+                                    command = openNextTable)
+    reservationResultNextTableButton.place(x=900, y=450, width=20, height=20)
+
+
 
 ############################################
 ## Reports 4 - Members with Outstanding Fines
@@ -645,10 +1145,12 @@ def bookSearchMenuFunc(searchField):
                                         command = closeSearchResultTable)
         searchResultBackButton.place(x=475, y=500, width=150, height=40)
 
+
     def searchForBook():
         categoryToSearch = searchField
         if searchField == "Publishing Year":
             categoryToSearch = "PubYear"
+
             
         if len(bookSearchFieldEntry.get()) == 0:
             messagebox.showerror(
