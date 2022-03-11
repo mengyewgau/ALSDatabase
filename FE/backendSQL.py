@@ -123,10 +123,13 @@ def payFine(membershipId, paidDate, paidAmt):
         updateMemQ = 'UPDATE Member SET currFine=0 WHERE membershipId="{0}"'.format(membershipId);
         engine.execute(paymentQuery);
         engine.execute(updateMemQ);
+        
 
-def confirmFinePayment(membershipId, paidDate, paidAmt):
+def confirmFinePayment(membershipId, paidDate):
+    paidAmtQuery = 'SELECT currFine FROM Member WHERE membershipId="{0}"'.format(membershipId);
+    paidAmt = engine.execute(paidAmtQuery).fetchone()[0];
     ## Return fine confirmation page
-    return ("$"+str(paidAmt), membershipId, "Exact Fee Only", paidDate)
+    return ("$"+ str(paidAmt), membershipId, "Exact Fee Only", paidDate)
 
 ## Reserve Books
 
