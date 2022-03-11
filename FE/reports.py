@@ -606,7 +606,7 @@ def bookSearchMenuFunc(searchField):
 
         ## Table nav buttons
         def openNextTable():
-            if currentPage != len(result)-1:
+            if currentPage != numPages-1:
                 searchResultTable.destroy()
                 openSearchResultTable(result, currentPage+1)
 

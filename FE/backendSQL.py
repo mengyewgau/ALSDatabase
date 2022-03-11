@@ -311,19 +311,34 @@ def checkIfBookOnLoan(accessionNum):
 #############################################################################################################################################################################
 
 ### Report Functions
-def bookSearchReport(word, category): 
-    queryBookInfo = 'SELECT accessionNum, title, ISBN, publisher, pubYear FROM Book where {0} LIKE "%%{1}%%";'.format(category,
-                                                                                                                      word)
-    bookInfoList = engine.execute(queryBookInfo).fetchall()
+def bookSearchReport(word, category):
+    if category == 'Author':
+        queryBookInfo = 'SELECT b.accessionNum, title, ISBN, publisher, pubYear FROM Book b INNER JOIN BookAuthor bA ON b.accessionNum = bA.accessionNum WHERE bA.authorName LIKE "%%{0}%%";'.format(word)
 
-    for index in range(len(bookInfoList)):
-        acNum = bookInfoList[index][0];
-        queryAuthors = "SELECT GROUP_CONCAT(authorName, ' ') FROM BookAuthor WHERE accessionNum='{0}'".format(acNum);
-        authors = engine.execute(queryAuthors).fetchone()[0]
-        
-        bookInfoList[index] = bookInfoList[index][0:2] + (authors,) + bookInfoList[index][2:]
+        bookInfoList = engine.execute(queryBookInfo).fetchall()
 
-    return bookInfoList;
+        for index in range(len(bookInfoList)):
+            acNum = bookInfoList[index][0];
+            queryAuthors = "SELECT GROUP_CONCAT(authorName, ' ') FROM BookAuthor WHERE accessionNum='{0}'".format(acNum);
+            authors = engine.execute(queryAuthors).fetchone()[0]
+            
+            bookInfoList[index] = bookInfoList[index][0:2] + (authors,) + bookInfoList[index][2:]
+
+        return bookInfoList;
+
+    else:
+        queryBookInfo = 'SELECT accessionNum, title, ISBN, publisher, pubYear FROM Book where {0} LIKE "%%{1}%%";'.format(category,
+                                                                                                                          word)
+        bookInfoList = engine.execute(queryBookInfo).fetchall()
+
+        for index in range(len(bookInfoList)):
+            acNum = bookInfoList[index][0];
+            queryAuthors = "SELECT GROUP_CONCAT(authorName, ' ') FROM BookAuthor WHERE accessionNum='{0}'".format(acNum);
+            authors = engine.execute(queryAuthors).fetchone()[0]
+            
+            bookInfoList[index] = bookInfoList[index][0:2] + (authors,) + bookInfoList[index][2:]
+
+        return bookInfoList;
 
 def loanReport():
     ## Returns loan report
