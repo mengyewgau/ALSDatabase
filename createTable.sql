@@ -8,9 +8,9 @@ CREATE TABLE Member(
 	 PRIMARY KEY 	(membershipId)); 
 CREATE TABLE Book( 
 	accessionNum	VARCHAR(25) 	NOT NULL,
-    title    		VARCHAR(25)		NOT NULL, #Authors will have to be referenced directly to BookAuthor
+    title    		VARCHAR(150)	NOT NULL, #Authors will have to be referenced directly to BookAuthor
 	ISBN			VARCHAR(25)		NOT NULL,
-	publisher		VARCHAR(25)		NOT NULL,
+	publisher		VARCHAR(50)		NOT NULL,
 	pubYear  		YEAR			NOT NULL,
     dueDate			DATE,
     membershipId	VARCHAR(25),

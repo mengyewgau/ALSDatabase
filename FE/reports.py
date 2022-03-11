@@ -1105,7 +1105,7 @@ def bookSearchMenuFunc(searchField):
 
         ## Table nav buttons
         def openNextTable():
-            if currentPage != numPages-1:
+            if currentPage != len(result)-1:
                 searchResultTable.destroy()
                 openSearchResultTable(result, currentPage+1)
 
@@ -1150,10 +1150,16 @@ def bookSearchMenuFunc(searchField):
         categoryToSearch = searchField
         if searchField == "Publishing Year":
             categoryToSearch = "PubYear"
-        
-        result = sqlFuncs.bookSearchReport(bookSearchFieldEntry.get(), categoryToSearch)
 
-        openSearchResultTable(result, 0)
+            
+        if len(bookSearchFieldEntry.get()) == 0:
+            messagebox.showerror(
+                        "Input Error",
+                        "Error: Please insert a search term")
+        else:
+            result = sqlFuncs.bookSearchReport(bookSearchFieldEntry.get(), categoryToSearch)
+
+            openSearchResultTable(result, 0)
     
     ## Information Header
     bookSearchMenuLabel = Label(bookSearchMenu,
@@ -1214,8 +1220,290 @@ def booksOnLoanToMemberMenuFunc():
     booksOnLoanToMemberMenu.title("Books on Loan to Member")
     booksOnLoanToMemberMenu.geometry("1280x720")
 
+    def closeSearchResultTable():
+        loanToMemberSearchResultTable.destroy()
+        booksOnLoanToMemberMenu.lift()
+
+    def openSearchResultTable(result, currentPage):
+        global loanToMemberSearchResultTable
+        loanToMemberSearchResultTable = Toplevel()
+        loanToMemberSearchResultTable.title("Search Results")
+        loanToMemberSearchResultTable.geometry("1100x600")
+
+        numResultRows = len(result)
+        numPages = numResultRows/3
+
+        ## Information Header
+        searchResultInfoLabel = Label(loanToMemberSearchResultTable,
+                                    text = "Books on Loan to Member: {0}"
+                                        .format(booksOnLoanToMemberIdEntry.get()),
+                                    font =("calibre", 20, "bold"),
+                                    bg = "LightSteelBlue2")
+        searchResultInfoLabel.place(x=0, y=0, width=1100, height=80);
+
+        ########################
+        ## Table Headers
+        ########################
+        ## Acc Num
+        searchResultAccNumLabel = Label(loanToMemberSearchResultTable,
+                                    text = "Accession Number",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=100,
+                                    justify="center")
+        searchResultAccNumLabel.place(x=20, y=100, width=150, height=80);
+
+        ## Title 
+        searchResultTitleLabel = Label(loanToMemberSearchResultTable,
+                                    text = "Title",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=180,
+                                    justify="center")
+        searchResultTitleLabel.place(x=170, y=100, width=250, height=80);
+
+        ## Author
+        searchResultAuthorsLabel = Label(loanToMemberSearchResultTable,
+                                    text = "Authors",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=180,
+                                    justify="center")
+        searchResultAuthorsLabel.place(x=420, y=100, width=250, height=80);
+
+        ## ISBN
+        searchResultISBNLabel = Label(loanToMemberSearchResultTable,
+                                    text = "ISBN",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=100,
+                                    justify="center")
+        searchResultISBNLabel.place(x=670, y=100, width=150, height=80);
+
+        ## Publisher
+        searchResultPublisherLabel = Label(loanToMemberSearchResultTable,
+                                    text = "Publisher",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=100,
+                                    justify="center")
+        searchResultPublisherLabel.place(x=820, y=100, width=150, height=80);
+
+        ## Publishing Year
+        searchResultPublisherLabel = Label(loanToMemberSearchResultTable,
+                                    text = "Year",
+                                    font =("calibre", 15, "bold"),
+                                    bg = "LightSteelBlue1",
+                                    wraplength=100,
+                                    justify="center")
+        searchResultPublisherLabel.place(x=970, y=100, width=110, height=80);
+
+        ## Table rows here - 3 rows per page
+        numResultsOnCurrPageOnwards = len(result)-(currentPage)*3
+        tempTuple = ((result[0+currentPage*3]), ())
+        resultsOnCurrPageList = list(tempTuple)
+
+        if numResultsOnCurrPageOnwards >= 2:
+            resultsOnCurrPageList.pop()
+            resultsOnCurrPageList.append(result[1+currentPage*3])
+
+        if numResultsOnCurrPageOnwards >= 3:
+            resultsOnCurrPageList.append(result[2+currentPage*3])
+
+        resultsOnCurrPage = tuple(resultsOnCurrPageList)
+        #####################################
+        ## Row 1
+        #####################################
+        if numResultsOnCurrPageOnwards >= 1:
+            ## Acc Num
+            searchResultRow1AccNumLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[0][0],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow1AccNumLabel.place(x=20, y=180, width=150, height=80);
+
+            ## Title 
+            searchResultRow1TitleLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[0][1],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow1TitleLabel.place(x=170, y=180, width=250, height=80);
+
+            ## Author
+            searchResultRow1AuthorsLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[0][2],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow1AuthorsLabel.place(x=420, y=180, width=250, height=80);
+
+            ## ISBN
+            searchResultRow1ISBNLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[0][3],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow1ISBNLabel.place(x=670, y=180, width=150, height=80);
+
+            ## Publisher
+            searchResultRow1PublisherLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[0][4],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow1PublisherLabel.place(x=820, y=180, width=150, height=80);
+
+            ## Publishing Year
+            searchResultRow1PublisherLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[0][5],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow1PublisherLabel.place(x=970, y=180, width=110, height=80);
+
+        #####################################
+        ## Row 2
+        #####################################
+        ## Acc Num
+        if numResultsOnCurrPageOnwards >= 2:
+            searchResultRow2AccNumLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[1][0],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow2AccNumLabel.place(x=20, y=260, width=150, height=80);
+
+            ## Title 
+            searchResultRow2TitleLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[1][1],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow2TitleLabel.place(x=170, y=260, width=250, height=80);
+
+            ## Author
+            searchResultRow2AuthorsLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[1][2],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow2AuthorsLabel.place(x=420, y=260, width=250, height=80);
+
+            ## ISBN
+            searchResultRow2ISBNLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[1][3],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow2ISBNLabel.place(x=670, y=260, width=150, height=80);
+
+            ## Publisher
+            searchResultRow2PublisherLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[1][4],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow2PublisherLabel.place(x=820, y=260, width=150, height=80);
+
+            ## Publishing Year
+            searchResultRow2PublisherLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[1][5],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow2PublisherLabel.place(x=970, y=260, width=110, height=80);
+
+        #####################################
+        ## Row 3
+        #####################################
+        if numResultsOnCurrPageOnwards >= 3:
+            ## Acc Num
+            searchResultRow3AccNumLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[2][0],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow3AccNumLabel.place(x=20, y=340, width=150, height=80);
+
+            ## Title 
+            searchResultRow3TitleLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[2][1],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow3TitleLabel.place(x=170, y=340, width=250, height=80);
+
+            ## Author
+            searchResultRow3AuthorsLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[2][2],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=180,
+                                        justify="center")
+            searchResultRow3AuthorsLabel.place(x=420, y=340, width=250, height=80);
+
+            ## ISBN
+            searchResultRow3ISBNLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[2][3],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow3ISBNLabel.place(x=670, y=340, width=150, height=80);
+
+            ## Publisher
+            searchResultRow3PublisherLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[2][4],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow3PublisherLabel.place(x=820, y=340, width=150, height=80);
+
+            ## Publishing Year
+            searchResultRow3PublisherLabel = Label(loanToMemberSearchResultTable,
+                                        text = resultsOnCurrPage[2][5],
+                                        font =("calibre", 15, "bold"),
+                                        bg = "GhostWhite",
+                                        wraplength=100,
+                                        justify="center")
+            searchResultRow3PublisherLabel.place(x=970, y=340, width=110, height=80);
+
+
+        ## Back Button
+        searchResultBackButton = Button(loanToMemberSearchResultTable,
+                                        text = "Back",
+                                        font = ("calibre", 15, "bold"),
+                                        fg = "grey39",
+                                        bg = "snow3",
+                                        command = closeSearchResultTable)
+        searchResultBackButton.place(x=475, y=500, width=150, height=40)
+
     def searchForBooksOnLoanToMember():
-        return
+        if len(booksOnLoanToMemberIdEntry.get()) == 0:
+            messagebox.showerror(
+                        "Input Error",
+                        "Error: Please insert a MembershipId")
+        else:
+            result = sqlFuncs.booksLoanedToMemReport(booksOnLoanToMemberIdEntry.get())
+
+            openSearchResultTable(result, 0)
     
     ## Information Header
     booksOnLoanToMemberLabel = Label(booksOnLoanToMemberMenu,
