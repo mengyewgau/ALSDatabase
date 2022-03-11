@@ -649,10 +649,15 @@ def bookSearchMenuFunc(searchField):
         categoryToSearch = searchField
         if searchField == "Publishing Year":
             categoryToSearch = "PubYear"
-        
-        result = sqlFuncs.bookSearchReport(bookSearchFieldEntry.get(), categoryToSearch)
+            
+        if len(bookSearchFieldEntry.get()) == 0:
+            messagebox.showerror(
+                        "Input Error",
+                        "Error: Please insert a search term")
+        else:
+            result = sqlFuncs.bookSearchReport(bookSearchFieldEntry.get(), categoryToSearch)
 
-        openSearchResultTable(result, 0)
+            openSearchResultTable(result, 0)
     
     ## Information Header
     bookSearchMenuLabel = Label(bookSearchMenu,
@@ -989,9 +994,14 @@ def booksOnLoanToMemberMenuFunc():
         searchResultBackButton.place(x=475, y=500, width=150, height=40)
 
     def searchForBooksOnLoanToMember():
-        result = sqlFuncs.booksLoanedToMemReport(booksOnLoanToMemberIdEntry.get())
+        if len(booksOnLoanToMemberIdEntry.get()) == 0:
+            messagebox.showerror(
+                        "Input Error",
+                        "Error: Please insert a MembershipId")
+        else:
+            result = sqlFuncs.booksLoanedToMemReport(booksOnLoanToMemberIdEntry.get())
 
-        openSearchResultTable(result, 0)
+            openSearchResultTable(result, 0)
     
     ## Information Header
     booksOnLoanToMemberLabel = Label(booksOnLoanToMemberMenu,
