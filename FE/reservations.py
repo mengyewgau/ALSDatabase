@@ -3,7 +3,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 from setuptools import Command
 from tkinter import messagebox
-import backendSQL as sqlFunc
+import backendSQL as sqlFuncs
 
 window = Tk()
 
@@ -41,8 +41,9 @@ def goReservationsMenuFromCancelReservation():
     reservationMenu.lift()
 
 def goHome():
-    window.destroy()
-    import landingPage
+    landingPageFunc()
+    destroyReservationMenu()
+    landingPage.lift()
 
 def openBookReservationMenuFunction():
     reservationMenu.destroy()
@@ -129,7 +130,7 @@ def openBookReservation():
 
     def reserveBook():
         try:
-            result = sqlFunc.confirmReservation(entryMemberID.get(),
+            result = sqlFuncs.confirmReservation(entryMemberID.get(),
                                 entryAccessionNumber.get(),
                                 entryDate.get())
             confirmReservationDetailsPopUpWindow(result)
@@ -153,13 +154,13 @@ def openBookReservation():
 
         def confirmReserveBook():
             try:
-                sqlFunc.reserveBook(sqlResult[2], sqlResult[0], sqlResult[4])
+                sqlFuncs.reserveBook(sqlResult[2], sqlResult[0], sqlResult[4])
                 destroyReservationConfirmDetailsPopUp()
                 reserveSuccessWindow()
                 reserveSuccess.lift()
             except Exception as excp:
                 if excp.args[0] == "Member has outstanding Fine":
-                    fineAmount = sqlFunc.checkFineValue(sqlResult[2])
+                    fineAmount = sqlFuncs.checkFineValue(sqlResult[2])
                     messagebox.showerror("Reservation Error", "Member has Outstanding Fine of: ${0}".format(fineAmount))
                     destroyReservationConfirmDetailsPopUp()
                 elif excp.args[0] == "Member has exceed reservation quota":
@@ -336,7 +337,7 @@ def openReservationCancellation():
 
     def cancelReservation():
         try:
-            result = sqlFunc.confirmCancel(entryMemberID.get(),
+            result = sqlFuncs.confirmCancel(entryMemberID.get(),
                                 entryAccessionNumber.get(),
                                 entryDate.get())
             confirmCancellationDetailsPopUpWindow(result)
@@ -355,7 +356,7 @@ def openReservationCancellation():
         
         def confirmCancelReservation():
             try:
-                sqlFunc.cancelReservation(sqlResult[2], sqlResult[0])
+                sqlFuncs.cancelReservation(sqlResult[2], sqlResult[0])
                 destroyCancelConfirmDetailsPopUp()
                 cancelSuccessWindow()
                 cancelSuccess.lift()

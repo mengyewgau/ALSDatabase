@@ -40,8 +40,9 @@ def openBooksOnLoanToMember():
     booksOnLoanToMemberMenu.lift()
 
 def goHome():
-    window.destroy()
-    import landingPage
+    landingPageFunc()
+    destroyReportsMenu()
+    landingPage.lift()
 
 def reportsMenuFunc():
     global reportsMenu

@@ -9,8 +9,9 @@ def destroyfineMainMenu():
     fineMainMenu.destroy()
 
 def goHome():
-    window.destroy()
-    import landingPage
+    landingPageFunc()
+    destroyfineMainMenu()
+    landingPage.lift()
 
 def goTofineMainMenuFromFinePayment():
     fineMainMenuFunction()

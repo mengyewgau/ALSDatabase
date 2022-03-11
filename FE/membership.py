@@ -3,8 +3,6 @@ from tkinter import messagebox
 from PIL import ImageTk, Image
 import backendSQL as sqlFuncs
 
-window = Tk()
-
 
 ### Naviagtion Functions #####################################################################################################################################################################################################################################
 # Navigation in Membership Menu
@@ -23,8 +21,10 @@ def navFromMemToUpdateMem(): # Go to updateMem
     destroyMemMenu();
     updateInputId.lift()
 def navReturnToMain(): # Return to Main Menu
-    window.destroy()
-    import landingPage
+    landingPageFunc()
+    destroyMemMenu()
+    landingPage.lift()
+
 
 # Navigation in Create Menus
 def destroyCreateMenu():

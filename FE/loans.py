@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import ttk
 from tkinter import messagebox
 from PIL import ImageTk, Image
 import backendSQL as sqlFuncs
@@ -25,8 +24,9 @@ def openReturn():
     loansReturnMenu.lift()
 
 def goHome():
-    window.destroy()
-    import landingPage
+    landingPageFunc()
+    destroyLoansMenu()
+    landingPage.lift()
 
 def loansMenuFunc():
     global loansMenu
