@@ -398,7 +398,7 @@ def reservationReport():
 def outsFineReport():
     # Returns members with outstanding fines report
     queryFineReport = 'SELECT membershipId,memberName,memberFac,memberPhone,memberEmail FROM Member WHERE currFine > 0'
-    return engine.execute(queryFineReport).fetchall()[0]
+    return engine.execute(queryFineReport).fetchall()
 
 def booksLoanedToMemReport(membershipId):
     queryBookInfo = "SELECT accessionNum, title, ISBN, publisher, pubYear FROM Book WHERE membershipId = '{0}'".format(membershipId)
