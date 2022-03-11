@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from PIL import ImageTk, Image
+import backendSQL as sqlFuncs
+from datetime import datetime
 
 window = Tk()
 
@@ -99,50 +101,49 @@ def loansBorrowMenuFunc():
     loansBorrowMenu.title("Borrow a Book")
     loansBorrowMenu.geometry("1280x720")
 
-    def closeBorrowDialog():
+    def closeConfirmBorrowDialog():
         loansBorrowMenu.lift()
         borrowConfirmDialog.destroy()
 
+    def borrowBook():
+        try:
+            result = sqlFuncs.confirmLoan(loansBorrowMemberIdEntry.get(),
+                                          loansBorrowAccNumEntry.get(),
+                                          datetime.today().strftime('%Y/%m/%d'))
+            openConfirmBookDialog(result)
+        except:
+            messagebox.showerror("Book Borrow Error", "Accession Number/Membership ID does not exist")
+        
     ############################################
     ## Loans 2.1 - Borrow Confirmation 
     ############################################
-    def borrowBook():
+    def openConfirmBookDialog(sqlResult):
         global borrowConfirmDialog
         borrowConfirmDialog = Toplevel()
+        borrowConfirmDialog.grab_set()
         borrowConfirmDialog.geometry("750x800")
         borrowConfirmDialog.configure(bg = "limegreen")
 
-        def isBookBorrowed():
-            return True
-
-        def isLoanQuotaExceeded():
-            return False
-
-        def doesMemberHaveFine():
-            return False
-
-
         def confirmBorrowBook():
-            if isBookBorrowed():
-                messagebox.showerror(
-                    "Book Borrow Error",
-                    "Error: Book currently on Loan until: {0}".format("DD/MM/YYYY"))
-                closeBorrowDialog()
-            else:
-                if isLoanQuotaExceeded():
-                    if doesMemberHaveFine():
-                        messagebox.showerror(
-                            "Book Borrow Error",
-                            "Error: Member has outstanding fines")
-                        closeBorrowDialog()
-                    else:
-                        ## Borrowing SQL call goes here
-                        closeBorrowDialog()
+            try:
+                sqlFuncs.loanBook(sqlResult[2][0],
+                                   sqlResult[0][0],
+                                   sqlResult[1])
+                closeConfirmBorrowDialog()
+            except Exception as excp:
+                if excp.args[0] == "Loan Quota Exceeded":
+                    messagebox.showerror(
+                        "Book Borrow Error",
+                        "Error: Member loan quota exceeded")
+                
+                elif excp.args[0] == "Outstanding Fines":
+                    messagebox.showerror(
+                        "Book Borrow Error",
+                        "Error: Member has outstanding fines")
                 else:
                     messagebox.showerror(
-                            "Book Borrow Error",
-                            "Error: Member loan quota exceeded")
-                    closeBorrowDialog()
+                        "Book Borrow Error",
+                        "Error: {0}".format(excp.args[0]))
  
 
         ## Information Header
@@ -155,7 +156,7 @@ def loansBorrowMenuFunc():
         ## Accession Number Field
         borrowConfirmAccInputLabel = Label(borrowConfirmDialog,
                                   text = "Accession Number: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[0][0]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
         borrowConfirmAccInputLabel.place(x=100, y=100, width=550, height=80)   
@@ -163,44 +164,61 @@ def loansBorrowMenuFunc():
         ## Book Title Field
         borrowConfirmBookTitleLabel = Label(borrowConfirmDialog,
                                   text = "Book Title: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[0][1]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
         borrowConfirmBookTitleLabel.place(x=100, y=200, width=550, height=80)
+
+        ## Borrow Date Field
+        borrowDateLabel = Label(borrowConfirmDialog,
+                                  text = "Return Date: {0}"
+                                           .format(sqlResult[1]),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        borrowDateLabel.place(x=100, y=300, width=550, height=80)
                              
         ## MembershipId Field
         borrowMembershipIdLabel = Label(borrowConfirmDialog,
                                   text = "Membership ID: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[2][0]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
-        borrowMembershipIdLabel.place(x=100, y=300, width=550, height=80)
+        borrowMembershipIdLabel.place(x=100, y=400, width=550, height=80)
 
         ## Member Name Field
         borrowMemberNameLabel = Label(borrowConfirmDialog,
                                   text = "Membership ID: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[2][1]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
-        borrowMemberNameLabel.place(x=100, y=400, width=550, height=80)
+        borrowMemberNameLabel.place(x=100, y=500, width=550, height=80)
 
         ## Borrow Due Date Field
         borrowDueDateLabel = Label(borrowConfirmDialog,
                                   text = "Return Date: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[3]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
-        borrowDueDateLabel.place(x=100, y=500, width=550, height=80)
+        borrowDueDateLabel.place(x=100, y=600, width=550, height=80)
 
 
-        ## Confirm Return Button
-        borrowBookCloseButton = Button(borrowConfirmDialog,
-            text = "Confirm\nReturn",
+        ## Confirm Borrow Button
+        borrowBookConfirmButton = Button(borrowConfirmDialog,
+            text = "Confirm\nBorrow",
             font = ("Arial", 20, "bold"),
             fg = "ghost white",
             bg = "magenta2",
             command = confirmBorrowBook)
-        borrowBookCloseButton.place(x=300, y=700, width=150, height=80)
+        borrowBookConfirmButton.place(x=200, y=700, width=150, height=80)
+        
+        ## Close Return Button
+        borrowBookCloseButton = Button(borrowConfirmDialog,
+            text = "Exit",
+            font = ("Arial", 20, "bold"),
+            fg = "ghost white",
+            bg = "magenta2",
+            command = closeConfirmBorrowDialog)
+        borrowBookCloseButton.place(x=400, y=700, width=150, height=80)
 
     ## Information Header
     loansBorrowLabel = Label(loansBorrowMenu,
@@ -269,6 +287,7 @@ def navFromLoansReturnToLoans():
 def loansReturnMenuFunc():
     global loansReturnMenu
     loansReturnMenu = Toplevel()
+    loansReturnMenu.grab_set()
     loansReturnMenu.title("Return a Book")
     loansReturnMenu.geometry("1280x720")
 
@@ -276,34 +295,39 @@ def loansReturnMenuFunc():
         loansReturnMenu.lift()
         returnConfirmDialog.destroy()
 
+    def returnBook():
+        try:
+            result = sqlFuncs.confirmReturn(loansReturnAccNumEntry.get(),
+                                            loansReturnDateEntry.get())
+            openReturnConfirmDialog(result)
+        except:
+            messagebox.showerror(
+                    "Book Return Error",
+                    "Accession Number/Return Date incorrect")
+
     ############################################
     ## Loans 3.1 - Return Confirmation 
     ############################################
-    def returnBook():
+    def openReturnConfirmDialog(sqlResult):
         global returnConfirmDialog
         returnConfirmDialog = Toplevel()
+        returnConfirmDialog.grab_set()
         returnConfirmDialog.geometry("750x800")
         returnConfirmDialog.configure(bg = "limegreen")
 
-        def isBookBorrowed():
-            return True
-
-        def isBookReturnedOnTime():
-            return False
-
         def confirmReturnBook():
-            if isBookBorrowed():
-                if isBookReturnedOnTime():
-                    closeReturnDialog()
-                else:
-                    messagebox.showwarning(
-                        "Book Returned Late",
-                        "Warning: Book returned late, fine credited to member!")
-                    closeReturnDialog()
-            else:
+            try:
+                response = sqlFuncs.returnBook(sqlResult[0],
+                                               sqlResult[4])
+                if response == "Warning! Member has outstanding fines to pay":
+                    messagebox.showerror(
+                            "Book Return Warning",
+                            "Reminder: Member has outstanding fines")
+                closeReturnDialog()
+            except:
                 messagebox.showerror(
-                "Book Return Error",
-                "Error: Book has not been borrowed")
+                        "Book Return Error",
+                        "Return Date cannot be before Loan Date")
 
         ## Information Header
         returnConfirmTitleLabel = Label(returnConfirmDialog,
@@ -315,7 +339,7 @@ def loansReturnMenuFunc():
         ## Accession Number Field
         returnConfirmAccInputLabel = Label(returnConfirmDialog,
                                   text = "Accession Number: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[0]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
         returnConfirmAccInputLabel.place(x=100, y=100, width=550, height=80)   
@@ -323,7 +347,7 @@ def loansReturnMenuFunc():
         ## Book Title Field
         returnConfirmBookTitleLabel = Label(returnConfirmDialog,
                                   text = "Book Title: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[1]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
         returnConfirmBookTitleLabel.place(x=100, y=200, width=550, height=80)
@@ -331,7 +355,7 @@ def loansReturnMenuFunc():
         ## MembershipId Field
         returnMembershipIdLabel = Label(returnConfirmDialog,
                                   text = "Membership ID: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[2]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
         returnMembershipIdLabel.place(x=100, y=300, width=550, height=80)
@@ -339,7 +363,7 @@ def loansReturnMenuFunc():
         ## Member Name Field
         returnMemberNameLabel = Label(returnConfirmDialog,
                                   text = "Membership ID: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[3]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
         returnMemberNameLabel.place(x=100, y=400, width=550, height=80)
@@ -347,10 +371,18 @@ def loansReturnMenuFunc():
         ## Return Date Field
         returnDateLabel = Label(returnConfirmDialog,
                                   text = "Return Date: {0}"
-                                           .format("Sample"),
+                                           .format(sqlResult[4]),
                                   font = ("calibre", 15),
                                   bg = "SkyBlue2")
         returnDateLabel.place(x=100, y=500, width=550, height=80)
+
+        ## Return Fine Field
+        returnFineLabel = Label(returnConfirmDialog,
+                                  text = "Fine: ${0}"
+                                           .format(sqlResult[5]),
+                                  font = ("calibre", 15),
+                                  bg = "SkyBlue2")
+        returnFineLabel.place(x=100, y=600, width=550, height=80)
 
 
         ## Confirm Return Button
@@ -384,7 +416,7 @@ def loansReturnMenuFunc():
 
     ## Return Date Field
     loansReturnDateLabel = Label(loansReturnMenu,
-                              text = "Return Date",
+                              text = "Return Date\n(ensure the format\nis YYYY/MM/DD)",
                               font = ("calibre", 15),
                               bg = "LightSkyBlue2")
     loansReturnDateLabel.place(x=50, y=400, width=220, height=80)
