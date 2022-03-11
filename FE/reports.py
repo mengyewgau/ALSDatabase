@@ -28,7 +28,8 @@ def openBooksOnReserv():
     booksOnReservMenu.lift()
 
 def openOutstandingFines():
-    outstandingFinesFunc()
+    result = sqlFuncs.outsFineReport()
+    outstandingFinesFunc(result, 0)
     outstandingFinesMenu.lift()
     outstandingFinesMenu.lift()
 
@@ -689,7 +690,7 @@ def booksOnReservFunc(sqlResult,currentPage):
 ## Reports 4 - Members with Outstanding Fines
 ############################################
 
-def outstandingFinesFunc():
+def outstandingFinesFunc(result, currentPage):
     global outstandingFinesMenu
     outstandingFinesMenu = Toplevel()
     outstandingFinesMenu.title("Members with Fines")
@@ -699,21 +700,265 @@ def outstandingFinesFunc():
         reportsMenu.lift()
         outstandingFinesMenu.destroy()
 
-    ## Information Header
-    booksOnLoanLabel = Label(outstandingFinesMenu,
-                       text = "Members with Outstanding Fines",
-                       font =("calibre", 20, "bold"),
-                       bg = "Slategray1")
-    booksOnLoanLabel.place(x=0, y=0, width=1100, height=80);
+    numResultRows = len(result)
+    numPages = numResultRows/3
 
-    ##Back Button
-    buttonBack = Button(outstandingFinesMenu,
-        text = "Back to Reports",
-        font = ("calibre", 15, "bold"),
-        fg = "grey39",
-        bg = "snow3",
-        command = closeOutstandingFinesMenuMenu)
-    buttonBack.place(x=480, y=500, width=180, height=40)
+    ## Information Header
+    searchResultInfoLabel = Label(outstandingFinesMenu,
+                                text = "Search Results",
+                                font =("calibre", 20, "bold"),
+                                bg = "LightSteelBlue2")
+    searchResultInfoLabel.place(x=0, y=0, width=1100, height=80);
+
+    ########################
+    ## Table Headers
+    ########################
+    ## MembershipId
+    finesMembershipIdLabel = Label(outstandingFinesMenu,
+                                text = "Membership\nId",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=120,
+                                justify="center")
+    finesMembershipIdLabel.place(x=20, y=100, width=150, height=80);
+
+    ## Name 
+    finesNameLabel = Label(outstandingFinesMenu,
+                                text = "Name",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=180,
+                                justify="center")
+    finesNameLabel.place(x=170, y=100, width=250, height=80);
+
+    ## Faculty
+    finesFacultyLabel = Label(outstandingFinesMenu,
+                                text = "Faculty",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=180,
+                                justify="center")
+    finesFacultyLabel.place(x=420, y=100, width=250, height=80);
+
+    ## Phone Number
+    finesPhoneNumberLabel = Label(outstandingFinesMenu,
+                                text = "Phone Number",
+                                font =("calibre", 15, "bold"),
+                                bg = "LightSteelBlue1",
+                                wraplength=100,
+                                justify="center")
+    finesPhoneNumberLabel.place(x=670, y=100, width=170, height=80);
+
+    ## Email Address
+    finesEmailLabel = Label(outstandingFinesMenu,
+                            text = "Email Address",
+                            font =("calibre", 15, "bold"),
+                            bg = "LightSteelBlue1",
+                            wraplength=180,
+                            justify="center")
+    finesEmailLabel.place(x=840, y=100, width=240, height=80);
+
+    ## Table rows here - 3 rows per page
+    numResultsOnCurrPageOnwards = len(result)-(currentPage)*3
+    tempTuple = ((result[0+currentPage*3]), ())
+    resultsOnCurrPageList = list(tempTuple)
+
+    if numResultsOnCurrPageOnwards >= 2:
+        resultsOnCurrPageList.pop()
+        resultsOnCurrPageList.append(result[1+currentPage*3])
+
+    if numResultsOnCurrPageOnwards >= 3:
+        resultsOnCurrPageList.append(result[2+currentPage*3])
+
+    resultsOnCurrPage = tuple(resultsOnCurrPageList)
+    #####################################
+    ## Row 1
+    #####################################
+    if numResultsOnCurrPageOnwards >= 1:
+        ## Acc Num
+        finesResultRow1MembershipIdLabel = Label(outstandingFinesMenu,
+                                                text = resultsOnCurrPage[0][0],
+                                                font =("calibre", 15, "bold"),
+                                                bg = "GhostWhite",
+                                                wraplength=120,
+                                                justify="center")
+        finesResultRow1MembershipIdLabel.place(x=20, y=180, width=150, height=80);
+
+        ## Title 
+        finesResultRow1NameLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[0][1],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        finesResultRow1NameLabel.place(x=170, y=180, width=250, height=80);
+
+        ## Author
+        finesResultRow1FacultyLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[0][2],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        finesResultRow1FacultyLabel.place(x=420, y=180, width=250, height=80);
+
+        ## ISBN
+        finesResultRow1PhoneNumberLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[0][3],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        finesResultRow1PhoneNumberLabel.place(x=670, y=180, width=170, height=80);
+
+        ## Publisher
+        finesResultRow1EmailLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[0][4],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        finesResultRow1EmailLabel.place(x=840, y=180, width=240, height=80);
+
+    #####################################
+    ## Row 2
+    #####################################
+    ## Acc Num
+    if numResultsOnCurrPageOnwards >= 2:
+        finesResultRow2MembershipIdLabel = Label(outstandingFinesMenu,
+                                                    text = resultsOnCurrPage[1][0],
+                                                    font =("calibre", 15, "bold"),
+                                                    bg = "GhostWhite",
+                                                    wraplength=120,
+                                                    justify="center")
+        finesResultRow2MembershipIdLabel.place(x=20, y=260, width=150, height=80);
+
+        ## Title 
+        finesResultRow2NameLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[1][1],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        finesResultRow2NameLabel.place(x=170, y=260, width=250, height=80);
+
+        ## Author
+        finesResultRow2FacultyLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[1][2],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        finesResultRow2FacultyLabel.place(x=420, y=260, width=250, height=80);
+
+        ## ISBN
+        finesResultRow2PhoneNumberLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[1][3],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        finesResultRow2PhoneNumberLabel.place(x=670, y=260, width=170, height=80);
+
+        ## Publisher
+        finesResultRow2EmailLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[1][4],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        finesResultRow2EmailLabel.place(x=840, y=260, width=240, height=80);
+
+    #####################################
+    ## Row 3
+    #####################################
+    if numResultsOnCurrPageOnwards >= 3:
+        ## Acc Num
+        finesResultRow3MembershipIdLabel = Label(outstandingFinesMenu,
+                                            text = resultsOnCurrPage[2][0],
+                                            font =("calibre", 15, "bold"),
+                                            bg = "GhostWhite",
+                                            wraplength=120,
+                                            justify="center")
+        finesResultRow3MembershipIdLabel.place(x=20, y=340, width=150, height=80);
+
+        ## Title 
+        finesResultRow3NameLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[2][1],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        finesResultRow3NameLabel.place(x=170, y=340, width=250, height=80);
+
+        ## Author
+        finesResultRow3FacultyLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[2][2],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        finesResultRow3FacultyLabel.place(x=420, y=340, width=250, height=80);
+
+        ## ISBN
+        finesResultRow3PhoneNumberLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[2][3],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=100,
+                                    justify="center")
+        finesResultRow3PhoneNumberLabel.place(x=670, y=340, width=170, height=80);
+
+        ## Publisher
+        finesResultRow3EmailLabel = Label(outstandingFinesMenu,
+                                    text = resultsOnCurrPage[2][4],
+                                    font =("calibre", 15, "bold"),
+                                    bg = "GhostWhite",
+                                    wraplength=180,
+                                    justify="center")
+        finesResultRow3EmailLabel.place(x=840, y=340, width=240, height=80);
+
+    ## Table nav buttons
+    def openNextTable():
+        if currentPage != len(result)-1:
+            outstandingFinesMenu.destroy()
+            outstandingFinesFunc(result, currentPage+1)
+
+
+    def openPrevTable():
+        if currentPage != 0:
+            outstandingFinesMenu.destroy()
+            outstandingFinesFunc(result, currentPage-1)
+
+    searchResultPrevTableButton = Button(outstandingFinesMenu,
+                                    text = "<<",
+                                    font = ("calibre", 15, "bold"),
+                                    fg = "grey39",
+                                    bg = "snow3",
+                                    command = openPrevTable)
+    searchResultPrevTableButton.place(x=200, y=450, width=20, height=20)
+
+    searchResultCurrPageLabel = Label(outstandingFinesMenu,
+                                text = "Current Page: {}".format(currentPage+1),
+                                font =("calibre", 15, "bold"))
+    searchResultCurrPageLabel.place(x=470, y=430, width=180, height=60);
+
+    searchResultNextTableButton = Button(outstandingFinesMenu,
+                                    text = ">>",
+                                    font = ("calibre", 15, "bold"),
+                                    fg = "grey39",
+                                    bg = "snow3",
+                                    command = openNextTable)
+    searchResultNextTableButton.place(x=900, y=450, width=20, height=20)
+
+    ## Back Button
+    searchResultBackButton = Button(outstandingFinesMenu,
+                                    text = "Back",
+                                    font = ("calibre", 15, "bold"),
+                                    fg = "grey39",
+                                    bg = "snow3",
+                                    command = closeOutstandingFinesMenuMenu)
+    searchResultBackButton.place(x=475, y=500, width=150, height=40)
 
 ############################################
 ## Reports 1 - Book Search 
