@@ -154,8 +154,11 @@ def confirmReservation(membershipId, accessionNum, reserveDate):
     
     memberLoanQuery = "SELECT membershipId, memberName FROM Member WHERE membershipId='{0}'".format(membershipId);
     memInfo = engine.execute(memberLoanQuery).fetchone()
-    
-    return (bookInfo[0], bookInfo[1], memInfo[0], memInfo[1], reserveDate)
+
+    if not bool(bookInfo) or not bool(memInfo):
+        raise Exception("MemberId/Accesion Number fields are wrong!")
+    else:
+        return (bookInfo[0], bookInfo[1], memInfo[0], memInfo[1], reserveDate)
 
 
 #############################################################################################################################################################################
@@ -225,8 +228,11 @@ def confirmCancel(membershipId, accessionNum, cancelDate):
     
     memberLoanQuery = "SELECT membershipId, memberName FROM Member WHERE membershipId='{0}'".format(membershipId);
     memInfo = engine.execute(memberLoanQuery).fetchone()
-    
-    return (bookInfo[0], bookInfo[1], memInfo[0], memInfo[1], cancelDate)
+
+    if not bool(bookInfo) or not bool(memInfo):
+        raise Exception("Reservation does not exist")
+    else:
+        return (bookInfo[0], bookInfo[1], memInfo[0], memInfo[1], cancelDate)
 
 #############################################################################################################################################################################
 
