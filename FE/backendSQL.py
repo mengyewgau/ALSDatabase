@@ -251,13 +251,13 @@ def confirmUpdate(membershipId, memName, memFac, memPhone, memEmail):
     return (membershipId, memName, memFac, memPhone, memEmail);
 #############################################################################################################################################################################
 ### Creation Functions
-def createMember(membershipId, memName, memFace, memPhone, memEmail):
+def createMember(membershipId, memName, memFac, memPhone, memEmail):
     if memName == "" or memFac == "" or memPhone == "" or memEmail == "":
         raise Exception("Missing or incomplete fields");
     try:
         createMem = 'INSERT INTO member VALUES ("{0}","{1}", "{2}", "{3}", "{4}", 0)'.format(membershipId,
                                                                                             memName,
-                                                                                            memFace,
+                                                                                            memFac,
                                                                                             memPhone,
                                                                                             memEmail)
         engine.execute(createMem)

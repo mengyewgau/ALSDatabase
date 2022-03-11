@@ -132,16 +132,16 @@ def memberCreation():
         createMemMenu.lift()
         createMemSuccessDialog.destroy()
     def createMemberFunc():
-        try:
-            sqlFuncs.createMember(entryMemberId.get(),
-                                  entryName.get(),
-                                  entryFac.get(),
-                                  entryPhone.get(),
-                                  entryEmail.get());
-            openCreateMemberSuccessDialog();
-        except Exception as excp:
-            messagebox.showerror("Member Creation Error",
-                                 "Member already exist; Missing or\n Incomplete fields.")
+##        try:
+        sqlFuncs.createMember(entryMemberId.get(),
+                                entryName.get(),
+                                entryFac.get(),
+                                entryPhone.get(),
+                                entryEmail.get());
+        openCreateMemberSuccessDialog();
+##        except Exception as excp:
+##            messagebox.showerror("Member Creation Error",
+##                                 "Member already exist; Missing or\n Incomplete fields.")
     ###################################################################################################################
     ## Membership 1.2 - Creation Windows and Popups
     def openCreateMemberSuccessDialog():
