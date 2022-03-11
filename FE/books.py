@@ -37,7 +37,6 @@ def createBookMenu():
     ##Book Page Background
     global bookMenu
     bookMenu = Toplevel()
-    bookMenu.grab_set()
     bookMenu.geometry("1280x750");
     bookMenu.configure(bg="Slategray2")
 
@@ -230,7 +229,7 @@ def confirmAcqDialog():
     confirmAcqHeader.place(x=0, y=0, width=800, height=90);
 
     ## Accession Number Confirmation
-    confirmAccNum = Label(acquisitionConfirmationDialog,
+    confirmAccNum = Label(acquisitionationDialog,
                               text = "Accession Number: {0}"
                                   .format(accessionNum),
                               font = ("calibre", 15),
@@ -305,7 +304,6 @@ def confirmAcqDialog():
 def createBookAcquisition():
     global bookAcq
     bookAcq = Toplevel()
-    bookAcq.grab_set()
     bookAcq.geometry("1280x750")
     bookAcq.configure(bg = "LightSteelBlue1")
 
@@ -434,7 +432,7 @@ def navFromWithConfirmationToSuccessPage():
 def navFromConfirmWithToBookWith():
     confirmWithDialog.destroy()
     
-def confirmWithDialog():
+def confirmWithDialogFunc():
 
     try:
         withBookDetails = sqlFuncs.confirmWithdrawal(str(accWithEntry.get()))
@@ -447,6 +445,7 @@ def confirmWithDialog():
         
         global confirmWithDialog
         confirmWithDialog = Toplevel()
+        confirmWithDialog.grab_set()
         confirmWithDialog.geometry("750x800")
         confirmWithDialog.configure(bg = "limegreen")
     except:
@@ -559,7 +558,6 @@ def navFromBookWithToBook():
 def createBookWithdrawal():
     global bookWith
     bookWith = Toplevel()
-    bookWith.grab_set()
     bookWith.geometry("1280x750")
     bookWith.configure(bg = "azure2")
 
@@ -592,7 +590,7 @@ def createBookWithdrawal():
         relief = "solid",                      
         fg = "ghost white",
         bg = "DeepSkyBlue4",
-        command = confirmWithDialog)
+        command = confirmWithDialogFunc)
     buttonSubmitWith.place(x=460, y=450, width=400, height=100)
 
     ## Back Button
