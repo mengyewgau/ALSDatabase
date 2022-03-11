@@ -4,7 +4,7 @@ from PIL import ImageTk, Image
 import backendSQL as sqlFuncs
 from datetime import datetime
 
-
+###################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
 ##Book Landing Window###########################################################
 
 def destroyBookMenu():
@@ -37,6 +37,7 @@ def createBookMenu():
     ##Book Page Background
     global bookMenu
     bookMenu = Toplevel()
+    bookMenu.grab_set()
     bookMenu.geometry("1280x750");
     bookMenu.configure(bg="Slategray2")
 
@@ -103,6 +104,7 @@ def destroySuccessAcq():
 def createSuccessAcq():
     global successAcq
     successAcq = Toplevel()
+    successAcq.grab_set()
     successAcq.geometry("500x500")
     successAcq.configure(bg = "limegreen")
 
@@ -141,6 +143,7 @@ def destroySuccessWith():
 def createSuccessWith():
     global successWith
     successWith = Toplevel()
+    successWith.grab_set()
     successWith.geometry("500x500")
     successWith.configure(bg = "limegreen")
 
@@ -192,6 +195,7 @@ def navFromAcqConfirmationToSuccessPage():
 def confirmAcqDialog():
     global acquisitionConfirmationDialog
     acquisitionConfirmationDialog = Toplevel()
+    acquisitionConfirmationDialog.grab_set()
     acquisitionConfirmationDialog.geometry("720x800")
     acquisitionConfirmationDialog.configure(bg = "limegreen")
 
@@ -301,6 +305,7 @@ def confirmAcqDialog():
 def createBookAcquisition():
     global bookAcq
     bookAcq = Toplevel()
+    bookAcq.grab_set()
     bookAcq.geometry("1280x750")
     bookAcq.configure(bg = "LightSteelBlue1")
 
@@ -554,6 +559,7 @@ def navFromBookWithToBook():
 def createBookWithdrawal():
     global bookWith
     bookWith = Toplevel()
+    bookWith.grab_set()
     bookWith.geometry("1280x750")
     bookWith.configure(bg = "azure2")
 
