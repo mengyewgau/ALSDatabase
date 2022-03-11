@@ -7,5 +7,5 @@ Run MySQL Data init file to set up Database and Tables
 Run `FE/initSQL - RUN FIRST.py` to set up test data
 <br>
 <br>
-## Setting up
+## Running the application
 Run `FE/landingPage.py` to start the application
